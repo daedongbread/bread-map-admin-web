@@ -1,34 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useRequestRefresh } from './apis';
+import { PATH } from './constants';
+import usePath from './hooks/usePath';
+import Route from './routes';
+import { Storage, userStorage } from './utils';
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+const App = () => {
+  const navigate = useNavigate();
+  const { mutateAsync } = useRequestRefresh();
+  const { getCurrPath } = usePath();
 
-export default App
+  // 추후 axios에서 처리하는걸로 변경하기
+  React.useEffect(() => {
+    const token = userStorage.getItem<{ accessToken: string; refreshToken: string }>(Storage.Token);
+    if (token) {
+      const { accessToken, refreshToken } = token;
+      mutateAsync({ accessToken, refreshToken });
+    } else {
+      if (getCurrPath() !== PATH.Login) {
+        window.confirm('로그인이 필요합니다.');
+      }
+      navigate(PATH.Login);
+      // redirect... router 내부에 넣어야 실행가능
+    }
+  }, [mutateAsync]);
+
+  return <Route />;
+};
+
+export default App;
