@@ -36,7 +36,7 @@ export const SideBar = () => {
 const SidebarMenu = [
   {
     name: '제보관리',
-    path: PATH.BakeryReport,
+    path: PATH.BakeryReports,
     icon: <Pencil />,
     noti: 43,
   },
@@ -48,7 +48,7 @@ const SidebarMenu = [
   },
   {
     name: '신고목록',
-    path: PATH.UserReport,
+    path: PATH.UserReports,
     icon: <Frown />,
     noti: 0,
   },

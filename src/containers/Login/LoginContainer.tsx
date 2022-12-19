@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '@/apis';
+import { useLogin } from '@/apis';
 import { Logo } from '@/components/Login';
 import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
@@ -11,7 +11,7 @@ import styled from '@emotion/styled';
 export type LoginForm = typeof initialForm;
 
 export const LoginContainer = () => {
-  const { login } = useAuth();
+  const { login } = useLogin();
   const { data, mutate, error } = login();
 
   const { activate: isRemembered, onActive: onActiveRemember, onInactive: onInactiveRemeber, onToggleActive: onToggleRemember } = useToggle();

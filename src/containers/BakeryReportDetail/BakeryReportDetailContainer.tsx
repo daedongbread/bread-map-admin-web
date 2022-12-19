@@ -29,7 +29,7 @@ export const BakeryReportDetailContainer = () => {
   }, [bakeryReport]);
 
   const onClickBack = () => {
-    navigate(PATH.BakeryReport);
+    navigate(PATH.BakeryReports);
   };
 
   const onClickAddBakery = () => {

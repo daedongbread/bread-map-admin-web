@@ -11,8 +11,10 @@ import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
+import { useAuth } from '@/hooks/auth';
 
 export const BakeriesContainer = () => {
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const [searchText, setSearchText] = React.useState('');
   const [word, setWord] = React.useState('');
