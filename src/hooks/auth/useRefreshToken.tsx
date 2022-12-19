@@ -1,6 +1,6 @@
 import React from 'react';
+import { requestRefresh, saveUserToken } from '@/apis/auth/login';
 import { useAuth } from '@/hooks/auth';
-import { requestRefresh } from '@/apis/auth/login';
 import { Storage, userStorage } from '@/utils';
 
 export const useRefreshToken = () => {
@@ -11,6 +11,7 @@ export const useRefreshToken = () => {
     if (token) {
       const { accessToken, refreshToken } = token;
       const response = await requestRefresh({ accessToken, refreshToken });
+      saveUserToken({ accessToken: response.accessToken, refreshToken: response.refreshToken });
 
       setAuth(prev => {
         // TODO: auth Provider에 저장할 필요가 있나 보기

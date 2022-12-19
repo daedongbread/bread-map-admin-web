@@ -1,7 +1,8 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { LoginResponse, requestRefresh, saveUserToken } from '@/apis/auth/login';
 import { fetcher } from '@/apis/axios/fetcher';
 import { PATH } from '@/constants';
-import { useRefreshToken } from '@/hooks/auth/useRefreshToken';
+import { useAuth } from '@/hooks/auth';
 import { Storage, userStorage } from '@/utils';
 
 export const reqSuccessFn = (config: AxiosRequestConfig) => {
@@ -9,7 +10,7 @@ export const reqSuccessFn = (config: AxiosRequestConfig) => {
     config.headers = {};
   }
 
-  const token = userStorage.getItem(Storage.Token);
+  const token = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
   if (token && token.accessToken) {
     config.headers['Authorization'] = `Bearer ${token.accessToken}`;
   }
@@ -27,18 +28,31 @@ export const resSuccessFn = (response: AxiosResponse) => {
   };
 };
 
-let refreshingToken: Promise<string | undefined> | null = null;
+const refresh = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
+  return requestRefresh({ accessToken, refreshToken });
+};
+
+let refreshingToken: Promise<LoginResponse> | Promise<string> | null = null;
 
 export const resFailFn = async (error: any) => {
   const config = error.config;
-  const refresh = useRefreshToken();
+  const { setAuth } = useAuth();
+
   if (error.response.data?.message === 'Invalid JWT' && !config._retry) {
-    config._retry = true;
+    config._retry = true; // 무한요청 방지
     try {
-      refreshingToken = refreshingToken ? refreshingToken : refresh();
-      const accessToken = await refreshingToken;
-      if (accessToken) {
-        return fetcher(config);
+      const token = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
+      if (token) {
+        const { accessToken, refreshToken } = token;
+        refreshingToken = refreshingToken ? refreshingToken : refresh({ accessToken, refreshToken });
+        const newAccessToken = await refreshingToken;
+
+        if (newAccessToken) {
+          const { accessToken, refreshToken } = newAccessToken as LoginResponse;
+          saveUserToken({ accessToken, refreshToken });
+          setAuth({ accessToken, refreshToken });
+          return fetcher(config);
+        }
       }
     } catch (err) {
       userStorage.removeItem(Storage.Token);

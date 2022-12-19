@@ -2,7 +2,6 @@ import React from 'react';
 import { Storage, userStorage } from '@/utils';
 
 export type Auth = {
-  pwd?: string;
   accessToken?: string;
   refreshToken?: string;
 };

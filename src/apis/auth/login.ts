@@ -4,7 +4,6 @@ import { fetcher } from '../axios';
 export type LoginResponse = {
   accessToken: string;
   refreshToken: string;
-  accessTokenExpiredDate: number;
 };
 
 export type LoginPayload = {
@@ -17,7 +16,7 @@ type RefreshRequest = {
   refreshToken: string;
 };
 
-const saveUserToken = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
+const saveUserToken = ({ accessToken, refreshToken }: LoginResponse) => {
   userStorage.setItem(Storage.Token, {
     accessToken,
     refreshToken,
@@ -54,7 +53,6 @@ const requestLogin = async ({ email, password, isRemembered }: LoginPayload & { 
 };
 
 const requestRefresh = async ({ accessToken, refreshToken }: RefreshRequest) => {
-  console.log('$$$ requestRefresh');
   const resp = await fetcher.post<LoginResponse>('/reissue', {
     accessToken,
     refreshToken,
