@@ -36,7 +36,7 @@ let refreshingToken: Promise<LoginResponse> | Promise<string> | null = null;
 
 export const resFailFn = async (error: any) => {
   const config = error.config;
-  const { setAuth } = useAuth();
+  // const { setAuth } = useAuth();
 
   if (error.response.data?.message === 'Invalid JWT' && !config._retry) {
     config._retry = true; // 무한요청 방지
@@ -50,7 +50,8 @@ export const resFailFn = async (error: any) => {
         if (newAccessToken) {
           const { accessToken, refreshToken } = newAccessToken as LoginResponse;
           saveUserToken({ accessToken, refreshToken });
-          setAuth({ accessToken, refreshToken });
+          // setAuth({ accessToken, refreshToken });
+          // TODO: storage에는 저장하는데 store에 저장되지 않음
           return fetcher(config);
         }
       }
