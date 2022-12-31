@@ -1,21 +1,30 @@
 import React from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { useGetBakeryReport, useUpdateBakeryReportStatus } from '@/apis';
 import { Report } from '@/components/BakeryReportDetail';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { Header } from '@/components/Shared/Header';
 import { BAKERY_REPORT_STATUS_OPTIONS, PATH } from '@/constants';
+
 import useSelectBox from '@/hooks/useSelectBox';
-import { color } from '@/styles';
 import { extractContentsWithType } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeryReportDetailContainer = () => {
   const { reportId } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { bakeryReport, error } = useGetBakeryReport({ reportId: Number(reportId) });
-  const { mutate: updateBakeryReportStatus } = useUpdateBakeryReportStatus();
+  const { mutate: updateBakeryReportStatus } = useUpdateBakeryReportStatus({
+    successFn: async () => {
+      await Promise.all([queryClient.invalidateQueries('bakeryReport'), queryClient.invalidateQueries('bakeryReports')]);
+      await navigate(PATH.BakeryReports);
+    },
+  });
+
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox();
 
   React.useEffect(() => {
@@ -40,6 +49,10 @@ export const BakeryReportDetailContainer = () => {
     if (!reportId || !selectedOption) {
       return;
     }
+    if (!window.confirm('저장하시겠습니까?')) {
+      return;
+    }
+
     updateBakeryReportStatus({ reportId: Number(reportId), status: selectedOption.value });
   };
 

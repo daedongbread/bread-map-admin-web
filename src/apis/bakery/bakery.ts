@@ -50,9 +50,4 @@ const updateBakery = async ({ bakeryId, payload }: { bakeryId: number } & Create
     },
   });
 };
-
-// const updateBakeryStatus = () => {
-//   await fetcher.patch(``)
-// }
-
 export { getBakeries, searchBakeries, getBakery, createBakery, updateBakery };
