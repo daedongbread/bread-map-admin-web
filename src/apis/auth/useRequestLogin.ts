@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PATH } from '@/constants';
 import { useAuth } from '@/hooks/auth';
 import { Storage, userStorage } from '@/utils';
-import { rememberUser, removeUser, requestLogin, saveUserToken } from './login';
+import { rememberUser, removeUser, requestLogin } from './login';
 
 export const useLogin = () => {
   const navigate = useNavigate();
@@ -13,7 +13,6 @@ export const useLogin = () => {
     const { data, mutate, isLoading, isError } = useMutation(requestLogin, {
       onSuccess: data => {
         const { accessToken, refreshToken, isRemembered, email, password } = data;
-        saveUserToken({ accessToken, refreshToken });
         setAuth({ accessToken, refreshToken });
 
         if (isRemembered) {
@@ -38,7 +37,7 @@ export const useLogin = () => {
 
   const logout = () => {
     userStorage.removeItem(Storage.Token);
-    setAuth({});
+    setAuth({ accessToken: null, refreshToken: null });
     navigate(PATH.Login, { replace: true });
   };
 
