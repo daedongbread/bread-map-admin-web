@@ -51,7 +51,7 @@ export const BakeryDetailContainer = () => {
   const { mutate: createBakery } = useCreateBakery();
   const { mutate: updateBakery } = useUpdateBakery({
     successFn: async () => {
-      await Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries')]);
+      await Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
       await navigate(PATH.Bakeries);
     },
   });

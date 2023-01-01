@@ -8,7 +8,7 @@ type MenuItemProps = {
   noti?: number;
 };
 
-export const MenuItem = ({ icon, name, active = false, noti }: MenuItemProps) => {
+export const MenuItem = ({ icon, name, active = false, noti = 0 }: MenuItemProps) => {
   return (
     <ItemContainer active={active}>
       <div>

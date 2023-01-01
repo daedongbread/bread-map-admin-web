@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
 import { useLogin } from '@/apis';
+import { MenuCountEntity } from '@/apis/menu/types';
 import { Frown, Pencil, Server, Users, User, Logout } from '@/components/Shared/Icons';
 import { PATH, Path } from '@/constants';
 import styled from '@emotion/styled';
 import { MenuItem } from './MenuItem';
 
-export const SideBar = () => {
+export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
   const location = useLocation();
   const { logout } = useLogin();
 
@@ -19,16 +21,29 @@ export const SideBar = () => {
     return path === matched?.[1];
   };
 
+  const onLogout = () => {
+    if (window.confirm('로그아웃 하시겠습니까?')) {
+      logout();
+    }
+  };
+
   const getSettingMenuFn = (menuName: string) => {
     switch (menuName) {
       case '로그아웃':
-        return () => {
-          if (window.confirm('로그아웃 하시겠습니까?')) {
-            logout();
-          }
-        };
+        return onLogout;
       default:
         return;
+    }
+  };
+
+  const getMenuCount = (path: Path) => {
+    switch (path) {
+      case PATH.BakeryReports:
+        return menuCount?.bakeryReportCount || 0;
+      case PATH.Bakeries:
+        return menuCount?.bakeryCount || 0;
+      case PATH.UserReports:
+        return menuCount?.reviewReportCount || 0;
     }
   };
 
@@ -40,13 +55,13 @@ export const SideBar = () => {
       <ul>
         {MENUS.map(menu => (
           <MenuLink key={menu.path} to={menu.path}>
-            <MenuItem icon={menu.icon} name={menu.name} noti={menu.noti} active={isCurrent(menu.path)} />
+            <MenuItem icon={menu.icon} name={menu.name} noti={getMenuCount(menu.path)} active={isCurrent(menu.path)} />
           </MenuLink>
         ))}
       </ul>
       <ul>
         {SETTING_MENUS.map(menu => (
-          <button onClick={getSettingMenuFn(menu.name)}>
+          <button key={menu.name} onClick={getSettingMenuFn(menu.name)}>
             <MenuItem icon={menu.icon} name={menu.name} />
           </button>
         ))}

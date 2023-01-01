@@ -20,7 +20,11 @@ export const BakeryReportDetailContainer = () => {
   const { bakeryReport, error } = useGetBakeryReport({ reportId: Number(reportId) });
   const { mutate: updateBakeryReportStatus } = useUpdateBakeryReportStatus({
     successFn: async () => {
-      await Promise.all([queryClient.invalidateQueries('bakeryReport'), queryClient.invalidateQueries('bakeryReports')]);
+      await Promise.all([
+        queryClient.invalidateQueries('bakeryReport'),
+        queryClient.invalidateQueries('bakeryReports'),
+        queryClient.invalidateQueries('menuCount'),
+      ]);
       await navigate(PATH.BakeryReports);
     },
   });
