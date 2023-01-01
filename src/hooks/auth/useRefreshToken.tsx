@@ -11,16 +11,12 @@ export const useRefreshToken = () => {
     if (token) {
       const { accessToken, refreshToken } = token;
       const response = await requestRefresh({ accessToken, refreshToken });
-      saveUserToken({ accessToken: response.accessToken, refreshToken: response.refreshToken });
 
-      setAuth(prev => {
-        // TODO: auth Provider에 저장할 필요가 있나 보기
-        return {
-          ...prev,
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-        };
-      });
+      setAuth(prev => ({
+        ...prev,
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      }));
 
       return response.accessToken;
     }
