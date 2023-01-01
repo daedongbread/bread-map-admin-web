@@ -1,6 +1,7 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import React from 'react';
+import { redirect } from 'react-router-dom';
 import { LoginResponse, requestRefresh } from '@/apis/auth/login';
 import { fetcher } from '@/apis/axios/fetcher';
 import { PATH } from '@/constants';
@@ -61,10 +62,12 @@ export const useInterceptor = () => {
         userStorage.removeItem(Storage.Token);
         window.confirm('장시간 사용하지않아 다시 로그인이 필요합니다.');
         window.location.replace(PATH.Login);
+        // redirect(PATH.Login); 안되나? or navigate ?
         return Promise.reject(error);
       }
     } else {
       console.log('axios response err:', error.response);
+      // window.location.replace(PATH.Login);
     }
 
     return Promise.reject(error);

@@ -113,7 +113,7 @@ export const BakeryDetailContainer = () => {
     if (form.productList.length) {
       if (bakery) {
         // 수정시
-        console.log('origin', origin);
+        // console.log('origin', origin);
         for (const bread of form.productList) {
           let file: File | Blob | string = '';
           const target = bakery.productList.find(item => item.productId === bread.productId);

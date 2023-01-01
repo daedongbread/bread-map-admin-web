@@ -4,11 +4,11 @@ import styled from '@emotion/styled';
 type MenuItemProps = {
   icon: ReactNode;
   name: string;
-  active: boolean;
-  noti: number;
+  active?: boolean;
+  noti?: number;
 };
 
-export const MenuItem = ({ icon, name, active, noti }: MenuItemProps) => {
+export const MenuItem = ({ icon, name, active = false, noti }: MenuItemProps) => {
   return (
     <ItemContainer active={active}>
       <div>
