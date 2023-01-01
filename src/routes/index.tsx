@@ -1,6 +1,8 @@
 import React from 'react';
 import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router-dom';
+
 import { PersistLogin, RequireAuth } from '@/components/Auth';
+import { ControlInterceptor } from '@/components/Auth/ControlInterceptor';
 import { PATH } from '@/constants/routes';
 import { BakeriesContainer } from '@/containers/Bakeries';
 import { BakeryDetailContainer } from '@/containers/BakeryDetail';
@@ -11,7 +13,7 @@ import { loginPageLoader } from '@/routes/loader';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path={PATH.Home}>
+    <Route path={PATH.Home} element={<ControlInterceptor />}>
       <Route path={PATH.Login} element={<LoginContainer />} loader={loginPageLoader} />
 
       <Route element={<PersistLogin />}>
