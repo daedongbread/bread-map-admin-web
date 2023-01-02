@@ -139,7 +139,6 @@ const bakerySlice = createSlice({
     },
     toggleMenuTypeOption(state, action: PayloadAction<{ currIdx: number }>) {
       const { openedMenuTypeIdx } = state;
-      console.log('openedMenuTypeIdx...', openedMenuTypeIdx, '/', action.payload);
       const { currIdx } = action.payload;
       if (currIdx === openedMenuTypeIdx) {
         state.openedMenuTypeIdx = null;

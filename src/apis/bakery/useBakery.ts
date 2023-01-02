@@ -28,10 +28,12 @@ const useCreateBakery = () => {
   };
 };
 
-const useUpdateBakery = () => {
+const useUpdateBakery = ({ successFn }: { successFn: () => Promise<void> }) => {
   const { mutate, isLoading, isError } = useMutation(updateBakery, {
-    // onSuccess: () => {},
-    // onError: () => {},
+    onSuccess: async () => {
+      await successFn();
+    },
+    onError: () => {},
   });
 
   return {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useCreateBakery, useGetBakery, useUpdateBakery } from '@/apis/bakery/useBakery';
@@ -40,6 +41,7 @@ export const BakeryDetailContainer = () => {
   const { bakeryId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
 
   // opened state를 리덕스에 저장하면 안될거같은데..?
   const { form, formLinks, openedLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
@@ -47,7 +49,12 @@ export const BakeryDetailContainer = () => {
 
   const { bakery, loading } = useGetBakery({ bakeryId: Number(bakeryId) });
   const { mutate: createBakery } = useCreateBakery();
-  const { mutate: updateBakery } = useUpdateBakery();
+  const { mutate: updateBakery } = useUpdateBakery({
+    successFn: async () => {
+      await Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
+      await navigate(PATH.Bakeries);
+    },
+  });
 
   React.useEffect(() => {
     if (bakery) {
@@ -75,6 +82,10 @@ export const BakeryDetailContainer = () => {
   };
 
   const onSaveForm = async () => {
+    if (!window.confirm('저장하시겠습니까?')) {
+      return;
+    }
+
     const formData = new FormData();
 
     // link에 대한 순회
@@ -102,7 +113,7 @@ export const BakeryDetailContainer = () => {
     if (form.productList.length) {
       if (bakery) {
         // 수정시
-        console.log('origin', origin);
+        // console.log('origin', origin);
         for (const bread of form.productList) {
           let file: File | Blob | string = '';
           const target = bakery.productList.find(item => item.productId === bread.productId);
@@ -150,7 +161,7 @@ export const BakeryDetailContainer = () => {
     }
 
     bakeryId ? onUpdateForm(payload) : onCreateForm(payload);
-    // onSaveForm(payload);
+    // TODO: optimistic update
   };
 
   const onChangeForm = (payload: { name: BakeryFormChangeKey; value: never }) => {

@@ -1,18 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
+
 import { BakeriesItemEntity, useGetBakeries, useSearchBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
-
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
+import { useAuth } from '@/hooks/auth';
 import usePagination from '@/hooks/usePagination';
-
 import usePrevious from '@/hooks/usePrevious';
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeriesContainer = () => {
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const [searchText, setSearchText] = React.useState('');
   const [word, setWord] = React.useState('');
@@ -42,15 +43,8 @@ export const BakeriesContainer = () => {
   };
 
   React.useEffect(() => {
-    // data 로드 후 최초에만 실행되도록 변경하기
-    changeTotalCount(data);
-  }, [data]);
-
-  React.useEffect(() => {
-    if (prevWord !== word) {
-      changeTotalCount(searchData);
-    }
-  }, [searchData]);
+    changeTotalCount(searchData || data);
+  }, [searchData, data]);
 
   React.useEffect(() => {
     if (prevWord !== word) {

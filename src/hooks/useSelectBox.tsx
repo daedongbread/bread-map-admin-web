@@ -7,7 +7,6 @@ const useSelectBox = (defaultOption?: SelectOption) => {
 
   React.useEffect(() => {
     if (defaultOption) {
-      console.log(defaultOption);
       onSelectOption(defaultOption);
     }
   }, []);

@@ -1,9 +1,10 @@
 export const PATH = {
+  Home: '/',
   Login: '/login',
   Bakeries: '/bakeries',
-  BakeryReport: '/bakery-report',
+  BakeryReports: '/bakery-reports',
   Users: '/users',
-  UserReport: '/user-report',
+  UserReports: '/user-reports',
 };
 
 export type Path = typeof PATH[keyof typeof PATH];

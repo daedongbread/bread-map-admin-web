@@ -1,13 +1,17 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+
+import { useMenuCount } from '@/apis';
 import styled from '@emotion/styled';
 import { SideBar } from './SideBar';
 
 export const Layout = () => {
+  const { data: menuCount, loading, error } = useMenuCount();
+
   return (
     <Container>
       <aside>
-        <SideBar />
+        <SideBar menuCount={menuCount} />
       </aside>
       <main>
         <Outlet />

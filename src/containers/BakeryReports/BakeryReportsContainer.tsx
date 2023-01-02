@@ -31,7 +31,7 @@ export const BakeryReportsContainer = () => {
   const bakeryReportsColumns = useMemo(() => COLUMNS, []);
 
   const onClickRequestItem = (reportId: number) => {
-    navigate(`${PATH.BakeryReport}/${reportId}`);
+    navigate(`${PATH.BakeryReports}/${reportId}`);
   };
 
   if (loading) {
@@ -50,7 +50,7 @@ export const BakeryReportsContainer = () => {
     <>
       <Header name={'제보관리'} />
       <Container>
-        <BakeryReportsTable route={PATH.BakeryReport} columns={bakeryReportsColumns} data={bakeryReportsRow} rowClickFn={onClickRequestItem} />
+        <BakeryReportsTable route={PATH.BakeryReports} columns={bakeryReportsColumns} data={bakeryReportsRow} rowClickFn={onClickRequestItem} />
         <Pagination
           totalCount={totalItemCount}
           perCount={PER_COUNT}

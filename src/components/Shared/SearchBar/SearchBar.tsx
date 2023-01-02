@@ -11,9 +11,22 @@ type Props = {
 };
 
 export const SearchBar = ({ placeholder, text, onChangeText, onSearch }: Props) => {
+  const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSearch();
+    }
+  };
+
   return (
     <Container>
-      <Input value={text} onChangeInput={e => onChangeText(e.target.value)} placeholder={placeholder} type={'plain'} padding={'large'} />
+      <Input
+        value={text}
+        onChangeInput={e => onChangeText(e.target.value)}
+        onKeypressInput={onEnter}
+        placeholder={placeholder}
+        type={'plain'}
+        padding={'large'}
+      />
       <button>
         <Search onClick={onSearch} />
       </button>

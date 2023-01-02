@@ -47,11 +47,23 @@ export type InputProps = {
   disabled?: boolean;
   textarea?: boolean;
   onChangeInput?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onKeypressInput?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   name?: string;
   value: string;
 };
 // textbox로 수정. textarea도 가능하게..
-export const Input = ({ textType, type, padding = 'small', placeholder, disabled = false, textarea = false, onChangeInput, name, value }: InputProps) => {
+export const Input = ({
+  textType,
+  type,
+  padding = 'small',
+  placeholder,
+  disabled = false,
+  textarea = false,
+  onChangeInput,
+  onKeypressInput,
+  name,
+  value,
+}: InputProps) => {
   const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
 
@@ -78,6 +90,7 @@ export const Input = ({ textType, type, padding = 'small', placeholder, disabled
         type={textType}
         value={value}
         onChange={onChangeInput}
+        onKeyPress={onKeypressInput}
         borderColor={matchedStyle[1].borderColor}
         fontColor={matchedStyle[1].fontColor}
         bgColor={matchedStyle[1].bgColor}

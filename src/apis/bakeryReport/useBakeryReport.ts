@@ -15,9 +15,11 @@ const useGetBakeryReport = ({ reportId }: { reportId: number }) => {
   };
 };
 
-const useUpdateBakeryReportStatus = () => {
+const useUpdateBakeryReportStatus = ({ successFn }: { successFn: () => Promise<void> }) => {
   const { mutate, isLoading, isError } = useMutation(updateBakeryReportStatus, {
-    // onSuccess: () => {},
+    onSuccess: async () => {
+      await successFn();
+    },
     // onError: () => {},
   });
   return {

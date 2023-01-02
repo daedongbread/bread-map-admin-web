@@ -14,7 +14,7 @@ const getId = (original: obj, route: string): number => {
     case PATH.Bakeries:
       id = original.bakeryId;
       break;
-    case PATH.BakeryReport:
+    case PATH.BakeryReports:
       id = original.reportId;
       console.log(id);
       break;

@@ -7,4 +7,6 @@ export { ChevronRight } from './ChevronRight';
 export { Server } from './Server';
 export { Frown } from './Frown';
 export { Users } from './Users';
+export { User } from './User';
+export { Logout } from './Logout';
 // export { Check } from './Check';
