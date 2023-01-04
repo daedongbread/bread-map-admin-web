@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLogin } from '@/apis';
+import { rememberUser, removeUser } from '@/apis/auth/login';
 import { Logo } from '@/components/Login';
 import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
+import { PATH } from '@/constants';
 import useForm from '@/hooks/useForm';
 import useToggle from '@/hooks/useToggle';
 import { loginStorage, Storage } from '@/utils';
@@ -11,8 +14,10 @@ import styled from '@emotion/styled';
 export type LoginForm = typeof initialForm;
 
 export const LoginContainer = () => {
-  const { login } = useLogin();
-  const { data, mutate, error } = login();
+  const navigate = useNavigate();
+  const {
+    login: { mutate: login, error },
+  } = useLogin();
 
   const { activate: isRemembered, onActive: onActiveRemember, onInactive: onInactiveRemeber, onToggleActive: onToggleRemember } = useToggle();
   const { form, onChangeForm, onSetForm } = useForm<LoginForm>(initialForm);
@@ -35,7 +40,15 @@ export const LoginContainer = () => {
 
   const onSubmit = () => {
     const { email, password } = form;
-    mutate({ email, password, isRemembered });
+    isRemembered ? rememberUser({ email, password }) : removeUser();
+    login(
+      { email, password },
+      {
+        onSuccess: () => {
+          navigate(PATH.Bakeries, { replace: true });
+        },
+      }
+    );
   };
 
   return (

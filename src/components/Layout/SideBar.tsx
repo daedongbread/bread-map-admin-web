@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { useLogin } from '@/apis';
 import { MenuCountEntity } from '@/apis/menu/types';
@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import { MenuItem } from './MenuItem';
 
 export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useLogin();
 
@@ -24,6 +25,7 @@ export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
   const onLogout = () => {
     if (window.confirm('로그아웃 하시겠습니까?')) {
       logout();
+      navigate(PATH.Login, { replace: true });
     }
   };
 

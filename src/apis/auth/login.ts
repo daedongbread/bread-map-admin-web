@@ -44,12 +44,12 @@ const removeUser = () => {
   loginStorage.setItem(Storage.IsRemembered, false);
 };
 
-const requestLogin = async ({ email, password, isRemembered }: LoginPayload & { isRemembered: boolean }) => {
+const requestLogin = async ({ email, password }: LoginPayload) => {
   const resp = await fetcher.post<LoginResponse>(`/login`, {
     email,
     password,
   });
-  return { ...resp.data, email, password, isRemembered };
+  return resp.data;
 };
 
 const requestRefresh = async ({ accessToken, refreshToken }: RefreshRequest) => {

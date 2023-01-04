@@ -3,10 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useBakeryReport } from '@/apis';
 import { Report } from '@/components/BakeryReportDetail';
-import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
+import { Button, SelectBox, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { Header } from '@/components/Shared/Header';
 import { BAKERY_REPORT_STATUS_OPTIONS, PATH } from '@/constants';
-
 import useSelectBox from '@/hooks/useSelectBox';
 import { extractContentsWithType } from '@/utils';
 import styled from '@emotion/styled';
