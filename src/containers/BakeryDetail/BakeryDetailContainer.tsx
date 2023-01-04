@@ -1,13 +1,11 @@
 import React from 'react';
-import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useCreateBakery, useGetBakery, useUpdateBakery } from '@/apis/bakery/useBakery';
+import { useBakery } from '@/apis/bakery/useBakery';
 import { Form } from '@/components/BakeryDetail';
 import { Link } from '@/components/BakeryDetail/LinkForm';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
-
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -30,8 +28,6 @@ import {
   toggleMenuTypeOption,
   selectMenuTypeOption,
 } from '@/store/slices/bakery';
-
-import { color } from '@/styles';
 import { urlToBlob } from '@/utils';
 import styled from '@emotion/styled';
 
@@ -41,20 +37,16 @@ export const BakeryDetailContainer = () => {
   const { bakeryId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const queryClient = useQueryClient();
+
+  const {
+    bakeryQuery: { data: bakery },
+    addBakery,
+    editBakery,
+  } = useBakery({ bakeryId: Number(bakeryId) });
 
   // opened state를 리덕스에 저장하면 안될거같은데..?
   const { form, formLinks, openedLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
-
-  const { bakery, loading } = useGetBakery({ bakeryId: Number(bakeryId) });
-  const { mutate: createBakery } = useCreateBakery();
-  const { mutate: updateBakery } = useUpdateBakery({
-    successFn: async () => {
-      await Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
-      await navigate(PATH.Bakeries);
-    },
-  });
 
   React.useEffect(() => {
     if (bakery) {
@@ -161,7 +153,6 @@ export const BakeryDetailContainer = () => {
     }
 
     bakeryId ? onUpdateForm(payload) : onCreateForm(payload);
-    // TODO: optimistic update
   };
 
   const onChangeForm = (payload: { name: BakeryFormChangeKey; value: never }) => {
@@ -234,13 +225,25 @@ export const BakeryDetailContainer = () => {
   };
 
   const onCreateForm = (payload: FormData) => {
-    createBakery({ payload });
+    addBakery.mutate(
+      { payload },
+      {
+        onSuccess: () => {
+          navigate(PATH.Bakeries); // TODO: 완료됨 UI 필요
+        },
+      }
+    );
   };
 
   const onUpdateForm = (payload: FormData) => {
-    if (bakeryId) {
-      updateBakery({ bakeryId: Number(bakeryId), payload });
-    }
+    editBakery.mutate(
+      { bakeryId: Number(bakeryId), payload },
+      {
+        onSuccess: () => {
+          navigate(PATH.Bakeries); // TODO: 완료됨 UI 필요
+        },
+      }
+    );
   };
 
   const onClickBack = () => {
