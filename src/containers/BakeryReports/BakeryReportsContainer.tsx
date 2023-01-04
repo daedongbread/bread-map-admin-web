@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-import { useGetBakeryReports } from '@/apis';
+import { useBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
 import { Pagination, CompleteStatus as Status } from '@/components/Shared';
 
@@ -18,7 +18,9 @@ export const BakeryReportsContainer = () => {
     perCount: PER_COUNT,
   });
 
-  const { data, error, loading, fetching } = useGetBakeryReports({ page: currPage });
+  const { bakeryReportsQuery } = useBakeryReports();
+  const { data, isLoading, isFetching, error } = bakeryReportsQuery({ page: currPage });
+
   const bakeryReportsRow = data?.bakeryReports.map(report => ({
     ...report,
     status: formatTextToOptionObj({ constants: BAKERY_REPORT_STATUS_OPTIONS, targetText: report.status }),
@@ -34,11 +36,11 @@ export const BakeryReportsContainer = () => {
     navigate(`${PATH.BakeryReports}/${reportId}`);
   };
 
-  if (loading) {
+  if (isLoading) {
     return <div>로딩중..</div>; // 에러 화면 or 메세지 필요
   }
 
-  if (fetching) {
+  if (isFetching) {
     return <div>fetching...</div>;
   }
 
