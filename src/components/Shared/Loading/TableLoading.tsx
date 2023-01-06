@@ -9,7 +9,7 @@ export const TableLoading = () => {
   React.useEffect(() => {
     const dotInterval = setInterval(() => {
       setText(prev => prev + '.');
-    }, 400);
+    }, 600);
 
     return () => {
       clearInterval(dotInterval);

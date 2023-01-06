@@ -14,5 +14,6 @@ export const Loading = ({
   if (isLoading && !havePrevData) {
     return <>{loadingComponent}</>;
   }
+
   return <>{children}</>;
 };

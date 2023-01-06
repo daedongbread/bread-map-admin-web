@@ -3,6 +3,7 @@ import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from '
 
 import { PersistLogin, RequireAuth } from '@/components/Auth';
 import { ControlInterceptor } from '@/components/Auth/ControlInterceptor';
+import { Error, Header } from '@/components/Shared';
 import { PATH } from '@/constants/routes';
 import { BakeriesContainer } from '@/containers/Bakeries';
 import { BakeryDetailContainer } from '@/containers/BakeryDetail';
@@ -24,9 +25,25 @@ export const router = createBrowserRouter(
           <Route path={`${PATH.Bakeries}/:bakeryId`} element={<BakeryDetailContainer />} />
           <Route path={PATH.BakeryReports} element={<BakeryReportsContainer />} />
           <Route path={`${PATH.BakeryReports}/:reportId`} element={<BakeryReportDetailContainer />} />
-          <Route path={PATH.Users} element={<div>Users page</div>} />
-          <Route path={PATH.UserReports} element={<div>User reports page</div>} />
-          <Route path={`${PATH.UserReports}/:reportId`} element={<div>User report detail page</div>} />
+          <Route
+            path={PATH.Users}
+            element={
+              <>
+                <Header name={'사용자 관리'} />
+                <Error errMsg={'사용자관리 페이지는 준비중이에요'} explanation={'빠른 시일 내에 돌아올게요!'} />
+              </>
+            }
+          />
+          <Route
+            path={PATH.UserReports}
+            element={
+              <>
+                <Header name={'신고목록'} />
+                <Error errMsg={'신고목록 페이지는 준비중이에요'} explanation={'빠른 시일 내에 돌아올게요!'} />
+              </>
+            }
+          />
+          <Route path={`${PATH.UserReports}/:reportId`} element={<Error errMsg={'신고관리 페이지는 준비중이에요'} />} />
         </Route>
       </Route>
 

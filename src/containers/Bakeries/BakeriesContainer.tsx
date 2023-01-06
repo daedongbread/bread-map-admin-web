@@ -1,11 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
-import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
-import { Loading, TableLoading } from '@/components/Shared/Loading';
+import { Button, SearchBar, Pagination, CompleteStatus as Status, Loading, TableLoading } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
 import { useAuth } from '@/hooks/auth';
 import usePagination from '@/hooks/usePagination';
