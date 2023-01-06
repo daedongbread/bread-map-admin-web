@@ -5,6 +5,7 @@ import { Column } from 'react-table';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
+import { Loading, TableLoading } from '@/components/Shared/Loading';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
 import { useAuth } from '@/hooks/auth';
 import usePagination from '@/hooks/usePagination';
@@ -22,8 +23,8 @@ export const BakeriesContainer = () => {
   });
 
   const { bakeriesQuery, searchBakeriesQuery } = useBakeries();
-  const { data } = bakeriesQuery({ name: word, page: currPage });
-  const { data: searchData } = searchBakeriesQuery({ name: word, page: currPage });
+  const { data, isLoading, isFetching } = bakeriesQuery({ name: word, page: currPage });
+  const { data: searchData, isLoading: isLoadingSearch, isFetching: isFetchingSearch } = searchBakeriesQuery({ name: word, page: currPage });
 
   const bakeriesRow = data?.bakeries.map(bakery => ({
     ...bakery,
@@ -72,6 +73,9 @@ export const BakeriesContainer = () => {
     setWord(searchText);
   };
 
+  const havePrevData = !!searchBakeriesRow?.length || !!bakeriesRow?.length;
+  const loading = isLoading || isLoadingSearch || isFetching || isFetchingSearch;
+
   return (
     <Container>
       <TopContainer>
@@ -80,16 +84,16 @@ export const BakeriesContainer = () => {
         </SearchBarWrapper>
         <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
       </TopContainer>
-
-      <BakeriesTable
-        route={PATH.Bakeries}
-        columns={bakeryColumns}
-        data={(searchBakeriesRow && searchBakeriesRow) || (bakeriesRow && bakeriesRow) || []}
-        rowClickFn={onClickBakeryItem}
-      />
-
+      <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
+        <BakeriesTable
+          route={PATH.Bakeries}
+          columns={bakeryColumns}
+          data={(searchBakeriesRow && searchBakeriesRow) || (bakeriesRow && bakeriesRow) || []}
+          rowClickFn={onClickBakeryItem}
+        />
+      </Loading>
       <Pagination
-        totalCount={totalItemCount}
+        totalCount={totalItemCount || 200}
         perCount={PER_COUNT}
         currPage={currPage}
         leftPosition={leftPosition}
