@@ -69,11 +69,21 @@ export const Input = ({
   const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
 
-  const onChangeTextareaAndResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChangeInput && onChangeInput(e);
-    const lineCnt = e.target.value.split('\n').length;
+  const resizeTextarea = (value: string) => {
+    const lineCnt = value.split('\n').length;
     setRowCnt(lineCnt);
   };
+
+  const onChangeTextareaAndResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChangeInput && onChangeInput(e);
+    resizeTextarea(e.target.value);
+  };
+
+  React.useEffect(() => {
+    if (textarea) {
+      resizeTextarea(value);
+    }
+  }, []);
 
   if (textarea) {
     return (
