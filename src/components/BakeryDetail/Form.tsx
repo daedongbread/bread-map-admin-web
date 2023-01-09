@@ -1,11 +1,8 @@
 import React from 'react';
-
 import { BakeryDetailEntity } from '@/apis';
 import { Button } from '@/components/Shared';
-
 import { BakeryForm, BakeryFormChangeKey } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
-
 import { AddressForm } from './AddressForm';
 import { BakeryImgForm } from './BakeryImgForm';
 import { BasicForm } from './BasicForm';
@@ -64,7 +61,7 @@ export const Form = ({
           <BasicForm label={'삥집명'} form={form} onChangeForm={onChangeForm} name={'name'} />
           <BakeryImgForm label={'대표이미지'} previewImg={form.image} onChangeBakeryImg={onChangeBakeryImg} />
           <AddressForm label={'주소'} form={form} onChangeForm={onChangeForm} />
-          <BasicForm label={'시간'} form={form} onChangeForm={onChangeForm} name={'hours'} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
+          <BasicForm label={'시간'} textarea form={form} onChangeForm={onChangeForm} name={'hours'} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
           <LinkForm
             label={'홈페이지'}
             links={links}

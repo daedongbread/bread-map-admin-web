@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
-import { Button, SearchBar, Pagination, CompleteStatus as Status, Loading, TableLoading } from '@/components/Shared';
+import { Button, SearchBar, Pagination, CompleteStatus as Status, Loading, TableLoading, Header } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
 import { useAuth } from '@/hooks/auth';
 import usePagination from '@/hooks/usePagination';
@@ -75,33 +75,36 @@ export const BakeriesContainer = () => {
   const loading = isLoading || isLoadingSearch || isFetching || isFetchingSearch;
 
   return (
-    <Container>
-      <TopContainer>
-        <SearchBarWrapper>
-          <SearchBar placeholder={'빵집 이름으로 검색하기'} text={searchText} onChangeText={onChangeText} onSearch={onSearch} />
-        </SearchBarWrapper>
-        <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
-      </TopContainer>
-      <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
-        <BakeriesTable
-          route={PATH.Bakeries}
-          columns={bakeryColumns}
-          data={(searchBakeriesRow && searchBakeriesRow) || (bakeriesRow && bakeriesRow) || []}
-          rowClickFn={onClickBakeryItem}
+    <>
+      <Header name={'빵집관리'} />
+      <Container>
+        <TopContainer>
+          <SearchBarWrapper>
+            <SearchBar placeholder={'빵집 이름으로 검색하기'} text={searchText} onChangeText={onChangeText} onSearch={onSearch} />
+          </SearchBarWrapper>
+          <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
+        </TopContainer>
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
+          <BakeriesTable
+            route={PATH.Bakeries}
+            columns={bakeryColumns}
+            data={(searchBakeriesRow && searchBakeriesRow) || (bakeriesRow && bakeriesRow) || []}
+            rowClickFn={onClickBakeryItem}
+          />
+        </Loading>
+        <Pagination
+          totalCount={totalItemCount || 200}
+          perCount={PER_COUNT}
+          currPage={currPage}
+          leftPosition={leftPosition}
+          onClickPage={onClickPage}
+          onClickNext={onClickNext}
+          onClickPrev={onClickPrev}
+          onClickEnd={onClickEnd}
+          onClickStart={onClickStart}
         />
-      </Loading>
-      <Pagination
-        totalCount={totalItemCount || 200}
-        perCount={PER_COUNT}
-        currPage={currPage}
-        leftPosition={leftPosition}
-        onClickPage={onClickPage}
-        onClickNext={onClickNext}
-        onClickPrev={onClickPrev}
-        onClickEnd={onClickEnd}
-        onClickStart={onClickStart}
-      />
-    </Container>
+      </Container>
+    </>
   );
 };
 

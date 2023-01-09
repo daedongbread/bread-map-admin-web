@@ -5,6 +5,7 @@ import { Row, RowContents } from '@/styles';
 
 type Props = {
   label: string;
+  textarea?: boolean;
   placeholder?: string;
   name: BakeryFormChangeKey;
   form: { [key: string]: any };
@@ -13,7 +14,7 @@ type Props = {
 
 // type 입력받기. input or textarea
 // 시간에 대한 정보는 Textarea로 변경해야함
-export const BasicForm = ({ label, placeholder, name, form, onChangeForm }: Props) => {
+export const BasicForm = ({ label, textarea = false, placeholder, name, form, onChangeForm }: Props) => {
   return (
     <Row>
       <label>{label}</label>
@@ -21,6 +22,7 @@ export const BasicForm = ({ label, placeholder, name, form, onChangeForm }: Prop
         <Input
           type={'plain'}
           placeholder={placeholder || ''}
+          textarea={textarea}
           value={form && form[name]}
           onChangeInput={e => onChangeForm({ name, value: e.target.value as never })}
         />

@@ -64,22 +64,30 @@ export const Input = ({
   name,
   value,
 }: InputProps) => {
+  const [rowCnt, setRowCnt] = React.useState(1);
+
   const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
+
+  const onChangeTextareaAndResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChangeInput && onChangeInput(e);
+    const lineCnt = e.target.value.split('\n').length;
+    setRowCnt(lineCnt);
+  };
 
   if (textarea) {
     return (
       <CustomTextarea
-        disabled={disabled}
+        rows={rowCnt}
         name={name}
         value={value}
-        onChange={onChangeInput}
+        disabled={disabled}
+        onChange={onChangeTextareaAndResize}
         borderColor={matchedStyle[1].borderColor}
         fontColor={matchedStyle[1].fontColor}
         bgColor={matchedStyle[1].bgColor}
         placeholderColor={matchedStyle[1].placeholderColor}
         padding={padding}
-        placeholder={placeholder || ''}
       />
     );
   } else {
@@ -119,7 +127,8 @@ const CustomInput = styled.input<InputStyles & { padding?: PaddingType }>`
 `;
 
 const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
-  padding: ${({ padding }) => (padding === 'small' ? '1rem 1.4rem' : '1.8rem 2.3rem')};
+  resize: none;
+  padding: ${({ padding }) => (padding === 'small' ? '1rem 1.4rem' : '1.1rem 2.3rem')};
   border-radius: ${({ padding }) => (padding === 'small' ? '10px' : '16px')};
   width: 100%;
   min-height: 3.7rem;
@@ -128,6 +137,9 @@ const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
   background-color: ${({ bgColor }) => bgColor};
   color: ${({ fontColor }) => fontColor};
   font-size: ${({ padding }) => (padding === 'small' ? '1.3rem' : '1.5rem')};
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   ::placeholder {
     font-size: ${({ padding }) => (padding === 'small' ? '1.3rem' : '1.5rem')};
