@@ -51,7 +51,7 @@ export type InputProps = {
   name?: string;
   value: string;
 };
-// textbox로 수정. textarea도 가능하게..
+// TODO: 컴포넌트명을 Textbox로 바꾸거나, textarea를 분리
 export const Input = ({
   textType,
   type,
@@ -64,35 +64,40 @@ export const Input = ({
   name,
   value,
 }: InputProps) => {
-  const [rowCnt, setRowCnt] = React.useState(1);
+  const [textareaRowCnt, setTextareaRowCnt] = React.useState(1);
+  const textareaPrevLineCnt = React.useRef(1);
 
   const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
 
-  const resizeTextarea = (value: string) => {
-    const lineCnt = value.split('\n').length;
-    setRowCnt(lineCnt);
-  };
-
-  const onChangeTextareaAndResize = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChangeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChangeInput && onChangeInput(e);
-    resizeTextarea(e.target.value);
   };
 
-  React.useEffect(() => {
-    if (textarea) {
-      resizeTextarea(value);
+  const resizeTextarea = (value: string) => {
+    let lineCnt = 1;
+    if (value.length > 0 && value.includes('\n')) {
+      lineCnt = value.split('\n').length;
+      if (lineCnt === textareaPrevLineCnt.current) {
+        return;
+      }
+      textareaPrevLineCnt.current = lineCnt;
     }
-  }, []);
+    setTextareaRowCnt(lineCnt);
+  };
+
+  React.useLayoutEffect(() => {
+    resizeTextarea(value);
+  }, [value]);
 
   if (textarea) {
     return (
       <CustomTextarea
-        rows={rowCnt}
+        rows={textareaRowCnt}
         name={name}
         value={value}
         disabled={disabled}
-        onChange={onChangeTextareaAndResize}
+        onChange={onChangeTextarea}
         borderColor={matchedStyle[1].borderColor}
         fontColor={matchedStyle[1].fontColor}
         bgColor={matchedStyle[1].bgColor}
