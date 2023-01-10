@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
@@ -46,7 +46,7 @@ type ButtonProps = {
   onClickBtn?: () => void;
 };
 
-export const Button = ({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
+export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
   const onClickCustomBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -65,7 +65,7 @@ export const Button = ({ type, text, btnSize, fontSize = 'small', icon, onClickB
       {text}
     </CustomBtn>
   );
-};
+});
 
 // 기본 스타일을 확장해서 만들 수 있는지 확인 필요
 const CustomBtn = styled.button<BtnStyles & { btnSize?: Size; fontSize?: Size }>`

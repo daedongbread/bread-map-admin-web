@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useBakery } from '@/apis/bakery/useBakery';
@@ -155,9 +155,9 @@ export const BakeryDetailContainer = () => {
     bakeryId ? onUpdateForm(payload) : onCreateForm(payload);
   };
 
-  const onChangeForm = (payload: { name: BakeryFormChangeKey; value: never }) => {
+  const onChangeForm = useCallback((payload: { name: BakeryFormChangeKey; value: never }) => {
     dispatch(changeForm(payload));
-  };
+  }, []);
 
   const onSelectBakerysSatusOption = (status: SelectOption | null) => {
     if (!status) {
@@ -173,29 +173,29 @@ export const BakeryDetailContainer = () => {
     dispatch(changeBakeryImg({ imgPreview }));
   };
 
-  const onToggleLinkOption = (currIdx: number) => {
+  const onToggleLinkOption = useCallback((currIdx: number) => {
     dispatch(toggleLinkOption({ currIdx }));
-  };
+  }, []);
 
-  const onSelectLinkOption = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+  const onSelectLinkOption = useCallback((payload: { currIdx: number; optionValue: string; linkValue: string }) => {
     dispatch(selectLinkOption(payload));
-  };
+  }, []);
 
-  const onChangeLinkValue = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+  const onChangeLinkValue = useCallback((payload: { currIdx: number; optionValue: string; linkValue: string }) => {
     dispatch(changeLinkValue(payload));
-  };
+  }, []);
 
-  const onSetLinks = (links: Link[]) => {
+  const onSetLinks = useCallback((links: Link[]) => {
     dispatch(setLinks({ links }));
-  };
+  }, []);
 
-  const onRemoveLink = (currIdx: number) => {
+  const onRemoveLink = useCallback((currIdx: number) => {
     dispatch(removeLink({ currIdx }));
-  };
+  }, []);
 
-  const onAddLink = () => {
+  const onAddLink = useCallback(() => {
     dispatch(addLink());
-  };
+  }, []);
 
   const onToggleMenuTypeOption = (currIdx: number) => {
     dispatch(toggleMenuTypeOption({ currIdx }));
@@ -246,9 +246,9 @@ export const BakeryDetailContainer = () => {
     );
   };
 
-  const onClickBack = () => {
+  const onClickBack = useCallback(() => {
     navigate(PATH.Bakeries);
-  };
+  }, []);
 
   return (
     <Container>

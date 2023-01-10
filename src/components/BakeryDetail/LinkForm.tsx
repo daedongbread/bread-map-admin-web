@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button } from '@/components/Shared';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
@@ -26,48 +26,40 @@ type Props = {
   onAddLink: () => void;
 };
 
-export const LinkForm = ({
-  label,
-  links,
-  openedLinkIdx,
-  onToggleLinkOption,
-  onSelectLinkOption,
-  onChangeLinkValue,
-  onSetLinks,
-  onRemoveLink,
-  onAddLink,
-}: Props) => {
-  return (
-    <Row>
-      <Row alignTop>
-        <label>{label}</label>
-        <CustomRowContents>
-          <>
-            {links.map((link, idx) => (
-              <CustomRow key={`link-${idx}`}>
-                <LinkItem
-                  idx={idx}
-                  link={link}
-                  opened={openedLinkIdx === idx}
-                  options={options}
-                  onToggleLinkOption={onToggleLinkOption}
-                  onSelectLinkOption={onSelectLinkOption}
-                  onChangeLinkValue={onChangeLinkValue}
-                  onRemoveLink={onRemoveLink}
-                />
-              </CustomRow>
-            ))}
-          </>
-          <Row>
-            <BtnWrapper>
-              <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} onClickBtn={onAddLink} />
-            </BtnWrapper>
-          </Row>
-        </CustomRowContents>
+export const LinkForm = memo(
+  ({ label, links, openedLinkIdx, onToggleLinkOption, onSelectLinkOption, onChangeLinkValue, onSetLinks, onRemoveLink, onAddLink }: Props) => {
+    return (
+      <Row>
+        <Row alignTop>
+          <label>{label}</label>
+          <CustomRowContents>
+            <>
+              {links.map((link, idx) => (
+                <CustomRow key={`link-${idx}`}>
+                  <LinkItem
+                    idx={idx}
+                    link={link}
+                    opened={openedLinkIdx === idx}
+                    options={options}
+                    onToggleLinkOption={onToggleLinkOption}
+                    onSelectLinkOption={onSelectLinkOption}
+                    onChangeLinkValue={onChangeLinkValue}
+                    onRemoveLink={onRemoveLink}
+                  />
+                </CustomRow>
+              ))}
+            </>
+            <Row>
+              <BtnWrapper>
+                <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} onClickBtn={onAddLink} />
+              </BtnWrapper>
+            </Row>
+          </CustomRowContents>
+        </Row>
       </Row>
-    </Row>
-  );
-};
+    );
+  }
+);
 
 const options: Option[] = [
   { name: '웹사이트', value: 'websiteURL' },

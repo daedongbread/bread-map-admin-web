@@ -8,22 +8,23 @@ type Props = {
   textarea?: boolean;
   placeholder?: string;
   name: BakeryFormChangeKey;
-  form: { [key: string]: any };
+  value: string;
   onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
 };
 
 // type 입력받기. input or textarea
 // 시간에 대한 정보는 Textarea로 변경해야함
-export const BasicForm = ({ label, textarea = false, placeholder, name, form, onChangeForm }: Props) => {
+export const BasicForm = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {
   return (
     <Row>
       <label>{label}</label>
       <RowContents>
         <Input
+          name={name}
           type={'plain'}
           placeholder={placeholder || ''}
           textarea={textarea}
-          value={form && form[name]}
+          value={value}
           onChangeInput={e => onChangeForm({ name, value: e.target.value as never })}
         />
       </RowContents>
