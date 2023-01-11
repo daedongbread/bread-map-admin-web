@@ -58,7 +58,7 @@ export const Form = ({
     <>
       <Forms>
         <div>
-          <BasicForm label={'삥집명'} name={'name'} value={form.name} onChangeForm={onChangeForm} />
+          <BasicForm label={'빵집명'} name={'name'} value={form.name} onChangeForm={onChangeForm} />
           <BakeryImgForm label={'대표이미지'} previewImg={form.image} onChangeBakeryImg={onChangeBakeryImg} />
           <AddressForm label={'주소'} form={form} onChangeForm={onChangeForm} />
           <BasicForm

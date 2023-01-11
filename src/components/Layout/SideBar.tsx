@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-
 import { useLogin } from '@/apis';
 import { MenuCountEntity } from '@/apis/menu/types';
-import { Frown, Pencil, Server, Users, User, Logout } from '@/components/Shared/Icons';
+import { Frown, Pencil, Server, Users, Logout } from '@/components/Shared/Icons';
 import { PATH, Path } from '@/constants';
 import styled from '@emotion/styled';
 import { MenuItem } from './MenuItem';
@@ -15,11 +14,11 @@ export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
 
   const isCurrent = (path: Path) => {
     const url = location.pathname;
-    const detailRegex = /(\/.*)(?:\/)\w/;
-    const regex = /(\/.*)/;
-    const matched = url.match(detailRegex) || url.match(regex);
+    const midMatchRegex = /(\/[a-zA-Z-]+)(?:\/)?/;
+    const currUrlMid = url.match(midMatchRegex);
+    const pathMid = path.match(midMatchRegex);
 
-    return path === matched?.[1];
+    return pathMid?.[1] === currUrlMid?.[1];
   };
 
   const onLogout = () => {
@@ -42,7 +41,7 @@ export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
     switch (path) {
       case PATH.BakeryReports:
         return menuCount?.bakeryReportCount || 0;
-      case PATH.Bakeries:
+      case `${PATH.Bakeries}/all`:
         return menuCount?.bakeryCount || 0;
       case PATH.UserReports:
         return menuCount?.reviewReportCount || 0;
@@ -81,7 +80,7 @@ const MENUS = [
   },
   {
     name: '빵집관리',
-    path: PATH.Bakeries,
+    path: `${PATH.Bakeries}/all`,
     icon: <Server />,
     noti: 141,
   },

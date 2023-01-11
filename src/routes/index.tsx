@@ -1,6 +1,5 @@
 import React from 'react';
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from 'react-router-dom';
-
 import { PersistLogin, RequireAuth } from '@/components/Auth';
 import { ControlInterceptor } from '@/components/Auth/ControlInterceptor';
 import { Error, Header } from '@/components/Shared';
@@ -20,7 +19,8 @@ export const router = createBrowserRouter(
 
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
-          <Route path={PATH.Bakeries} element={<BakeriesContainer />} />
+          <Route path={`${PATH.Bakeries}/all`} element={<BakeriesContainer />} />
+          <Route path={`${PATH.Bakeries}/search`} element={<BakeriesContainer />} />
           <Route path={`${PATH.Bakeries}/new`} element={<BakeryDetailContainer />} />
           <Route path={`${PATH.Bakeries}/:bakeryId`} element={<BakeryDetailContainer />} />
           <Route path={PATH.BakeryReports} element={<BakeryReportsContainer />} />

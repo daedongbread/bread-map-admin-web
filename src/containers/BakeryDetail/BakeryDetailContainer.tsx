@@ -229,7 +229,7 @@ export const BakeryDetailContainer = () => {
       { payload },
       {
         onSuccess: () => {
-          navigate(PATH.Bakeries); // TODO: 완료됨 UI 필요
+          navigate(-1); // TODO: 완료됨 UI 필요
         },
       }
     );
@@ -240,14 +240,14 @@ export const BakeryDetailContainer = () => {
       { bakeryId: Number(bakeryId), payload },
       {
         onSuccess: () => {
-          navigate(PATH.Bakeries); // TODO: 완료됨 UI 필요
+          navigate(-1); // TODO: 완료됨 UI 필요
         },
       }
     );
   };
 
   const onClickBack = useCallback(() => {
-    navigate(PATH.Bakeries);
+    navigate(-1);
   }, []);
 
   return (

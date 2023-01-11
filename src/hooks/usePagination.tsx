@@ -28,29 +28,29 @@ const usePagination = ({ totalCount, perCount }: { totalCount?: number; perCount
     setTotalItemCount(count);
   };
 
-  const onClickPage = (page: number) => {
+  const onSetPage = (page: number) => {
     setCurrPage(page);
   };
 
-  const onClickNext = () => {
+  const onSetNext = () => {
     if (leftPosition === lastIndexLeft) return;
     const updatedLeft = leftPosition + (LI_MARGIN + LI_WIDTH) * PAGING_COUNT;
     setLeftPosition(updatedLeft);
   };
 
-  const onClickPrev = () => {
+  const onSetPrev = () => {
     if (leftPosition === 0) return;
     const updatedLeft = leftPosition - (LI_MARGIN + LI_WIDTH) * PAGING_COUNT;
     setLeftPosition(updatedLeft);
   };
 
-  const onClickEnd = () => {
+  const onSetEnd = () => {
     if (leftPosition === lastIndexLeft) return;
     const updatedLeft = lastIndexLeft;
     setLeftPosition(updatedLeft);
   };
 
-  const onClickStart = useCallback(() => {
+  const onSetStart = useCallback(() => {
     const updatedLeft = 0;
     setLeftPosition(updatedLeft);
   }, []);
@@ -60,11 +60,11 @@ const usePagination = ({ totalCount, perCount }: { totalCount?: number; perCount
     totalItemCount,
     leftPosition,
     onChangeTotalCount,
-    onClickPage,
-    onClickNext,
-    onClickPrev,
-    onClickEnd,
-    onClickStart,
+    onSetPage,
+    onSetNext,
+    onSetPrev,
+    onSetEnd,
+    onSetStart,
   };
 };
 

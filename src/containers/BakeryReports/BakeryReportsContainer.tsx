@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-
 import { useBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
 import { Pagination, CompleteStatus as Status, Loading, TableLoading, Header } from '@/components/Shared';
@@ -12,7 +11,7 @@ import styled from '@emotion/styled';
 
 export const BakeryReportsContainer = () => {
   const navigate = useNavigate();
-  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination({
+  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination({
     perCount: PER_COUNT,
   });
 
@@ -54,11 +53,11 @@ export const BakeryReportsContainer = () => {
           perCount={PER_COUNT}
           currPage={currPage}
           leftPosition={leftPosition}
-          onClickPage={onClickPage}
-          onClickNext={onClickNext}
-          onClickPrev={onClickPrev}
-          onClickEnd={onClickEnd}
-          onClickStart={onClickStart}
+          onClickPage={onSetPage}
+          onClickNext={onSetNext}
+          onClickPrev={onSetPrev}
+          onClickEnd={onSetEnd}
+          onClickStart={onSetStart}
         />
       </Container>
     </>
