@@ -19,6 +19,7 @@ export const router = createBrowserRouter(
 
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
+          <Route path={`${PATH.Bakeries}`} element={<Navigate to={`${PATH.Bakeries}/all`} />} />
           <Route path={`${PATH.Bakeries}/all`} element={<BakeriesContainer />} />
           <Route path={`${PATH.Bakeries}/search`} element={<BakeriesContainer />} />
           <Route path={`${PATH.Bakeries}/new`} element={<BakeryDetailContainer />} />

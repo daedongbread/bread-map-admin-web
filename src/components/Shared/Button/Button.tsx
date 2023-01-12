@@ -47,12 +47,8 @@ type ButtonProps = {
 };
 
 export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
-  const onClickCustomBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    if (onClickBtn) {
-      onClickBtn();
-    }
+  const onClickCustomBtn = () => {
+    onClickBtn && onClickBtn();
   };
 
   const matchedStyle = Object.entries(buttons).find(([key]) => key === type);
@@ -60,7 +56,7 @@ export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, onC
   if (!matchedStyle) return <button />;
 
   return (
-    <CustomBtn btnSize={btnSize} fontSize={fontSize} {...matchedStyle[1]} onClick={onClickCustomBtn}>
+    <CustomBtn type="button" btnSize={btnSize} fontSize={fontSize} {...matchedStyle[1]} onClick={onClickCustomBtn}>
       {icon}
       {text}
     </CustomBtn>
