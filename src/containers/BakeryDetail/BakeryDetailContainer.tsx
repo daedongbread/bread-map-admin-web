@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
 import { useBakery } from '@/apis/bakery/useBakery';
 import { Form } from '@/components/BakeryDetail';
 import { Link } from '@/components/BakeryDetail/LinkForm';
@@ -28,10 +27,8 @@ import {
   toggleMenuTypeOption,
   selectMenuTypeOption,
 } from '@/store/slices/bakery';
-import { urlToBlob } from '@/utils';
+import { makeBakeryPayload } from '@/utils';
 import styled from '@emotion/styled';
-
-const emptyFile = new Blob([''], { type: 'image/png' });
 
 export const BakeryDetailContainer = () => {
   const { bakeryId } = useParams();
@@ -77,81 +74,7 @@ export const BakeryDetailContainer = () => {
     if (!window.confirm('저장하시겠습니까?')) {
       return;
     }
-
-    const formData = new FormData();
-
-    // link에 대한 순회
-    const linkPayload: { [key: string]: string } = {};
-    formLinks.forEach(link => {
-      linkPayload[link.key] = link.value;
-    });
-
-    // make request data
-    const copiedForm = { ...form };
-    const { image, productList, ...requestData } = copiedForm;
-    const productListExceptImage = productList.map(item => {
-      const { image, ...rest } = item;
-      return { ...rest };
-    });
-    const request = new Blob([JSON.stringify({ ...requestData, productList: productListExceptImage, ...linkPayload })], { type: 'application/json' });
-    formData.append('request', request);
-
-    // make productList (image) data
-    //이미지들은 원본데이터(original)와 달라졌을 경우만 아래로직들 실행하기.
-    //메뉴들의 순서가 바뀔수있으므로, 순회해서 target을 찾는다.
-    //빵 메뉴 이미지 순회,
-    // 빵메뉴가 없으면 append X, 빵메뉴가 없을때 productImageList = [] 로 보내면 에러가 난다.
-
-    if (form.productList.length) {
-      if (bakery) {
-        // 수정시
-        // console.log('origin', origin);
-        for (const bread of form.productList) {
-          let file: File | Blob | string = '';
-          const target = bakery.productList.find(item => item.productId === bread.productId);
-          if (target) {
-            if (bread.image === target.image) {
-              file = target.image ? target.image : emptyFile;
-            } else {
-              file = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyFile;
-            }
-          } else {
-            file = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyFile;
-          }
-          formData.append('productImageList', file);
-        }
-      } else {
-        // 생성시
-        for (const bread of form.productList) {
-          const emptyBlob = new Blob([''], { type: 'image/png' });
-          const blob: Blob = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyBlob;
-          formData.append('productImageList', blob);
-        }
-      }
-    }
-    // make bakeryImage data
-    // 빵집 이미지없으면 append X
-    if (form.image) {
-      let file: Blob | string = '';
-      if (bakery) {
-        if (form.image === bakery.image) {
-          // 기존 이미지를 바꾸지않았다면 그냥 string을 넣는다. 테스트 필요
-          file = bakery.image;
-        } else {
-          file = await urlToBlob(form.image, form.name);
-        }
-      } else {
-        file = await urlToBlob(form.image, form.name);
-      }
-
-      formData.append('bakeryImage', file);
-    }
-
-    const payload = await formData;
-    for (const [key, value] of payload) {
-      console.log(`${key}: ${value}`);
-    }
-
+    const payload = await makeBakeryPayload({ origin: bakery, form, formLinks });
     bakeryId ? onUpdateForm(payload) : onCreateForm(payload);
   };
 

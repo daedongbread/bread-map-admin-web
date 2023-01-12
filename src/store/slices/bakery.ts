@@ -6,15 +6,17 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 // 타입지정시 reducer type error..
 export type BakeryForm = BakeryDetailBaseEntity & {
-  productList: {
-    productId?: number;
-    productType: string;
-    productName: string;
-    price: number;
-    image: string | null;
-  }[];
+  productList: ProductItem[];
   status: BakeryStatus | null;
   facilityInfoList: string[];
+};
+
+export type ProductItem = {
+  productId?: number;
+  productType: string;
+  productName: string;
+  price: number;
+  image: string | null;
 };
 
 const initialProductItem = {
