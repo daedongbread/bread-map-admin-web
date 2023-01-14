@@ -1,0 +1,19 @@
+version: 0.2
+
+batch:
+  build-list:
+    - identifier: bread-map-admin
+      env:
+        variables:
+          S3_BUCKET_NAME: bread-map-admin
+          DISTRIBUTION_ID: E35G8Y3BUEP3M8
+          SERVICE_DIR: services/bread-map-admin
+      ignore-failure: false
+
+phases:
+  build:
+    commands:
+      - SERVICE_PATH=$CODEBUILD_SRC_DIR/${SERVICE_DIR}
+      - printf 'VITE_API_URI=%s\n' ${VITE_API_URI} >> .env.dev
+      - chmod +x ./pre-build.sh
+      - ./pre-build.sh "$SERVICE_PATH" "$CODEBUILD_WEBHOOK_PREV_COMMIT" "$CODEBUILD_RESOLVED_SOURCE_VERSION" "$ENV" "$S3_BUCKET_NAME" "$DISTRIBUTION_ID" "$CODEBUILD_BUILD_URL"
