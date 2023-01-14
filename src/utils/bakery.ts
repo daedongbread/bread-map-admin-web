@@ -10,10 +10,6 @@ const getUpdateBreadImgFile = async ({ formBread, originBread }: { formBread: Pr
 };
 
 const makeBakeryPayload = async ({ origin, form, formLinks }: { origin?: BakeryDetailEntity; form: BakeryForm; formLinks: Link[] }) => {
-  if (!origin) {
-    throw new Error('빵집 데이터가 없습니다.');
-  }
-
   const formData = new FormData();
 
   const linkPayload: { [key: string]: string } = {};
