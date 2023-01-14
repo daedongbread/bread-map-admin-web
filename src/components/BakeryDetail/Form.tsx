@@ -1,11 +1,8 @@
 import React from 'react';
-
 import { BakeryDetailEntity } from '@/apis';
 import { Button } from '@/components/Shared';
-
 import { BakeryForm, BakeryFormChangeKey } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
-
 import { AddressForm } from './AddressForm';
 import { BakeryImgForm } from './BakeryImgForm';
 import { BasicForm } from './BasicForm';
@@ -61,10 +58,17 @@ export const Form = ({
     <>
       <Forms>
         <div>
-          <BasicForm label={'삥집명'} form={form} onChangeForm={onChangeForm} name={'name'} />
+          <BasicForm label={'빵집명'} name={'name'} value={form.name} onChangeForm={onChangeForm} />
           <BakeryImgForm label={'대표이미지'} previewImg={form.image} onChangeBakeryImg={onChangeBakeryImg} />
           <AddressForm label={'주소'} form={form} onChangeForm={onChangeForm} />
-          <BasicForm label={'시간'} form={form} onChangeForm={onChangeForm} name={'hours'} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
+          <BasicForm
+            textarea
+            label={'시간'}
+            name={'hours'}
+            value={form.hours || ''}
+            onChangeForm={onChangeForm}
+            placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'}
+          />
           <LinkForm
             label={'홈페이지'}
             links={links}
@@ -76,7 +80,7 @@ export const Form = ({
             onRemoveLink={onRemoveLink}
             onAddLink={onAddLink}
           />
-          <BasicForm label={'전화번호'} form={form} onChangeForm={onChangeForm} name={'phoneNumber'} placeholder={'000-000-0000'} />
+          <BasicForm label={'전화번호'} name={'phoneNumber'} value={form.phoneNumber || ''} onChangeForm={onChangeForm} placeholder={'000-000-0000'} />
           <MenuForm
             label={'메뉴'}
             form={form}

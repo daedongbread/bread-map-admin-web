@@ -51,7 +51,7 @@ export type InputProps = {
   name?: string;
   value: string;
 };
-// textbox로 수정. textarea도 가능하게..
+// TODO: 컴포넌트명을 Textbox로 바꾸거나, textarea를 분리
 export const Input = ({
   textType,
   type,
@@ -64,22 +64,45 @@ export const Input = ({
   name,
   value,
 }: InputProps) => {
+  const [textareaRowCnt, setTextareaRowCnt] = React.useState(1);
+  const textareaPrevLineCnt = React.useRef(1);
+
   const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
+
+  const onChangeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChangeInput && onChangeInput(e);
+  };
+
+  const resizeTextarea = (value: string) => {
+    let lineCnt = 1;
+    if (value.length > 0 && value.includes('\n')) {
+      lineCnt = value.split('\n').length;
+      if (lineCnt === textareaPrevLineCnt.current) {
+        return;
+      }
+      textareaPrevLineCnt.current = lineCnt;
+    }
+    setTextareaRowCnt(lineCnt);
+  };
+
+  React.useLayoutEffect(() => {
+    resizeTextarea(value);
+  }, [value]);
 
   if (textarea) {
     return (
       <CustomTextarea
-        disabled={disabled}
+        rows={textareaRowCnt}
         name={name}
         value={value}
-        onChange={onChangeInput}
+        disabled={disabled}
+        onChange={onChangeTextarea}
         borderColor={matchedStyle[1].borderColor}
         fontColor={matchedStyle[1].fontColor}
         bgColor={matchedStyle[1].bgColor}
         placeholderColor={matchedStyle[1].placeholderColor}
         padding={padding}
-        placeholder={placeholder || ''}
       />
     );
   } else {
@@ -119,7 +142,8 @@ const CustomInput = styled.input<InputStyles & { padding?: PaddingType }>`
 `;
 
 const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
-  padding: ${({ padding }) => (padding === 'small' ? '1rem 1.4rem' : '1.8rem 2.3rem')};
+  resize: none;
+  padding: ${({ padding }) => (padding === 'small' ? '1rem 1.4rem' : '1.1rem 2.3rem')};
   border-radius: ${({ padding }) => (padding === 'small' ? '10px' : '16px')};
   width: 100%;
   min-height: 3.7rem;
@@ -128,6 +152,9 @@ const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
   background-color: ${({ bgColor }) => bgColor};
   color: ${({ fontColor }) => fontColor};
   font-size: ${({ padding }) => (padding === 'small' ? '1.3rem' : '1.5rem')};
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
   ::placeholder {
     font-size: ${({ padding }) => (padding === 'small' ? '1.3rem' : '1.5rem')};

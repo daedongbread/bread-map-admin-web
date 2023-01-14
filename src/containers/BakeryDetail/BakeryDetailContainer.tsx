@@ -1,13 +1,10 @@
-import React from 'react';
-import { useQueryClient } from 'react-query';
+import React, { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import { useCreateBakery, useGetBakery, useUpdateBakery } from '@/apis/bakery/useBakery';
+import { useBakery } from '@/apis/bakery/useBakery';
 import { Form } from '@/components/BakeryDetail';
 import { Link } from '@/components/BakeryDetail/LinkForm';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
-
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -30,31 +27,23 @@ import {
   toggleMenuTypeOption,
   selectMenuTypeOption,
 } from '@/store/slices/bakery';
-
-import { color } from '@/styles';
-import { urlToBlob } from '@/utils';
+import { makeBakeryPayload } from '@/utils';
 import styled from '@emotion/styled';
-
-const emptyFile = new Blob([''], { type: 'image/png' });
 
 export const BakeryDetailContainer = () => {
   const { bakeryId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const queryClient = useQueryClient();
+
+  const {
+    bakeryQuery: { data: bakery },
+    addBakery,
+    editBakery,
+  } = useBakery({ bakeryId: Number(bakeryId) });
 
   // opened state를 리덕스에 저장하면 안될거같은데..?
   const { form, formLinks, openedLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
-
-  const { bakery, loading } = useGetBakery({ bakeryId: Number(bakeryId) });
-  const { mutate: createBakery } = useCreateBakery();
-  const { mutate: updateBakery } = useUpdateBakery({
-    successFn: async () => {
-      await Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
-      await navigate(PATH.Bakeries);
-    },
-  });
 
   React.useEffect(() => {
     if (bakery) {
@@ -85,88 +74,13 @@ export const BakeryDetailContainer = () => {
     if (!window.confirm('저장하시겠습니까?')) {
       return;
     }
-
-    const formData = new FormData();
-
-    // link에 대한 순회
-    const linkPayload: { [key: string]: string } = {};
-    formLinks.forEach(link => {
-      linkPayload[link.key] = link.value;
-    });
-
-    // make request data
-    const copiedForm = { ...form };
-    const { image, productList, ...requestData } = copiedForm;
-    const productListExceptImage = productList.map(item => {
-      const { image, ...rest } = item;
-      return { ...rest };
-    });
-    const request = new Blob([JSON.stringify({ ...requestData, productList: productListExceptImage, ...linkPayload })], { type: 'application/json' });
-    formData.append('request', request);
-
-    // make productList (image) data
-    //이미지들은 원본데이터(original)와 달라졌을 경우만 아래로직들 실행하기.
-    //메뉴들의 순서가 바뀔수있으므로, 순회해서 target을 찾는다.
-    //빵 메뉴 이미지 순회,
-    // 빵메뉴가 없으면 append X, 빵메뉴가 없을때 productImageList = [] 로 보내면 에러가 난다.
-
-    if (form.productList.length) {
-      if (bakery) {
-        // 수정시
-        // console.log('origin', origin);
-        for (const bread of form.productList) {
-          let file: File | Blob | string = '';
-          const target = bakery.productList.find(item => item.productId === bread.productId);
-          if (target) {
-            if (bread.image === target.image) {
-              file = target.image ? target.image : emptyFile;
-            } else {
-              file = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyFile;
-            }
-          } else {
-            file = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyFile;
-          }
-          formData.append('productImageList', file);
-        }
-      } else {
-        // 생성시
-        for (const bread of form.productList) {
-          const emptyBlob = new Blob([''], { type: 'image/png' });
-          const blob: Blob = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyBlob;
-          formData.append('productImageList', blob);
-        }
-      }
-    }
-    // make bakeryImage data
-    // 빵집 이미지없으면 append X
-    if (form.image) {
-      let file: Blob | string = '';
-      if (bakery) {
-        if (form.image === bakery.image) {
-          // 기존 이미지를 바꾸지않았다면 그냥 string을 넣는다. 테스트 필요
-          file = bakery.image;
-        } else {
-          file = await urlToBlob(form.image, form.name);
-        }
-      } else {
-        file = await urlToBlob(form.image, form.name);
-      }
-
-      formData.append('bakeryImage', file);
-    }
-
-    const payload = await formData;
-    for (const [key, value] of payload) {
-      console.log(`${key}: ${value}`);
-    }
-
+    const payload = await makeBakeryPayload({ origin: bakery, form, formLinks });
     bakeryId ? onUpdateForm(payload) : onCreateForm(payload);
-    // TODO: optimistic update
   };
 
-  const onChangeForm = (payload: { name: BakeryFormChangeKey; value: never }) => {
+  const onChangeForm = useCallback((payload: { name: BakeryFormChangeKey; value: never }) => {
     dispatch(changeForm(payload));
-  };
+  }, []);
 
   const onSelectBakerysSatusOption = (status: SelectOption | null) => {
     if (!status) {
@@ -182,29 +96,29 @@ export const BakeryDetailContainer = () => {
     dispatch(changeBakeryImg({ imgPreview }));
   };
 
-  const onToggleLinkOption = (currIdx: number) => {
+  const onToggleLinkOption = useCallback((currIdx: number) => {
     dispatch(toggleLinkOption({ currIdx }));
-  };
+  }, []);
 
-  const onSelectLinkOption = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+  const onSelectLinkOption = useCallback((payload: { currIdx: number; optionValue: string; linkValue: string }) => {
     dispatch(selectLinkOption(payload));
-  };
+  }, []);
 
-  const onChangeLinkValue = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+  const onChangeLinkValue = useCallback((payload: { currIdx: number; optionValue: string; linkValue: string }) => {
     dispatch(changeLinkValue(payload));
-  };
+  }, []);
 
-  const onSetLinks = (links: Link[]) => {
+  const onSetLinks = useCallback((links: Link[]) => {
     dispatch(setLinks({ links }));
-  };
+  }, []);
 
-  const onRemoveLink = (currIdx: number) => {
+  const onRemoveLink = useCallback((currIdx: number) => {
     dispatch(removeLink({ currIdx }));
-  };
+  }, []);
 
-  const onAddLink = () => {
+  const onAddLink = useCallback(() => {
     dispatch(addLink());
-  };
+  }, []);
 
   const onToggleMenuTypeOption = (currIdx: number) => {
     dispatch(toggleMenuTypeOption({ currIdx }));
@@ -234,18 +148,30 @@ export const BakeryDetailContainer = () => {
   };
 
   const onCreateForm = (payload: FormData) => {
-    createBakery({ payload });
+    addBakery.mutate(
+      { payload },
+      {
+        onSuccess: () => {
+          navigate(-1); // TODO: 완료됨 UI 필요
+        },
+      }
+    );
   };
 
   const onUpdateForm = (payload: FormData) => {
-    if (bakeryId) {
-      updateBakery({ bakeryId: Number(bakeryId), payload });
-    }
+    editBakery.mutate(
+      { bakeryId: Number(bakeryId), payload },
+      {
+        onSuccess: () => {
+          navigate(-1); // TODO: 완료됨 UI 필요
+        },
+      }
+    );
   };
 
-  const onClickBack = () => {
-    navigate(PATH.Bakeries);
-  };
+  const onClickBack = useCallback(() => {
+    navigate(-1);
+  }, []);
 
   return (
     <Container>

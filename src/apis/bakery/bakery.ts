@@ -12,7 +12,7 @@ type GetBakeriesResponse = {
 };
 
 export type GetBakeriesPayload = {
-  name?: string;
+  name: string | null;
   page: number;
 };
 
@@ -20,7 +20,7 @@ export type CreateUpdateBakeryPayload = {
   payload: FormData;
 };
 
-const getBakeries = async ({ page }: GetBakeriesPayload) => {
+const getBakeries = async ({ page }: Omit<GetBakeriesPayload, 'name'>) => {
   const resp = await fetcher.get<GetBakeriesResponse>(`/bakery`, { params: { page } });
   return { bakeries: resp.data.contents, totalCount: resp.data.totalElements };
 };

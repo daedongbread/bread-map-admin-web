@@ -1,13 +1,11 @@
 import React from 'react';
-import { useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useGetBakeryReport, useUpdateBakeryReportStatus } from '@/apis';
+import { useBakeryReport } from '@/apis';
 import { Report } from '@/components/BakeryReportDetail';
-import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
+import { Button, SelectBox, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { Header } from '@/components/Shared/Header';
 import { BAKERY_REPORT_STATUS_OPTIONS, PATH } from '@/constants';
-
 import useSelectBox from '@/hooks/useSelectBox';
 import { extractContentsWithType } from '@/utils';
 import styled from '@emotion/styled';
@@ -15,19 +13,11 @@ import styled from '@emotion/styled';
 export const BakeryReportDetailContainer = () => {
   const { reportId } = useParams();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
-  const { bakeryReport, error } = useGetBakeryReport({ reportId: Number(reportId) });
-  const { mutate: updateBakeryReportStatus } = useUpdateBakeryReportStatus({
-    successFn: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries('bakeryReport'),
-        queryClient.invalidateQueries('bakeryReports'),
-        queryClient.invalidateQueries('menuCount'),
-      ]);
-      await navigate(PATH.BakeryReports);
-    },
-  });
+  const {
+    bakeryReportQuery: { data: bakeryReport },
+    editBakeryReportStatus,
+  } = useBakeryReport({ reportId: Number(reportId) });
 
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox();
 
@@ -57,7 +47,14 @@ export const BakeryReportDetailContainer = () => {
       return;
     }
 
-    updateBakeryReportStatus({ reportId: Number(reportId), status: selectedOption.value });
+    editBakeryReportStatus.mutate(
+      { reportId: Number(reportId), status: selectedOption.value },
+      {
+        onSuccess: () => {
+          navigate(PATH.BakeryReports);
+        },
+      }
+    );
   };
 
   return (

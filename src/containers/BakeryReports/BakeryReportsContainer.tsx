@@ -1,25 +1,24 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-import { useGetBakeryReports } from '@/apis';
+import { useBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
-import { Pagination, CompleteStatus as Status } from '@/components/Shared';
-
-import { Header } from '@/components/Shared/Header';
+import { Pagination, CompleteStatus as Status, Loading, TableLoading, Header } from '@/components/Shared';
 import { BAKERY_REPORT_STATUS_OPTIONS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
-
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeryReportsContainer = () => {
   const navigate = useNavigate();
-  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination({
+  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination({
     perCount: PER_COUNT,
   });
 
-  const { data, error, loading, fetching } = useGetBakeryReports({ page: currPage });
-  const bakeryReportsRow = data?.bakeryReports.map(report => ({
+  const { bakeryReportsQuery } = useBakeryReports();
+  const { data, isLoading, isFetching } = bakeryReportsQuery({ page: currPage });
+
+  const bakeryReportsRow = data?.bakeryReports?.map(report => ({
     ...report,
     status: formatTextToOptionObj({ constants: BAKERY_REPORT_STATUS_OPTIONS, targetText: report.status }),
   }));
@@ -34,33 +33,31 @@ export const BakeryReportsContainer = () => {
     navigate(`${PATH.BakeryReports}/${reportId}`);
   };
 
-  if (loading) {
-    return <div>로딩중..</div>; // 에러 화면 or 메세지 필요
-  }
-
-  if (fetching) {
-    return <div>fetching...</div>;
-  }
-
-  if (error || !bakeryReportsRow) {
-    return <div>error...</div>;
-  }
+  const havePrevData = !!bakeryReportsRow?.length;
+  const loading = isLoading || isFetching;
 
   return (
     <>
       <Header name={'제보관리'} />
       <Container>
-        <BakeryReportsTable route={PATH.BakeryReports} columns={bakeryReportsColumns} data={bakeryReportsRow} rowClickFn={onClickRequestItem} />
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
+          <BakeryReportsTable
+            route={PATH.BakeryReports}
+            columns={bakeryReportsColumns}
+            data={(bakeryReportsRow && bakeryReportsRow) || []}
+            rowClickFn={onClickRequestItem}
+          />
+        </Loading>
         <Pagination
-          totalCount={totalItemCount}
+          totalCount={totalItemCount || 200}
           perCount={PER_COUNT}
           currPage={currPage}
           leftPosition={leftPosition}
-          onClickPage={onClickPage}
-          onClickNext={onClickNext}
-          onClickPrev={onClickPrev}
-          onClickEnd={onClickEnd}
-          onClickStart={onClickStart}
+          onClickPage={onSetPage}
+          onClickNext={onSetNext}
+          onClickPrev={onSetPrev}
+          onClickEnd={onSetEnd}
+          onClickStart={onSetStart}
         />
       </Container>
     </>
@@ -86,15 +83,4 @@ const PER_COUNT = 20;
 
 const Container = styled.div`
   padding: 3rem 6rem;
-`;
-
-const TopContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2.8rem;
-`;
-
-const SearchBarWrapper = styled.div`
-  flex: 1;
-  margin-right: 2.8rem;
 `;

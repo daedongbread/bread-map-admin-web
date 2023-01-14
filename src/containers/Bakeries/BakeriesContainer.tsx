@@ -1,39 +1,43 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Column } from 'react-table';
-
-import { BakeriesItemEntity, useGetBakeries, useSearchBakeries } from '@/apis';
+import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
-import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
+import { Button, SearchBar, Pagination, CompleteStatus as Status, Loading, TableLoading, Header } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
-import { useAuth } from '@/hooks/auth';
 import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeriesContainer = () => {
-  const { auth } = useAuth();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [searchText, setSearchText] = React.useState('');
-  const [word, setWord] = React.useState('');
-  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination({
+  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination({
     perCount: PER_COUNT,
   });
 
-  const { data, error } = useGetBakeries({ name: word, page: currPage });
-  const { data: searchData, error: searchErr } = useSearchBakeries({ name: word, page: currPage });
-  const bakeriesRow = data?.bakeries.map(bakery => ({
+  const { bakeriesQuery, searchBakeriesQuery } = useBakeries();
+  const { data, isLoading, isFetching } = bakeriesQuery({ name: searchParams.get('keyword'), page: currPage });
+  const {
+    data: searchData,
+    isLoading: isLoadingSearch,
+    isFetching: isFetchingSearch,
+  } = searchBakeriesQuery({ name: searchParams.get('keyword'), page: currPage });
+
+  const bakeriesRow = data?.bakeries?.map(bakery => ({
     ...bakery,
     notification: '',
     status: formatTextToOptionObj({ constants: BAKERY_STATUS_OPTIONS, targetText: bakery.status }),
   }));
-  const searchBakeriesRow = searchData?.bakeries.map(bakery => ({
+  const searchBakeriesRow = searchData?.bakeries?.map(bakery => ({
     ...bakery,
     notification: '',
     status: formatTextToOptionObj({ constants: BAKERY_STATUS_OPTIONS, targetText: bakery.status }),
   }));
-  const prevWord = usePrevious(word);
+
+  const prevKeyword = usePrevious(searchParams.get('keyword'));
   // 추후 알람영역 활성화
 
   const changeTotalCount = (data?: { bakeries: BakeriesItemEntity[]; totalCount: number }) => {
@@ -47,10 +51,12 @@ export const BakeriesContainer = () => {
   }, [searchData, data]);
 
   React.useEffect(() => {
-    if (prevWord !== word) {
-      onClickPage(0);
-    }
-  });
+    const keyword = searchParams.get('keyword');
+    const page = Number(searchParams.get('page'));
+
+    keyword ? setSearchText(keyword) : setSearchText('');
+    onSetPage(page);
+  }, [searchParams]);
 
   const bakeryColumns = React.useMemo(() => COLUMNS, []);
 
@@ -67,37 +73,54 @@ export const BakeriesContainer = () => {
   };
 
   const onSearch = () => {
-    setWord(searchText);
+    const trimmedSearchText = searchText.trim();
+    if (trimmedSearchText.length === 0) {
+      return;
+    }
+    const page = prevKeyword !== trimmedSearchText ? 0 : currPage;
+    navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}`, { state: { keyword: searchText } });
   };
 
+  const setPageWithNavigate = (callback: (page: number) => void) => (page: number) => {
+    const path = searchText ? `${PATH.Bakeries}/search?keyword=${searchText}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
+    navigate(path, { state: { keyword: searchText } });
+    callback(page);
+  };
+
+  const havePrevData = !!searchBakeriesRow?.length || !!bakeriesRow?.length;
+  const loading = isLoading || isLoadingSearch || isFetching || isFetchingSearch;
+
   return (
-    <Container>
-      <TopContainer>
-        <SearchBarWrapper>
-          <SearchBar placeholder={'빵집 이름으로 검색하기'} text={searchText} onChangeText={onChangeText} onSearch={onSearch} />
-        </SearchBarWrapper>
-        <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
-      </TopContainer>
-
-      <BakeriesTable
-        route={PATH.Bakeries}
-        columns={bakeryColumns}
-        data={(searchBakeriesRow && searchBakeriesRow) || (bakeriesRow && bakeriesRow) || []}
-        rowClickFn={onClickBakeryItem}
-      />
-
-      <Pagination
-        totalCount={totalItemCount}
-        perCount={PER_COUNT}
-        currPage={currPage}
-        leftPosition={leftPosition}
-        onClickPage={onClickPage}
-        onClickNext={onClickNext}
-        onClickPrev={onClickPrev}
-        onClickEnd={onClickEnd}
-        onClickStart={onClickStart}
-      />
-    </Container>
+    <>
+      <Header name={'빵집관리'} />
+      <Container>
+        <TopContainer>
+          <SearchBarWrapper>
+            <SearchBar placeholder={'빵집 이름으로 검색하기'} text={searchText} onChangeText={onChangeText} onSearch={onSearch} />
+          </SearchBarWrapper>
+          <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
+        </TopContainer>
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
+          <BakeriesTable
+            route={PATH.Bakeries}
+            columns={bakeryColumns}
+            data={searchParams.get('keyword') && searchBakeriesRow ? searchBakeriesRow : bakeriesRow ? bakeriesRow : []}
+            rowClickFn={onClickBakeryItem}
+          />
+        </Loading>
+        <Pagination
+          totalCount={totalItemCount || 200}
+          perCount={PER_COUNT}
+          currPage={currPage}
+          leftPosition={leftPosition}
+          onClickPage={setPageWithNavigate(onSetPage)}
+          onClickNext={onSetNext}
+          onClickPrev={onSetPrev}
+          onClickEnd={onSetEnd}
+          onClickStart={onSetStart}
+        />
+      </Container>
+    </>
   );
 };
 

@@ -1,47 +1,22 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { createBakery, getBakery, updateBakery } from './bakery';
 
-const useGetBakery = ({ bakeryId }: { bakeryId: number }) => {
-  const queryKey = ['bakery', { bakeryId }] as const;
-  const { data, isLoading, isError, refetch } = useQuery(queryKey, () => getBakery({ bakeryId }), {
+export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
+  const queryClient = useQueryClient();
+
+  const bakeryQuery = useQuery(['bakery', { bakeryId }], () => getBakery({ bakeryId }), {
     enabled: !isNaN(bakeryId),
   });
 
-  return {
-    bakery: data,
-    loading: isLoading,
-    error: isError,
-    refetch: null,
-  };
-};
-
-const useCreateBakery = () => {
-  const { mutate, isLoading, isError } = useMutation(createBakery, {
-    // onSuccess: () => {},
-    // onError: () => {},
+  const addBakery = useMutation(createBakery, {
+    onSuccess: () => queryClient.invalidateQueries('getBakeries'),
   });
-  return {
-    mutate,
-    loading: isLoading,
-    error: isError,
-    refetch: null,
-  };
-};
 
-const useUpdateBakery = ({ successFn }: { successFn: () => Promise<void> }) => {
-  const { mutate, isLoading, isError } = useMutation(updateBakery, {
-    onSuccess: async () => {
-      await successFn();
+  const editBakery = useMutation(updateBakery, {
+    onSuccess: () => {
+      return Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
     },
-    onError: () => {},
   });
 
-  return {
-    mutate,
-    loading: isLoading,
-    error: isError,
-    refetch: null,
-  };
+  return { bakeryQuery, addBakery, editBakery };
 };
-
-export { useGetBakery, useCreateBakery, useUpdateBakery };
