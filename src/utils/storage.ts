@@ -1,9 +1,9 @@
 import { EncryptStorage } from 'encrypt-storage';
 
 const Storage = {
-  AccessToken: 'accessToken',
-  RefreshToken: 'refreshToken',
-  Token: 'token',
+  // AccessToken: 'accessToken',
+  // RefreshToken: 'refreshToken',
+  Token: 'token', // accessToken, refreshToken, expiredAt
   Form: 'form',
   IsRemembered: 'isRemembered',
 };

@@ -5,25 +5,27 @@ import { Storage, userStorage } from '@/utils';
 export type Auth = {
   accessToken: string | null;
   refreshToken: string | null;
+  expiredAt: number | null;
 };
 
 const AuthContext = React.createContext<{ auth: Auth; setAuth: React.Dispatch<React.SetStateAction<Auth>> } | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [auth, setAuth] = React.useState<Auth>({ accessToken: null, refreshToken: null });
-  const token = userStorage.getItem<{ accessToken: string; refreshToken: string }>(Storage.Token);
+  const [auth, setAuth] = React.useState<Auth>({ accessToken: null, refreshToken: null, expiredAt: null });
+  const token = userStorage.getItem<{ accessToken: string; refreshToken: string; expiredAt: number }>(Storage.Token);
 
   React.useEffect(() => {
     if (token) {
-      setAuth({ accessToken: token.accessToken, refreshToken: token.refreshToken });
+      const { accessToken, refreshToken, expiredAt } = token;
+      setAuth({ accessToken, refreshToken, expiredAt });
     }
   }, []);
 
   React.useEffect(() => {
-    if (auth.accessToken && auth.refreshToken) {
-      saveUserToken({ accessToken: auth.accessToken, refreshToken: auth.refreshToken });
+    if (auth.accessToken && auth.refreshToken && auth.expiredAt) {
+      saveUserToken({ accessToken: auth.accessToken, refreshToken: auth.refreshToken, expiredAt: auth.expiredAt });
     }
-  }, [auth.accessToken, auth.refreshToken]);
+  }, [auth.accessToken, auth.refreshToken, auth.expiredAt]);
 
   return <AuthContext.Provider value={{ auth, setAuth }}>{children}</AuthContext.Provider>;
 };
