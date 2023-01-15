@@ -1,9 +1,10 @@
+import { fetcher } from '@/apis/axios';
 import { loginStorage, Storage, userStorage } from '@/utils';
-import { fetcher } from '../axios';
 
 export type LoginResponse = {
   accessToken: string;
   refreshToken: string;
+  accessTokenExpiredDate: number;
 };
 
 export type LoginPayload = {
@@ -16,10 +17,11 @@ type RefreshRequest = {
   refreshToken: string;
 };
 
-const saveUserToken = ({ accessToken, refreshToken }: LoginResponse) => {
+const saveUserToken = ({ accessToken, refreshToken, expiredAt }: Omit<LoginResponse, 'accessTokenExpiredDate'> & { expiredAt: number }) => {
   userStorage.setItem(Storage.Token, {
     accessToken,
     refreshToken,
+    expiredAt,
   });
 };
 

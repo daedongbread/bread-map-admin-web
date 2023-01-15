@@ -8,8 +8,8 @@ export const useLogin = () => {
 
   const login = useMutation(requestLogin, {
     onSuccess: data => {
-      const { accessToken, refreshToken } = data;
-      setAuth({ accessToken, refreshToken });
+      const { accessToken, refreshToken, accessTokenExpiredDate } = data;
+      setAuth({ accessToken, refreshToken, expiredAt: new Date().getTime() + accessTokenExpiredDate });
     },
     onError: (err: unknown) => {
       console.log('login error...', err);
@@ -18,7 +18,7 @@ export const useLogin = () => {
 
   const logout = () => {
     userStorage.removeItem(Storage.Token);
-    setAuth({ accessToken: null, refreshToken: null });
+    setAuth({ accessToken: null, refreshToken: null, expiredAt: null });
   };
 
   return { login, logout };

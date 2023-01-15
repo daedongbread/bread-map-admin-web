@@ -28,7 +28,7 @@ deploy() {
   fi
 
   echo "> AWS S3 Upload"
-  if ! aws s3 sync ./build s3://"$S3_BUCKET_NAME" --exclude "config.json" --delete; then
+  if ! aws s3 sync ./dist s3://"$S3_BUCKET_NAME" --exclude "config.json" --delete; then
     exit 255
   fi
 
