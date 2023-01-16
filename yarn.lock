@@ -1370,7 +1370,6 @@ __metadata:
     react-query: ^3.39.2
     react-redux: ^8.0.5
     react-router-dom: ^6.4.5
-    react-table: ^7.8.0
     typescript: ^4.9.3
     vite: ^4.0.0
     vite-tsconfig-paths: ^4.0.2
@@ -4221,15 +4220,6 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 0d471df39f0487224240f9910c2f2939519f3e9909a7b19f72767aeea2caf1c9fa4e8ea9a51b17c20051ec252db0fcc34a7a0b3068b338dd9d8eb656ffd489c1
-  languageName: node
-  linkType: hard
-
-"react-table@npm:^7.8.0":
-  version: 7.8.0
-  resolution: "react-table@npm:7.8.0"
-  peerDependencies:
-    react: ^16.8.3 || ^17.0.0-0 || ^18.0.0
-  checksum: 44ca0fb848c6869cd793cede8dc33072b38ebb8f8d2833565afe7cf3eac5d1fa455ac5fb9d06838b16fab0523d5d03e3e82f7645032f71245096e67b892313b9
   languageName: node
   linkType: hard
 
