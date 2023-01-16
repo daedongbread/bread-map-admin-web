@@ -9,4 +9,5 @@ export { Frown } from './Frown';
 export { Users } from './Users';
 export { User } from './User';
 export { Logout } from './Logout';
+export { Circle } from './Circle';
 // export { Check } from './Check';

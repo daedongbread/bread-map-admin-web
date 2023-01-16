@@ -113,7 +113,7 @@ const SETTING_MENUS = [
 ];
 
 const Container = styled.div`
-  width: ${({ theme }) => theme.size.sidebarWidth};
+  width: inherit;
   height: 100%;
   display: flex;
   flex-direction: column;

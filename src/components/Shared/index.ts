@@ -6,6 +6,5 @@ export * from './Preview';
 export * from './SearchBar';
 export * from './SelectBox';
 export * from './Table';
-export * from './CompleteStatus';
 export * from './Loading';
 export * from './Error';
