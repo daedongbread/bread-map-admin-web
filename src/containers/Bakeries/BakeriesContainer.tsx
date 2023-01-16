@@ -59,12 +59,13 @@ export const BakeriesContainer = () => {
       return;
     }
     const page = prevKeyword !== trimmedSearchText ? 0 : currPage;
-    navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}`, { state: { keyword: searchText } });
+    navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}`);
   };
 
   const setPageWithNavigate = (callback: (page: number) => void) => (page: number) => {
-    const path = searchText ? `${PATH.Bakeries}/search?keyword=${searchText}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
-    navigate(path, { state: { keyword: searchText } });
+    const params = searchParams.get('keyword') || '';
+    const path = params.length ? `${PATH.Bakeries}/search?keyword=${params}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
+    navigate(path);
     callback(page);
   };
 
