@@ -2,7 +2,7 @@ import React from 'react';
 import { BakeryReportsItemEntity, useBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
 import { Pagination, Loading, TableLoading, Header, TableCell, StatusCell } from '@/components/Shared';
-import { BAKERY_REPORT_STATUS_OPTIONS } from '@/constants';
+import { BAKERY_REPORT_STATUS_OPTIONS, BAKERY_REPORT_TABLE_HEADERS } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
@@ -33,7 +33,7 @@ export const BakeryReportsContainer = () => {
     <>
       <Header name={'제보관리'} />
       <Container>
-        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={getBakeryReportTableData([]).headers} />}>
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={BAKERY_REPORT_TABLE_HEADERS} />}>
           <BakeryReportsTable headers={bakeryReportData.headers} rows={bakeryReportData.rows} />
         </Loading>
         <Pagination
@@ -53,16 +53,6 @@ export const BakeryReportsContainer = () => {
 };
 
 const getBakeryReportTableData = (contents: BakeryReportsItemEntity[]) => {
-  const headers = [
-    { key: 'reportId', name: '제보 번호' },
-    { key: 'nickName', name: '제보자' },
-    { key: 'bakeryName', name: '빵집 이름' },
-    { key: 'location', name: '빵집 위치' },
-    { key: 'content', name: '추천 이유' },
-    { key: 'createdAt', name: '제보날짜' },
-    { key: 'status', name: '처리상태' },
-  ];
-
   let rows: TableCell[] = [];
   if (contents.length > 0) {
     rows = contents.map(item => {
@@ -74,7 +64,7 @@ const getBakeryReportTableData = (contents: BakeryReportsItemEntity[]) => {
     });
   }
 
-  return { headers, rows };
+  return { headers: BAKERY_REPORT_TABLE_HEADERS, rows };
 };
 
 const PER_COUNT = 20;

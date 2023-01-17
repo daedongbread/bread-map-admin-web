@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, SearchBar, Pagination, Loading, TableLoading, Header, TableCell, StatusCell } from '@/components/Shared';
-import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
+import { BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
 import { formatTextToOptionObj } from '@/utils';
@@ -84,7 +84,7 @@ export const BakeriesContainer = () => {
           </SearchBarWrapper>
           <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
         </TopContainer>
-        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={getBakeryTableData([]).headers} />}>
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={BAKERY_TABLE_HEADERS} />}>
           <BakeriesTable headers={bakeryData.headers} rows={bakeryData.rows} />
         </Loading>
         <Pagination
@@ -104,15 +104,6 @@ export const BakeriesContainer = () => {
 };
 
 export const getBakeryTableData = (contents: BakeriesItemEntity[]) => {
-  const headers = [
-    { key: 'bakeryId', name: '빵집 번호' },
-    { key: 'name', name: '빵집 이름' },
-    // { key: '-', name: '알람' } 나중에 추가
-    { key: 'createdAt', name: '등록일' },
-    { key: 'modifiedAt', name: '마지막 수정일' },
-    { key: 'status', name: '상태' },
-  ];
-
   let rows: TableCell[] = [];
   if (contents.length > 0) {
     rows = contents.map(item => {
@@ -124,7 +115,7 @@ export const getBakeryTableData = (contents: BakeriesItemEntity[]) => {
     });
   }
 
-  return { headers, rows };
+  return { headers: BAKERY_TABLE_HEADERS, rows };
 };
 
 const PER_COUNT = 20; // default로 20 놓을지 고민
