@@ -33,7 +33,7 @@ export const BakeryReportsContainer = () => {
     <>
       <Header name={'제보관리'} />
       <Container>
-        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={getBakeryReportTableData([]).headers} />}>
           <BakeryReportsTable headers={bakeryReportData.headers} rows={bakeryReportData.rows} />
         </Loading>
         <Pagination

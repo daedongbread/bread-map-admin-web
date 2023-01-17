@@ -1,7 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import { Error } from '@/components/Shared';
 import { useAuth } from '@/hooks/auth';
 import { useRefreshToken } from '@/hooks/auth/useRefreshToken';
+import styled from '@emotion/styled';
 
 export const PersistLogin = () => {
   const [isLoading, setIsLoading] = React.useState(true);
@@ -22,5 +24,22 @@ export const PersistLogin = () => {
     !auth.accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
-  return <>{isLoading ? <p>loading...</p> : <Outlet />}</>;
+  return (
+    <>
+      {isLoading ? (
+        <Container>
+          <Error errMsg={'페이지로 이동중이에요!'} />
+        </Container>
+      ) : (
+        <Outlet />
+      )}
+    </>
+  );
 };
+
+const Container = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

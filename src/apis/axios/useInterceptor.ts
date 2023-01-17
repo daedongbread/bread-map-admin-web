@@ -67,9 +67,11 @@ export const useInterceptor = () => {
           return Promise.reject(error);
         }
       } else {
-        console.log('axios response err:', error.response);
+        if (config._retry) {
+          console.log('axios response err:', error.response);
+          window.confirm('알수없는 에러입니다. 대동빵팀에게 문의해주세요.');
+        }
         userStorage.removeItem(Storage.Token);
-        window.confirm('알수없는 에러입니다. 대동빵팀에게 문의해주세요.');
         navigate(PATH.Login, { replace: true });
       }
 

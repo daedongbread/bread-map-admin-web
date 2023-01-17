@@ -84,7 +84,7 @@ export const BakeriesContainer = () => {
           </SearchBarWrapper>
           <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
         </TopContainer>
-        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={getBakeryTableData([]).headers} />}>
           <BakeriesTable headers={bakeryData.headers} rows={bakeryData.rows} />
         </Loading>
         <Pagination
@@ -103,7 +103,7 @@ export const BakeriesContainer = () => {
   );
 };
 
-const getBakeryTableData = (contents: BakeriesItemEntity[]) => {
+export const getBakeryTableData = (contents: BakeriesItemEntity[]) => {
   const headers = [
     { key: 'bakeryId', name: '빵집 번호' },
     { key: 'name', name: '빵집 이름' },

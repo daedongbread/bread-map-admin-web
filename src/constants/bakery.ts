@@ -1,5 +1,5 @@
-import { color } from '@/styles';
 import { SelectOption } from '@/components/Shared';
+import { color } from '@/styles';
 
 export const BAKERY_STATUS = {
   Unposting: 'UNPOSTING',
