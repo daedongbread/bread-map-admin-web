@@ -1,0 +1,206 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Shared Table 테이블 컴포넌트가 렌더링된다 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": ".css-16omkrh{border:1px solid #F5F5F5;width:calc(100vw - 27rem - 12rem);white-space:nowrap;overflow-x:scroll;-ms-overflow-style:none;scrollbar-width:none;}.css-16omkrh::-webkit-scrollbar{display:none;}",
+      }
+    }
+    data-emotion="css 16omkrh"
+  />,
+  <div
+    className="css-16omkrh"
+  >
+    <style
+      dangerouslySetInnerHTML={
+        {
+          "__html": ".css-gi96c8{border-collapse:collapse;border-spacing:0;width:100%;border:none;}.css-gi96c8 thead tr>th{background-color:#EEEEEE;border-bottom-width:0;}.css-gi96c8 tbody tr:nth-of-type(even) td{background-color:#FAFAFA;border-top:1px solid #EEEEEE;}",
+        }
+      }
+      data-emotion="css gi96c8"
+    />
+    <table
+      className="css-gi96c8"
+    >
+      <thead>
+        <style
+          dangerouslySetInnerHTML={
+            {
+              "__html": ".css-19bh3p5 th,.css-19bh3p5 td{text-align:center;font-size:1.35rem;padding:1.5rem 1.5rem;}.css-19bh3p5 td{background-color:#FFFFFF;}.css-19bh3p5:not(:last-of-type) >td{border-bottom-width:0;}",
+            }
+          }
+          data-emotion="css 19bh3p5"
+        />
+        <tr
+          className="css-19bh3p5"
+        >
+          <th>
+            빵집 번호
+          </th>
+          <th>
+            빵집 이름
+          </th>
+          <th>
+            등록일
+          </th>
+          <th>
+            마지막 수정일
+          </th>
+          <th>
+            상태
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          className="css-19bh3p5"
+          onClick={[Function]}
+        >
+          <td>
+            3
+          </td>
+          <td>
+            테스트 신규_성수점 2
+          </td>
+          <td>
+            2023-01-15
+          </td>
+          <td>
+            2023-01-16
+          </td>
+          <td>
+            <style
+              dangerouslySetInnerHTML={
+                {
+                  "__html": ".css-1gzqjqd{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;}.css-1gzqjqd div{margin-right:2.5px;}.css-1gzqjqd span{color:#F3213B;}",
+                }
+              }
+              data-emotion="css 1gzqjqd"
+            />
+            <div
+              className="css-1gzqjqd"
+              color="#F3213B"
+            >
+              <div>
+                <svg
+                  fill="none"
+                  fillcolor="#F3213B"
+                  height={10}
+                  width={10}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx={3.5}
+                    cy={3.5}
+                    fill="#F3213B"
+                    r={3.5}
+                  />
+                </svg>
+              </div>
+              <span>
+                미게시
+              </span>
+            </div>
+          </td>
+        </tr>
+        <tr
+          className="css-19bh3p5"
+          onClick={[Function]}
+        >
+          <td>
+            2
+          </td>
+          <td>
+            테스트 신규2
+          </td>
+          <td>
+            2023-01-15
+          </td>
+          <td>
+            2023-01-15
+          </td>
+          <td>
+            <style
+              dangerouslySetInnerHTML={
+                {
+                  "__html": ".css-1uzinym{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;-webkit-justify-content:center;justify-content:center;}.css-1uzinym div{margin-right:2.5px;}.css-1uzinym span{color:#1EC780;}",
+                }
+              }
+              data-emotion="css 1uzinym"
+            />
+            <div
+              className="css-1uzinym"
+              color="#1EC780"
+            >
+              <div>
+                <svg
+                  fill="none"
+                  fillcolor="#1EC780"
+                  height={10}
+                  width={10}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx={3.5}
+                    cy={3.5}
+                    fill="#1EC780"
+                    r={3.5}
+                  />
+                </svg>
+              </div>
+              <span>
+                게시중
+              </span>
+            </div>
+          </td>
+        </tr>
+        <tr
+          className="css-19bh3p5"
+          onClick={[Function]}
+        >
+          <td>
+            1
+          </td>
+          <td>
+            테스트 신규1
+          </td>
+          <td>
+            2023-01-15
+          </td>
+          <td>
+            2023-01-15
+          </td>
+          <td>
+            <div
+              className="css-1gzqjqd"
+              color="#F3213B"
+            >
+              <div>
+                <svg
+                  fill="none"
+                  fillcolor="#F3213B"
+                  height={10}
+                  width={10}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx={3.5}
+                    cy={3.5}
+                    fill="#F3213B"
+                    r={3.5}
+                  />
+                </svg>
+              </div>
+              <span>
+                미게시
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>,
+]
+`;
