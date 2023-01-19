@@ -1,10 +1,19 @@
-import { Column } from 'react-table';
-import { Path } from '@/constants';
-export type TableProps = {
-  route: Path;
-  columns: readonly (Column & { percentage: number })[];
-  data: readonly object[];
-  rowClickFn?: (id: number) => void;
-};
+import React from 'react';
 
-export type TableData<T extends object> = T[];
+export type TableHeader = { key: string; name: string };
+
+export type TableCell = Record<string, React.ReactNode | string | number>;
+
+export type TableProps = {
+  headers: TableCell[];
+  rows: TableCell[];
+  event?: {
+    hover?: {
+      on: boolean;
+    };
+    move?: {
+      on: boolean;
+      basePath: string;
+    };
+  };
+};

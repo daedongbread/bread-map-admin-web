@@ -1,15 +1,18 @@
 import React from 'react';
+import { Circle } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
 
-export type CompleteStatusProps = {
+export type StatusCellProps = {
   color: string;
   text: string;
 };
 
-export const CompleteStatus = ({ color, text }: CompleteStatusProps) => {
+export const StatusCell = ({ color, text }: StatusCellProps) => {
   return (
     <Container color={color}>
-      <div></div>
+      <div>
+        <Circle fillcolor={color} />
+      </div>
       <span>{text}</span>
     </Container>
   );
@@ -18,13 +21,10 @@ export const CompleteStatus = ({ color, text }: CompleteStatusProps) => {
 const Container = styled.div<{ color: string }>`
   display: flex;
   align-items: center;
+  justify-content: center;
 
   div {
-    background-color: ${({ color }) => color};
-    border-radius: 50%;
-    width: 6px;
-    height: 6px;
-    margin-right: 4px;
+    margin-right: 2.5px;
   }
 
   span {

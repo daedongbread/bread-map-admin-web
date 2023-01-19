@@ -1,10 +1,9 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Column } from 'react-table';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
-import { Button, SearchBar, Pagination, CompleteStatus as Status, Loading, TableLoading, Header } from '@/components/Shared';
-import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
+import { Button, SearchBar, Pagination, Loading, TableLoading, Header, TableCell, StatusCell } from '@/components/Shared';
+import { BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
 import { formatTextToOptionObj } from '@/utils';
@@ -26,19 +25,7 @@ export const BakeriesContainer = () => {
     isFetching: isFetchingSearch,
   } = searchBakeriesQuery({ name: searchParams.get('keyword'), page: currPage });
 
-  const bakeriesRow = data?.bakeries?.map(bakery => ({
-    ...bakery,
-    notification: '',
-    status: formatTextToOptionObj({ constants: BAKERY_STATUS_OPTIONS, targetText: bakery.status }),
-  }));
-  const searchBakeriesRow = searchData?.bakeries?.map(bakery => ({
-    ...bakery,
-    notification: '',
-    status: formatTextToOptionObj({ constants: BAKERY_STATUS_OPTIONS, targetText: bakery.status }),
-  }));
-
   const prevKeyword = usePrevious(searchParams.get('keyword'));
-  // 추후 알람영역 활성화
 
   const changeTotalCount = (data?: { bakeries: BakeriesItemEntity[]; totalCount: number }) => {
     if (data && data.totalCount) {
@@ -58,12 +45,6 @@ export const BakeriesContainer = () => {
     onSetPage(page);
   }, [searchParams]);
 
-  const bakeryColumns = React.useMemo(() => COLUMNS, []);
-
-  const onClickBakeryItem = (bakeryId: number) => {
-    navigate(`${PATH.Bakeries}/${bakeryId}`);
-  };
-
   const onChangeText = (text: string) => {
     setSearchText(text);
   };
@@ -78,17 +59,20 @@ export const BakeriesContainer = () => {
       return;
     }
     const page = prevKeyword !== trimmedSearchText ? 0 : currPage;
-    navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}`, { state: { keyword: searchText } });
+    navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}`);
   };
 
   const setPageWithNavigate = (callback: (page: number) => void) => (page: number) => {
-    const path = searchText ? `${PATH.Bakeries}/search?keyword=${searchText}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
-    navigate(path, { state: { keyword: searchText } });
+    const params = searchParams.get('keyword') || '';
+    const path = params.length ? `${PATH.Bakeries}/search?keyword=${params}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
+    navigate(path);
     callback(page);
   };
 
-  const havePrevData = !!searchBakeriesRow?.length || !!bakeriesRow?.length;
+  const havePrevData = !!searchData?.bakeries?.length || !!data?.bakeries?.length;
   const loading = isLoading || isLoadingSearch || isFetching || isFetchingSearch;
+
+  const bakeryData = getBakeryTableData(searchParams.get('keyword') && searchData?.bakeries ? searchData?.bakeries : data?.bakeries ? data.bakeries : []);
 
   return (
     <>
@@ -100,13 +84,8 @@ export const BakeriesContainer = () => {
           </SearchBarWrapper>
           <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
         </TopContainer>
-        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading />}>
-          <BakeriesTable
-            route={PATH.Bakeries}
-            columns={bakeryColumns}
-            data={searchParams.get('keyword') && searchBakeriesRow ? searchBakeriesRow : bakeriesRow ? bakeriesRow : []}
-            rowClickFn={onClickBakeryItem}
-          />
+        <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={BAKERY_TABLE_HEADERS} />}>
+          <BakeriesTable headers={bakeryData.headers} rows={bakeryData.rows} />
         </Loading>
         <Pagination
           totalCount={totalItemCount || 200}
@@ -124,19 +103,20 @@ export const BakeriesContainer = () => {
   );
 };
 
-const COLUMNS: (Column & { percentage: number })[] = [
-  { accessor: 'bakeryId', Header: 'Bakery_ID', percentage: 15 },
-  { accessor: 'name', Header: '빵집이름', percentage: 25 },
-  { accessor: 'notification', Header: '알람', percentage: 30 },
-  { accessor: 'createdAt', Header: '최초 등록일', percentage: 10 },
-  { accessor: 'modifiedAt', Header: '마지막 수정일', percentage: 10 },
-  {
-    accessor: 'status',
-    Header: '상태',
-    percentage: 10,
-    Cell: ({ cell: { value } }) => <Status color={value.color} text={value.text} />,
-  },
-];
+export const getBakeryTableData = (contents: BakeriesItemEntity[]) => {
+  let rows: TableCell[] = [];
+  if (contents.length > 0) {
+    rows = contents.map(item => {
+      const status = formatTextToOptionObj({ constants: BAKERY_STATUS_OPTIONS, targetText: item.status });
+      return {
+        ...item,
+        status: <StatusCell color={status.color} text={status.text} />,
+      };
+    });
+  }
+
+  return { headers: BAKERY_TABLE_HEADERS, rows };
+};
 
 const PER_COUNT = 20; // default로 20 놓을지 고민
 

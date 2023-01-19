@@ -1,4 +1,3 @@
-export * from './types';
 import { BakeryReportStatus } from '@/constants';
 import { fetcher } from '../axios';
 import { BakeryReportsItemEntity } from './types';

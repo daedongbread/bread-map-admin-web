@@ -1,5 +1,15 @@
-import { SelectOption } from '@/components/Shared';
+import { SelectOption, TableHeader } from '@/components/Shared';
 import { color } from '@/styles';
+
+export const BAKERY_REPORT_TABLE_HEADERS: TableHeader[] = [
+  { key: 'reportId', name: '제보 번호' },
+  { key: 'nickName', name: '제보자' },
+  { key: 'bakeryName', name: '빵집 이름' },
+  { key: 'location', name: '빵집 위치' },
+  { key: 'content', name: '추천 이유' },
+  { key: 'createdAt', name: '제보날짜' },
+  { key: 'status', name: '처리상태' },
+];
 
 export const BAKERY_REPORT_STATUS = {
   BeforeReflect: 'BEFORE_REFLECT',

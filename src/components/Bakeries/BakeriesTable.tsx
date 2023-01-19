@@ -1,7 +1,18 @@
 import React from 'react';
 import { Table } from '@/components/Shared';
 import type { TableProps } from '@/components/Shared';
+import { PATH } from '@/constants';
 
-export const BakeriesTable = ({ route, columns, data, rowClickFn }: TableProps) => {
-  return <Table route={route} columns={columns} data={data} rowClickFn={rowClickFn} />;
+const event = {
+  hover: {
+    on: true,
+  },
+  move: {
+    on: true,
+    basePath: PATH.Bakeries,
+  },
+};
+
+export const BakeriesTable = ({ headers, rows }: TableProps) => {
+  return <Table headers={headers} rows={rows} event={event} />;
 };
