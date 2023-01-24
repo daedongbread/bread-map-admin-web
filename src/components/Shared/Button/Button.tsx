@@ -1,6 +1,35 @@
-import React, { memo } from 'react';
+import React, { memo, ReactNode } from 'react';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
+
+type BtnColor = 'orange' | 'lightOrange' | 'reverseOrange' | 'gray' | 'white';
+type Size = 'large' | 'medium' | 'small';
+
+type ButtonProps = {
+  type: BtnColor;
+  text: string;
+  btnSize?: Size;
+  fontSize?: Size;
+  icon?: ReactNode;
+  onClickBtn?: () => void;
+};
+
+export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
+  const onClickCustomBtn = () => {
+    onClickBtn && onClickBtn();
+  };
+
+  const matchedStyle = Object.entries(BUTTON_STYLE).find(([key]) => key === type);
+  if (!matchedStyle) return <button />;
+  const colors = matchedStyle[1];
+
+  return (
+    <CustomBtn type="button" btnSize={btnSize} fontSize={fontSize} {...colors} onClick={onClickCustomBtn}>
+      {icon}
+      {text}
+    </CustomBtn>
+  );
+});
 
 type BtnStyles = {
   bgColor: string;
@@ -8,7 +37,7 @@ type BtnStyles = {
   borderColor?: string;
 };
 
-const buttons: { [key: string]: BtnStyles } = {
+const BUTTON_STYLE: { [key: string]: BtnStyles } = {
   orange: {
     bgColor: color.primary500,
     fontColor: color.white,
@@ -33,37 +62,6 @@ const buttons: { [key: string]: BtnStyles } = {
   },
 };
 
-type BtnColor = 'orange' | 'lightOrange' | 'reverseOrange' | 'gray' | 'white';
-
-type Size = 'large' | 'medium' | 'small';
-
-type ButtonProps = {
-  type: BtnColor;
-  text: string;
-  btnSize?: Size;
-  fontSize?: Size;
-  icon?: React.ReactNode;
-  onClickBtn?: () => void;
-};
-
-export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
-  const onClickCustomBtn = () => {
-    onClickBtn && onClickBtn();
-  };
-
-  const matchedStyle = Object.entries(buttons).find(([key]) => key === type);
-
-  if (!matchedStyle) return <button />;
-
-  return (
-    <CustomBtn type="button" btnSize={btnSize} fontSize={fontSize} {...matchedStyle[1]} onClick={onClickCustomBtn}>
-      {icon}
-      {text}
-    </CustomBtn>
-  );
-});
-
-// 기본 스타일을 확장해서 만들 수 있는지 확인 필요
 const CustomBtn = styled.button<BtnStyles & { btnSize?: Size; fontSize?: Size }>`
   border-radius: 0.9rem;
   background-color: ${({ bgColor }) => bgColor};
