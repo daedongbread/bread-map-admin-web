@@ -1,6 +1,99 @@
-import React from 'react';
+import React, { ChangeEvent, KeyboardEvent, useLayoutEffect, useRef, useState } from 'react';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
+
+type InputStyleType = 'plain' | 'gray' | 'disabled' | 'orange';
+type PaddingType = 'small' | 'large';
+
+export type InputProps = {
+  textType?: string;
+  type: InputStyleType;
+  padding?: PaddingType;
+  placeholder?: string;
+  disabled?: boolean;
+  textarea?: boolean;
+  onChangeInput?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onKeypressInput?: (e: KeyboardEvent<HTMLInputElement>) => void;
+  name?: string;
+  value: string;
+};
+
+export const Input = ({
+  textType,
+  type,
+  padding = 'small',
+  placeholder,
+  disabled = false,
+  textarea = false,
+  onChangeInput,
+  onKeypressInput,
+  name,
+  value,
+}: InputProps) => {
+  const [textareaRowCnt, setTextareaRowCnt] = useState(1);
+  const textareaPrevLineCnt = useRef(1);
+
+  const matchedStyle = Object.entries(INPUT_STYLE).find(([key]) => key === type);
+  if (!matchedStyle) return <input />;
+  const { borderColor, fontColor, bgColor, placeholderColor } = matchedStyle[1];
+
+  const onChangeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    onChangeInput && onChangeInput(e);
+  };
+
+  const resizeTextarea = (value: string) => {
+    let lineCnt = 1;
+    if (value.length > 0 && value.includes('\n')) {
+      lineCnt = value.split('\n').length;
+      if (lineCnt === textareaPrevLineCnt.current) {
+        return;
+      }
+      textareaPrevLineCnt.current = lineCnt;
+    }
+    setTextareaRowCnt(lineCnt);
+  };
+
+  useLayoutEffect(() => {
+    if (!textarea) {
+      return;
+    }
+    resizeTextarea(value);
+  }, [value]);
+
+  if (textarea) {
+    return (
+      <CustomTextarea
+        rows={textareaRowCnt}
+        name={name}
+        value={value}
+        disabled={disabled}
+        onChange={onChangeTextarea}
+        borderColor={borderColor}
+        fontColor={fontColor}
+        bgColor={bgColor}
+        placeholderColor={placeholderColor}
+        padding={padding}
+      />
+    );
+  } else {
+    return (
+      <CustomInput
+        disabled={disabled}
+        name={name}
+        type={textType}
+        value={value}
+        onChange={onChangeInput}
+        onKeyPress={onKeypressInput}
+        borderColor={borderColor}
+        fontColor={fontColor}
+        bgColor={bgColor}
+        placeholderColor={placeholderColor}
+        padding={padding}
+        placeholder={placeholder || ''}
+      />
+    );
+  }
+};
 
 type InputStyles = {
   bgColor: string;
@@ -9,7 +102,7 @@ type InputStyles = {
   borderColor?: string;
 };
 
-const inputs: { [key: string]: InputStyles } = {
+const INPUT_STYLE: { [key: string]: InputStyles } = {
   plain: {
     bgColor: color.white,
     fontColor: color.gray900,
@@ -33,96 +126,6 @@ const inputs: { [key: string]: InputStyles } = {
     fontColor: color.gray600,
     placeholderColor: color.gray600,
   },
-};
-
-type InputStyleType = 'plain' | 'gray' | 'disabled' | 'orange';
-
-type PaddingType = 'small' | 'large';
-
-export type InputProps = {
-  textType?: string;
-  type: InputStyleType;
-  padding?: PaddingType;
-  placeholder?: string;
-  disabled?: boolean;
-  textarea?: boolean;
-  onChangeInput?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onKeypressInput?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  name?: string;
-  value: string;
-};
-// TODO: 컴포넌트명을 Textbox로 바꾸거나, textarea를 분리
-export const Input = ({
-  textType,
-  type,
-  padding = 'small',
-  placeholder,
-  disabled = false,
-  textarea = false,
-  onChangeInput,
-  onKeypressInput,
-  name,
-  value,
-}: InputProps) => {
-  const [textareaRowCnt, setTextareaRowCnt] = React.useState(1);
-  const textareaPrevLineCnt = React.useRef(1);
-
-  const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
-  if (!matchedStyle) return <input />;
-
-  const onChangeTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChangeInput && onChangeInput(e);
-  };
-
-  const resizeTextarea = (value: string) => {
-    let lineCnt = 1;
-    if (value.length > 0 && value.includes('\n')) {
-      lineCnt = value.split('\n').length;
-      if (lineCnt === textareaPrevLineCnt.current) {
-        return;
-      }
-      textareaPrevLineCnt.current = lineCnt;
-    }
-    setTextareaRowCnt(lineCnt);
-  };
-
-  React.useLayoutEffect(() => {
-    resizeTextarea(value);
-  }, [value]);
-
-  if (textarea) {
-    return (
-      <CustomTextarea
-        rows={textareaRowCnt}
-        name={name}
-        value={value}
-        disabled={disabled}
-        onChange={onChangeTextarea}
-        borderColor={matchedStyle[1].borderColor}
-        fontColor={matchedStyle[1].fontColor}
-        bgColor={matchedStyle[1].bgColor}
-        placeholderColor={matchedStyle[1].placeholderColor}
-        padding={padding}
-      />
-    );
-  } else {
-    return (
-      <CustomInput
-        disabled={disabled}
-        name={name}
-        type={textType}
-        value={value}
-        onChange={onChangeInput}
-        onKeyPress={onKeypressInput}
-        borderColor={matchedStyle[1].borderColor}
-        fontColor={matchedStyle[1].fontColor}
-        bgColor={matchedStyle[1].bgColor}
-        placeholderColor={matchedStyle[1].placeholderColor}
-        padding={padding}
-        placeholder={placeholder || ''}
-      />
-    );
-  }
 };
 
 const CustomInput = styled.input<InputStyles & { padding?: PaddingType }>`
