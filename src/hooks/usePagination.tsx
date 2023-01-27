@@ -1,31 +1,38 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const LI_MARGIN = 0.6; // 양쪽 마진 합, rem
-const LI_WIDTH = 3.5; // rem
 const PAGING_COUNT = 5; // pagination 컴포넌트의 페이징 갯수
-// PER_COUNT = 20; // 한 페이지의 리스트 갯수. Pagination 컴포넌트에서도 써야하기때문에 Pagination이 쓰이는 곳마다 선언필요 -> 어떻게해야 안쓸수 있을지..?
+const FIRST_PAGE = 1;
 
-const usePagination = ({ totalCount, perCount }: { totalCount?: number; perCount: number }) => {
+const usePagination = () => {
+  const [pages, setPages] = useState<number[]>([]);
   const [currPage, setCurrPage] = useState(0);
-  const [leftPosition, setLeftPosition] = useState(0);
-  const [lastIndexLeft, setLastIndexLeft] = useState(0);
-  const [totalItemCount, setTotalItemCount] = useState(0);
+  const [totalPage, setTotalPage] = useState(1);
 
-  React.useEffect(() => {
-    if (totalCount) {
-      setTotalItemCount(totalCount);
+  useEffect(() => {
+    setPages(getPagesFromTarget({ target: currPage, total: totalPage }));
+  }, [currPage, totalPage]);
+
+  const getPagesFromTarget = ({ target, total }: { target: number; total: number }) => {
+    let startPage: number;
+    if (target === FIRST_PAGE - 1) {
+      startPage = FIRST_PAGE;
+    } else {
+      const idx = Math.floor(target / PAGING_COUNT);
+      startPage = PAGING_COUNT * idx + 1;
     }
-  }, []);
 
-  React.useEffect(() => {
-    const pageCount = totalItemCount / perCount; // 페이지 갯수
-    const index = Math.floor(pageCount / PAGING_COUNT);
-    const left = (LI_MARGIN + LI_WIDTH) * PAGING_COUNT * index;
-    setLastIndexLeft(left);
-  }, [totalItemCount]);
+    const pages = [];
+    for (let i = 0; i < PAGING_COUNT; i++) {
+      if (startPage <= total) {
+        pages.push(startPage++);
+      } else break;
+    }
 
-  const onChangeTotalCount = (count: number) => {
-    setTotalItemCount(count);
+    return pages;
+  };
+
+  const onChangeTotalPageCount = (page: number) => {
+    setTotalPage(page);
   };
 
   const onSetPage = (page: number) => {
@@ -33,33 +40,48 @@ const usePagination = ({ totalCount, perCount }: { totalCount?: number; perCount
   };
 
   const onSetNext = () => {
-    if (leftPosition === lastIndexLeft) return;
-    const updatedLeft = leftPosition + (LI_MARGIN + LI_WIDTH) * PAGING_COUNT;
-    setLeftPosition(updatedLeft);
+    if (!totalPage || pages.includes(totalPage)) {
+      return;
+    }
+
+    setPages(pages => {
+      return pages.filter(page => page + PAGING_COUNT <= totalPage).map(page => page + PAGING_COUNT);
+    });
   };
 
   const onSetPrev = () => {
-    if (leftPosition === 0) return;
-    const updatedLeft = leftPosition - (LI_MARGIN + LI_WIDTH) * PAGING_COUNT;
-    setLeftPosition(updatedLeft);
+    if (pages.includes(FIRST_PAGE)) {
+      return;
+    }
+
+    setPages(pages => {
+      const p = pages[0];
+      const prevPages = Array(PAGING_COUNT)
+        .fill(p)
+        .map((num, idx) => num + idx - PAGING_COUNT);
+      return prevPages;
+    });
   };
 
   const onSetEnd = () => {
-    if (leftPosition === lastIndexLeft) return;
-    const updatedLeft = lastIndexLeft;
-    setLeftPosition(updatedLeft);
+    if (!totalPage || pages.includes(totalPage)) {
+      return;
+    }
+    setPages(getPagesFromTarget({ target: totalPage, total: totalPage }));
   };
 
-  const onSetStart = useCallback(() => {
-    const updatedLeft = 0;
-    setLeftPosition(updatedLeft);
-  }, []);
+  const onSetStart = () => {
+    if (pages.includes(FIRST_PAGE)) {
+      return;
+    }
+
+    setPages([1, 2, 3, 4, 5]);
+  };
 
   return {
+    pages,
     currPage,
-    totalItemCount,
-    leftPosition,
-    onChangeTotalCount,
+    onChangeTotalPageCount,
     onSetPage,
     onSetNext,
     onSetPrev,

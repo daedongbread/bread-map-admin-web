@@ -22,12 +22,12 @@ export type CreateUpdateBakeryPayload = {
 
 const getBakeries = async ({ page }: Omit<GetBakeriesPayload, 'name'>) => {
   const resp = await fetcher.get<GetBakeriesResponse>(`/bakery`, { params: { page } });
-  return { bakeries: resp.data.contents, totalCount: resp.data.totalElements };
+  return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
 };
 
 const searchBakeries = async ({ name, page }: GetBakeriesPayload) => {
   const resp = await fetcher.get<GetBakeriesResponse>('/bakery/search', { params: { name, page } });
-  return { bakeries: resp.data.contents, totalCount: resp.data.totalElements };
+  return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
 };
 
 const getBakery = async ({ bakeryId }: { bakeryId: number }) => {

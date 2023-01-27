@@ -3,10 +3,8 @@ import { ChevronLeft, ChevronRight } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
 
 type PaginationProps = {
-  totalCount: number;
-  perCount: number;
+  pages: number[];
   currPage: number;
-  leftPosition: number;
   onClickPage: (page: number) => void;
   onClickNext: () => void;
   onClickPrev: () => void;
@@ -15,23 +13,11 @@ type PaginationProps = {
 };
 
 // usePagination이랑 같이 사용
-export const Pagination = ({
-  totalCount,
-  perCount,
-  currPage,
-  leftPosition,
-  onClickPage,
-  onClickNext,
-  onClickPrev,
-  onClickEnd,
-  onClickStart,
-}: PaginationProps) => {
-  const totalPages = Math.ceil(totalCount / perCount);
-
+export const Pagination = ({ pages, currPage, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart }: PaginationProps) => {
   return (
     <PaginationContainer>
       <Container>
-        <ArrowLeftWrapper>
+        <div>
           <Btn onClick={onClickStart} margin>
             <ChevronLeft />
             <ChevronLeft />
@@ -39,19 +25,17 @@ export const Pagination = ({
           <Btn onClick={onClickPrev}>
             <ChevronLeft />
           </Btn>
-        </ArrowLeftWrapper>
-        <PagesWrapper currPage={currPage} left={leftPosition}>
+        </div>
+        <PagesWrapper currPage={currPage}>
           <ul>
-            {Array(totalPages)
-              .fill('')
-              .map((_, i) => (
-                <Li key={i} active={currPage === i} onClick={() => onClickPage(i)}>
-                  {i + 1}
-                </Li>
-              ))}
+            {pages?.map((p, i) => (
+              <Li key={`pageNum-${i}`} active={currPage === p - 1} onClick={() => onClickPage(p - 1)}>
+                {p}
+              </Li>
+            ))}
           </ul>
         </PagesWrapper>
-        <ArrowRightWrapper>
+        <div>
           <Btn onClick={onClickNext} margin>
             <ChevronRight />
           </Btn>
@@ -59,7 +43,7 @@ export const Pagination = ({
             <ChevronRight />
             <ChevronRight />
           </Btn>
-        </ArrowRightWrapper>
+        </div>
       </Container>
     </PaginationContainer>
   );
@@ -73,23 +57,18 @@ const PaginationContainer = styled.div`
 `;
 
 const Container = styled.div`
-  position: absolute;
+  display: flex;
   height: inherit;
+  margin-top: 2rem;
 `;
 
-const PagesWrapper = styled.div<{ currPage: number; left: number }>`
-  width: 205px;
+const PagesWrapper = styled.div<{ currPage: number }>`
+  width: 230px;
   height: inherit;
-  position: relative;
-
-  overflow-x: hidden;
 
   ul {
-    position: absolute;
-    width: 100000vw;
-    left: ${({ left }) => `-${left}rem`};
-    top: 50%;
-    transform: translateY(-50%);
+    margin: 0 1rem;
+    display: flex;
   }
 `;
 
@@ -105,20 +84,6 @@ const Li = styled.li<{ active: boolean }>`
   border-radius: 50%;
   cursor: pointer;
   margin: 0.3rem;
-`;
-
-const ArrowLeftWrapper = styled.div`
-  position: absolute;
-  left: -10rem;
-  top: 50%;
-  transform: translateY(-50%);
-`;
-
-const ArrowRightWrapper = styled.div`
-  position: absolute;
-  right: -10rem;
-  top: 50%;
-  transform: translateY(-50%);
 `;
 
 const Btn = styled.button<{ margin?: boolean }>`
