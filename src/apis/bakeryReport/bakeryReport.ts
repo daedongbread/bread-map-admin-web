@@ -23,7 +23,7 @@ export type UpdateReportStatusPayload = GetBakeryReportPayload & { status: Baker
 
 const getBakeryReports = async ({ page }: GetBakeryReportsPayload) => {
   const resp = await fetcher.get<GetBakeryReportsResponse>('/bakery/report', { params: { page } });
-  return { bakeryReports: resp.data.contents, totalCount: resp.data.totalElements };
+  return { bakeryReports: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
 };
 
 const getBakeryReport = async ({ reportId }: GetBakeryReportPayload) => {

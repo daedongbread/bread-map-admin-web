@@ -1,4 +1,4 @@
-import type { AxiosResponse } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginResponse, requestRefresh } from '@/apis/auth/login';
@@ -18,11 +18,7 @@ export const useInterceptor = () => {
   const navigate = useNavigate();
 
   const reqInterceptor = fetcher.interceptors.request.use(
-    config => {
-      if (config.headers === undefined) {
-        config.headers = {};
-      }
-
+    (config: AxiosRequestConfig) => {
       const token = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
       if (token && token.accessToken) {
         config.headers = {

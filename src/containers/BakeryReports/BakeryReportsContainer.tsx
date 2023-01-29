@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BakeryReportsItemEntity, useBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
 import { Pagination, Loading, TableLoading, Header, TableCell, StatusCell } from '@/components/Shared';
@@ -8,9 +8,7 @@ import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeryReportsContainer = () => {
-  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination({
-    perCount: PER_COUNT,
-  });
+  const { pages, currPage, onChangeTotalPageCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination();
 
   const { bakeryReportsQuery } = useBakeryReports();
   const { data, isLoading, isFetching } = bakeryReportsQuery({ page: currPage });
@@ -20,8 +18,14 @@ export const BakeryReportsContainer = () => {
     status: formatTextToOptionObj({ constants: BAKERY_REPORT_STATUS_OPTIONS, targetText: report.status }),
   }));
 
-  React.useEffect(() => {
-    if (data && data.totalCount) onChangeTotalCount(data.totalCount);
+  const changeTotalPageCount = (data?: { bakeryReports: BakeryReportsItemEntity[]; totalCount: number; totalPages: number }) => {
+    if (data && data.totalPages) {
+      onChangeTotalPageCount(data.totalPages);
+    }
+  };
+
+  useEffect(() => {
+    data && changeTotalPageCount(data);
   }, [data]);
 
   const havePrevData = !!bakeryReportsRow?.length;
@@ -37,10 +41,8 @@ export const BakeryReportsContainer = () => {
           <BakeryReportsTable headers={bakeryReportData.headers} rows={bakeryReportData.rows} />
         </Loading>
         <Pagination
-          totalCount={totalItemCount || 200}
-          perCount={PER_COUNT}
+          pages={pages}
           currPage={currPage}
-          leftPosition={leftPosition}
           onClickPage={onSetPage}
           onClickNext={onSetNext}
           onClickPrev={onSetPrev}
@@ -66,8 +68,6 @@ const getBakeryReportTableData = (contents: BakeryReportsItemEntity[]) => {
 
   return { headers: BAKERY_REPORT_TABLE_HEADERS, rows };
 };
-
-const PER_COUNT = 20;
 
 const Container = styled.div`
   padding: 3rem 6rem;

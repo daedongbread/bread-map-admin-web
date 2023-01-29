@@ -27,7 +27,6 @@ const usePagination = () => {
         pages.push(startPage++);
       } else break;
     }
-
     return pages;
   };
 
@@ -43,7 +42,6 @@ const usePagination = () => {
     if (!totalPage || pages.includes(totalPage)) {
       return;
     }
-
     setPages(pages => {
       return pages.filter(page => page + PAGING_COUNT <= totalPage).map(page => page + PAGING_COUNT);
     });
@@ -53,7 +51,6 @@ const usePagination = () => {
     if (pages.includes(FIRST_PAGE)) {
       return;
     }
-
     setPages(pages => {
       const p = pages[0];
       const prevPages = Array(PAGING_COUNT)
@@ -74,7 +71,6 @@ const usePagination = () => {
     if (pages.includes(FIRST_PAGE)) {
       return;
     }
-
     setPages([1, 2, 3, 4, 5]);
   };
 
