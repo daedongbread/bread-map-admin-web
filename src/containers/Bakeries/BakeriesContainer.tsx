@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
@@ -13,9 +13,7 @@ export const BakeriesContainer = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [searchText, setSearchText] = React.useState('');
-  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination({
-    perCount: PER_COUNT,
-  });
+  const { pages, currPage, onChangeTotalPageCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination();
 
   const { bakeriesQuery, searchBakeriesQuery } = useBakeries();
   const { data, isLoading, isFetching } = bakeriesQuery({ name: searchParams.get('keyword'), page: currPage });
@@ -27,17 +25,17 @@ export const BakeriesContainer = () => {
 
   const prevKeyword = usePrevious(searchParams.get('keyword'));
 
-  const changeTotalCount = (data?: { bakeries: BakeriesItemEntity[]; totalCount: number }) => {
-    if (data && data.totalCount) {
-      onChangeTotalCount(data.totalCount);
+  const changeTotalPageCount = (data?: { bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }) => {
+    if (data && data.totalPages) {
+      onChangeTotalPageCount(data.totalPages);
     }
   };
 
-  React.useEffect(() => {
-    changeTotalCount(searchData || data);
+  useEffect(() => {
+    changeTotalPageCount(searchParams.get('keyword') ? searchData : data);
   }, [searchData, data]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const keyword = searchParams.get('keyword');
     const page = Number(searchParams.get('page'));
 
@@ -88,10 +86,8 @@ export const BakeriesContainer = () => {
           <BakeriesTable headers={bakeryData.headers} rows={bakeryData.rows} />
         </Loading>
         <Pagination
-          totalCount={totalItemCount || 200}
-          perCount={PER_COUNT}
+          pages={pages}
           currPage={currPage}
-          leftPosition={leftPosition}
           onClickPage={setPageWithNavigate(onSetPage)}
           onClickNext={onSetNext}
           onClickPrev={onSetPrev}

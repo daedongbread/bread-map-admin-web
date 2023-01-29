@@ -1,5 +1,5 @@
 import { BakeryReportsItemEntity } from '@/apis';
-import { ContentsRow } from '@/components/BakeryReportDetail';
+import type { ContentsRow } from '@/components/BakeryReportDetail';
 
 const extractContentsWithType = (bakeryReport: BakeryReportsItemEntity): ContentsRow[] => {
   const contents: ContentsRow[] = [

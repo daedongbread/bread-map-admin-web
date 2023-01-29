@@ -1,3 +1,3 @@
-export { PersistLogin } from './PersistLogin';
-export { RequireAuth } from './RequireAuth';
-export { ControlInterceptor } from './ControlInterceptor';
+export * from './PersistLogin';
+export * from './RequireAuth';
+export * from './ControlInterceptor';

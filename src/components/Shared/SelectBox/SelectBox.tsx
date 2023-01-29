@@ -21,7 +21,7 @@ export const SelectBox = ({ width, isOpen, onToggleSelectBox, triggerComponent, 
   );
 };
 
-export const ContainerWrapper = styled.div<{ width: number | undefined }>`
+const ContainerWrapper = styled.div<{ width: number | undefined }>`
   position: relative;
   user-select: none;
   width: ${({ width }) => (width ? `${width}px` : '100%')};

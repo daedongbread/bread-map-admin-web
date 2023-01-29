@@ -1,1 +1,1 @@
-export { BakeryReportsTable } from './BakeryReportsTable';
+export * from './BakeryReportsTable';

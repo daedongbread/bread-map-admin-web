@@ -1,2 +1,2 @@
-export { StatusCell } from './StatusCell';
-export { SkeletonCell } from './SkeletonCell';
+export * from './StatusCell';
+export * from './SkeletonCell';

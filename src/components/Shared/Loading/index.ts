@@ -1,2 +1,2 @@
-export { Loading } from './Loading';
-export { TableLoading } from './TableLoading';
+export * from './Loading';
+export * from './TableLoading';

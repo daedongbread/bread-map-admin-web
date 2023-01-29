@@ -43,7 +43,7 @@ export const Table = ({ headers, rows, event }: TableProps) => {
         </thead>
         <tbody>
           {rows.map((row, idx) => (
-            <Tr key={`row-${idx}`} onClick={() => movePage(row)}>
+            <Tr data-testid="row" key={`row-${idx}`} onClick={() => movePage(row)}>
               {Object.keys(row).map((key, idx) => (
                 <td key={`td-${key}-${idx}`}>{row[key]}</td>
               ))}
