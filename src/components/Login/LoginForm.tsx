@@ -1,10 +1,10 @@
 import React from 'react';
 import { Input } from '@/components/Shared';
+import type { InputProps } from '@/components/Shared';
 import Check from '@/components/Shared/Icons/Check.svg';
 import CheckOrange from '@/components/Shared/Icons/CheckOrange.svg';
 import { LoginForm as LoginFormType } from '@/containers/Login';
 import styled from '@emotion/styled';
-import { InputProps } from '../Shared/Input/Input';
 
 type Props = {
   form: LoginFormType;
@@ -17,7 +17,7 @@ export const LoginForm = ({ form, onChangeForm, isRemembered, onToggleRemember }
   return (
     <div>
       <Wrapper>
-        {inputs.map(input => (
+        {LOGIN_INPUTS.map(input => (
           <InputWrapper key={`login-${input.name}`}>
             <Input
               value={form[input.name]}
@@ -38,12 +38,10 @@ export const LoginForm = ({ form, onChangeForm, isRemembered, onToggleRemember }
   );
 };
 
-const inputs: ({ name: keyof LoginFormType; textType?: string } & Pick<InputProps, 'placeholder' | 'type' | 'padding'>)[] = [
+const LOGIN_INPUTS: ({ name: keyof LoginFormType; textType?: string } & Pick<InputProps, 'placeholder' | 'type' | 'padding'>)[] = [
   { name: 'email', placeholder: '아이디', type: 'orange', padding: 'large' },
   { name: 'password', placeholder: '비밀번호', type: 'orange', padding: 'large', textType: 'password' },
 ];
-
-const Container = styled.div``;
 
 const Wrapper = styled.div`
   margin-top: 50px;
@@ -77,25 +75,27 @@ const CheckBox = styled.div`
     left: 0;
     top: 0;
     background-image: url(${Check});
+    opacity: 1;
     width: 24px;
     height: 24px;
   }
 
   input[type='checkbox']:checked + label:before {
-    background-image: url(${CheckOrange});
+    opacity: 0;
   }
 
-  /* input[type='checkbox']:checked {
-    background 'url(Check)';
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 1.5rem;
-    background-color: #ffbdb4;
-  } */
+  input[type='checkbox'] + label:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: url(${CheckOrange});
+    opacity: 0;
+    width: 24px;
+    height: 24px;
+  }
 
-  /* > label {
-    color: ${({ theme }) => theme.color.gray600};
-    font-size: 1.6rem;
-    margin-left: 5px;
-  } */
+  input[type='checkbox']:checked + label:after {
+    opacity: 1;
+  }
 `;

@@ -35,7 +35,7 @@ export const Input = ({
 
   const matchedStyle = Object.entries(INPUT_STYLE).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
-  const { borderColor, fontColor, bgColor, placeholderColor } = matchedStyle[1];
+  const { borderColor, fontColor, bgColor, placeholderColor, focusBorderColor, focusBgColor } = matchedStyle[1];
 
   const onChangeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     onChangeInput && onChangeInput(e);
@@ -72,7 +72,10 @@ export const Input = ({
         fontColor={fontColor}
         bgColor={bgColor}
         placeholderColor={placeholderColor}
+        focusBorderColor={focusBorderColor}
+        focusBgColor={focusBgColor}
         padding={padding}
+        placeholder={placeholder || ''}
       />
     );
   } else {
@@ -88,6 +91,8 @@ export const Input = ({
         fontColor={fontColor}
         bgColor={bgColor}
         placeholderColor={placeholderColor}
+        focusBorderColor={focusBorderColor}
+        focusBgColor={focusBgColor}
         padding={padding}
         placeholder={placeholder || ''}
       />
@@ -100,6 +105,8 @@ type InputStyles = {
   fontColor: string;
   placeholderColor: string;
   borderColor?: string;
+  focusBorderColor?: string;
+  focusBgColor?: string;
 };
 
 const INPUT_STYLE: { [key: string]: InputStyles } = {
@@ -108,6 +115,7 @@ const INPUT_STYLE: { [key: string]: InputStyles } = {
     fontColor: color.gray900,
     placeholderColor: color.gray500,
     borderColor: color.gray400,
+    focusBgColor: color.gray50,
   },
   gray: {
     bgColor: color.gray100,
@@ -125,6 +133,7 @@ const INPUT_STYLE: { [key: string]: InputStyles } = {
     bgColor: color.prmary50,
     fontColor: color.gray600,
     placeholderColor: color.gray600,
+    focusBorderColor: color.primary200,
   },
 };
 
@@ -141,6 +150,11 @@ const CustomInput = styled.input<InputStyles & { padding?: PaddingType }>`
   ::placeholder {
     font-size: ${({ padding }) => (padding === 'small' ? '1.3rem' : '1.5rem')};
     color: ${({ placeholderColor }) => placeholderColor};
+  }
+
+  :focus {
+    background-color: ${({ focusBgColor }) => focusBgColor && focusBgColor};
+    box-shadow: ${({ borderColor, focusBorderColor }) => (focusBorderColor ? `0 0 0 2px ${focusBorderColor} inset` : 'none')};
   }
 `;
 
@@ -166,5 +180,10 @@ const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
 
   ::-webkit-scrollbar {
     display: none;
+  }
+
+  :focus {
+    background-color: ${({ focusBgColor }) => focusBgColor && focusBgColor};
+    box-shadow: ${({ borderColor, focusBorderColor }) => (focusBorderColor ? `0 0 0 2px ${focusBorderColor} inset` : 'none')};
   }
 `;
