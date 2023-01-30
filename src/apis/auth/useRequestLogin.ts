@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
 import { useAuth } from '@/hooks/auth';
 import { Storage, userStorage } from '@/utils';
@@ -11,8 +12,8 @@ export const useLogin = () => {
       const { accessToken, refreshToken, accessTokenExpiredDate } = data;
       setAuth({ accessToken, refreshToken, expiredAt: new Date().getTime() + accessTokenExpiredDate });
     },
-    onError: (err: unknown) => {
-      console.log('login error...', err);
+    onError: (err: AxiosError<{ code: number; message: string }>) => {
+      // console.log('err..')
     },
   });
 
