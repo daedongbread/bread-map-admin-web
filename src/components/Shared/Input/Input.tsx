@@ -115,7 +115,6 @@ const INPUT_STYLE: { [key: string]: InputStyles } = {
     fontColor: color.gray900,
     placeholderColor: color.gray500,
     borderColor: color.gray400,
-    focusBgColor: color.gray50,
   },
   gray: {
     bgColor: color.gray100,
@@ -154,7 +153,7 @@ const CustomInput = styled.input<InputStyles & { padding?: PaddingType }>`
 
   :focus {
     background-color: ${({ focusBgColor }) => focusBgColor && focusBgColor};
-    box-shadow: ${({ borderColor, focusBorderColor }) => (focusBorderColor ? `0 0 0 2px ${focusBorderColor} inset` : 'none')};
+    box-shadow: ${({ focusBorderColor }) => (focusBorderColor ? `0 0 0 1.5px ${focusBorderColor} inset` : 'none')};
   }
 `;
 
@@ -184,6 +183,6 @@ const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
 
   :focus {
     background-color: ${({ focusBgColor }) => focusBgColor && focusBgColor};
-    box-shadow: ${({ borderColor, focusBorderColor }) => (focusBorderColor ? `0 0 0 2px ${focusBorderColor} inset` : 'none')};
+    box-shadow: ${({ focusBorderColor }) => (focusBorderColor ? `0 0 0 1.5px ${focusBorderColor} inset` : 'none')};
   }
 `;

@@ -155,14 +155,14 @@ export const BakeriesContainer = () => {
 }
 ```
 
-2. index.ts에서 모듈을 내보낼 때는 * 로 전체를 내보냅니다. (리팩토링 진행중..)
+2. index.ts에서 모듈을 내보낼 때는 * 로 전체를 내보냅니다.
 ```typescript
  // ❌ export { SkeletonCell } from './SkeletonCell';
 
  export * from './SkeletonCell';
 ```
 
-4. 타입을 export 해줄 경우 export type을 사용해주세요.
+3. 타입을 export 해줄 경우 export type을 사용해주세요.
 ```typescript
 export type { TableHeader, TableCell, TableProps } from './types';
 ```
