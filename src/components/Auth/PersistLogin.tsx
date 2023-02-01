@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Error } from '@/components/Shared';
 import { useAuth } from '@/hooks/auth';
@@ -6,11 +6,11 @@ import { useRefreshToken } from '@/hooks/auth/useRefreshToken';
 import styled from '@emotion/styled';
 
 export const PersistLogin = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const verifyRefreshToken = async () => {
       try {
         await refresh();
@@ -28,7 +28,7 @@ export const PersistLogin = () => {
     <>
       {isLoading ? (
         <Container>
-          <Error errMsg={'페이지로 이동중이에요!'} />
+          <Error errMsg={'페이지로 이동중이에요!'} withImg={false} />
         </Container>
       ) : (
         <Outlet />
