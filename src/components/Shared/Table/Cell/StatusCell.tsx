@@ -25,6 +25,16 @@ const Container = styled.div<{ color: string }>`
 
   div {
     margin-right: 2.5px;
+    width: 10px;
+    height: 16px;
+    position: relative;
+
+    > svg {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-35%);
+    }
   }
 
   span {
