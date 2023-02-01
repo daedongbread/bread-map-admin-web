@@ -10,7 +10,7 @@ type Props = {
   onChangeBakeryImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const BakeryImgForm = ({ label, previewImg, onChangeBakeryImg }: Props) => {
+export const BakeryImgField = ({ label, previewImg, onChangeBakeryImg }: Props) => {
   const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
 
   return (

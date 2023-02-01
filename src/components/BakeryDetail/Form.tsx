@@ -3,11 +3,11 @@ import { BakeryDetailEntity } from '@/apis';
 import { Button } from '@/components/Shared';
 import { BakeryForm, BakeryFormChangeKey } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
-import { AddressForm } from './AddressForm';
-import { BakeryImgForm } from './BakeryImgForm';
-import { BasicForm } from './BasicForm';
-import { Link, LinkForm } from './LinkForm';
-import { MenuForm } from './MenuForm';
+import { AddressArea } from './AddressArea';
+import { BakeryImgField } from './BakeryImgField';
+import { Link, LinkArea } from './LinkArea';
+import { MenuArea } from './MenuArea';
+import { TextField } from './TextField';
 
 type Props = {
   origin?: BakeryDetailEntity;
@@ -33,7 +33,6 @@ type Props = {
 };
 
 export const Form = ({
-  origin,
   form,
   links,
   openedLinkIdx,
@@ -54,22 +53,24 @@ export const Form = ({
   onChangeMenuImg,
   onSaveForm,
 }: Props) => {
+  const { name, image, address, latitude, longitude, hours, phoneNumber, productList } = form;
+
   return (
     <>
       <Forms>
         <div>
-          <BasicForm label={'빵집명'} name={'name'} value={form.name} onChangeForm={onChangeForm} />
-          <BakeryImgForm label={'대표이미지'} previewImg={form.image} onChangeBakeryImg={onChangeBakeryImg} />
-          <AddressForm label={'주소'} form={form} onChangeForm={onChangeForm} />
-          <BasicForm
+          <TextField label={'빵집명'} name={'name'} value={name} onChangeForm={onChangeForm} />
+          <BakeryImgField label={'대표이미지'} previewImg={image} onChangeBakeryImg={onChangeBakeryImg} />
+          <AddressArea label={'주소'} fullAddress={{ address, latitude, longitude }} onChangeForm={onChangeForm} />
+          <TextField
             textarea
             label={'시간'}
             name={'hours'}
-            value={form.hours || ''}
+            value={hours || ''}
             onChangeForm={onChangeForm}
             placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'}
           />
-          <LinkForm
+          <LinkArea
             label={'홈페이지'}
             links={links}
             openedLinkIdx={openedLinkIdx}
@@ -80,10 +81,10 @@ export const Form = ({
             onRemoveLink={onRemoveLink}
             onAddLink={onAddLink}
           />
-          <BasicForm label={'전화번호'} name={'phoneNumber'} value={form.phoneNumber || ''} onChangeForm={onChangeForm} placeholder={'000-000-0000'} />
-          <MenuForm
+          <TextField label={'전화번호'} name={'phoneNumber'} value={phoneNumber || ''} onChangeForm={onChangeForm} placeholder={'000-000-0000'} />
+          <MenuArea
             label={'메뉴'}
-            form={form}
+            menus={productList}
             openedMenuTypeIdx={openedMenuTypeIdx}
             onToggleMenuTypeOption={onToggleMenuTypeOption}
             onSelectMenuTypeOption={onSelectMenuTypeOption}

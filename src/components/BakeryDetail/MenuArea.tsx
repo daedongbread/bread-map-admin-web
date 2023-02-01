@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button } from '@/components/Shared';
-import { BakeryForm } from '@/store/slices/bakery';
+import { ProductItem } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
-import { Option } from './LinkForm';
+import { Option } from './LinkArea';
 import MenuItem from './MenuItem';
 
 type Props = {
   label: string;
-  form: BakeryForm;
+  menus: ProductItem[];
   openedMenuTypeIdx: number | null;
   onToggleMenuTypeOption: (currIdx: number) => void;
   onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string }) => void;
@@ -18,9 +18,9 @@ type Props = {
   onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => void;
 };
 
-export const MenuForm = ({
+export const MenuArea = ({
   label,
-  form,
+  menus,
   openedMenuTypeIdx,
   onToggleMenuTypeOption,
   onSelectMenuTypeOption,
@@ -33,12 +33,12 @@ export const MenuForm = ({
     <Row alignTop>
       <label>{label}</label>
       <RowContents>
-        {form.productList?.map((item, idx) => (
+        {menus?.map((item, idx) => (
           <MenuItem
             key={`menu-${idx}`}
             idx={idx}
             menu={item}
-            productTypes={productTypes}
+            productTypes={MENU_TYPES}
             isOpenMenuType={openedMenuTypeIdx === idx}
             onToggleMenuTypeOption={onToggleMenuTypeOption}
             onSelectMenuTypeOption={onSelectMenuTypeOption}
@@ -55,7 +55,7 @@ export const MenuForm = ({
   );
 };
 
-const productTypes: Option[] = [
+const MENU_TYPES: Option[] = [
   { name: '빵', value: 'BREAD' },
   { name: '야채', value: 'BEVERAGE' },
   { name: '기타', value: 'ETC' },

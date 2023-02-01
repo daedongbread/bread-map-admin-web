@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useBakery } from '@/apis/bakery/useBakery';
 import { Form } from '@/components/BakeryDetail';
-import { Link } from '@/components/BakeryDetail/LinkForm';
+import { Link } from '@/components/BakeryDetail/LinkArea';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';

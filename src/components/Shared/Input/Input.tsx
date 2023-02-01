@@ -115,6 +115,7 @@ const INPUT_STYLE: { [key: string]: InputStyles } = {
     fontColor: color.gray900,
     placeholderColor: color.gray500,
     borderColor: color.gray400,
+    focusBorderColor: color.gray600,
   },
   gray: {
     bgColor: color.gray100,
@@ -141,7 +142,7 @@ const CustomInput = styled.input<InputStyles & { padding?: PaddingType }>`
   border-radius: ${({ padding }) => (padding === 'small' ? '10px' : '16px')};
   width: 100%;
   outline: none;
-  border: ${({ borderColor }) => (borderColor ? `1px solid ${borderColor}` : 'none')};
+  border: ${({ borderColor }) => (borderColor ? `1px solid ${borderColor}` : '1px solid rgba(255,255,255,0)')};
   background-color: ${({ bgColor }) => bgColor};
   color: ${({ fontColor }) => fontColor};
   font-size: ${({ padding }) => (padding === 'small' ? '1.3rem' : '1.5rem')};
@@ -152,8 +153,9 @@ const CustomInput = styled.input<InputStyles & { padding?: PaddingType }>`
   }
 
   :focus {
+    border: ${({ borderColor, focusBorderColor }) => borderColor && focusBorderColor && `1.5px solid ${focusBorderColor}`};
     background-color: ${({ focusBgColor }) => focusBgColor && focusBgColor};
-    box-shadow: ${({ focusBorderColor }) => (focusBorderColor ? `0 0 0 1.5px ${focusBorderColor} inset` : 'none')};
+    box-shadow: ${({ borderColor, focusBorderColor }) => (borderColor ? 'none' : focusBorderColor ? `0 0 0 1.5px ${focusBorderColor}` : 'none')};
   }
 `;
 
@@ -164,7 +166,7 @@ const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
   width: 100%;
   min-height: 3.7rem;
   outline: none;
-  border: ${({ borderColor }) => (borderColor ? `1px solid ${borderColor}` : 'none')};
+  border: ${({ borderColor }) => (borderColor ? `1px solid ${borderColor}` : '1px solid transparent')};
   background-color: ${({ bgColor }) => bgColor};
   color: ${({ fontColor }) => fontColor};
   font-size: ${({ padding }) => (padding === 'small' ? '1.3rem' : '1.5rem')};
@@ -182,7 +184,8 @@ const CustomTextarea = styled.textarea<InputStyles & { padding?: PaddingType }>`
   }
 
   :focus {
+    border: ${({ borderColor, focusBorderColor }) => borderColor && focusBorderColor && `1.5px solid ${focusBorderColor}`};
     background-color: ${({ focusBgColor }) => focusBgColor && focusBgColor};
-    box-shadow: ${({ focusBorderColor }) => (focusBorderColor ? `0 0 0 1.5px ${focusBorderColor} inset` : 'none')};
+    box-shadow: ${({ borderColor, focusBorderColor }) => (borderColor ? 'none' : focusBorderColor ? `0 0 0 1.5px ${focusBorderColor}` : 'none')};
   }
 `;

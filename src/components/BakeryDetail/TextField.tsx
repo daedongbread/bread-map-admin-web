@@ -12,9 +12,7 @@ type Props = {
   onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
 };
 
-// type 입력받기. input or textarea
-// 시간에 대한 정보는 Textarea로 변경해야함
-export const BasicForm = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {
+export const TextField = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {
   return (
     <Row>
       <label>{label}</label>
