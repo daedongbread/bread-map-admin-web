@@ -1,53 +1,28 @@
-import { fetcher } from '../axios';
-import { BakeriesItemEntity, BakeryDetailEntity } from './types';
+import { BakeryApiClient, CreateUpdateBakeryPayload, GetBakeriesPayload } from './types';
 
-// 데이터 내부에 이런값들이 필요한가?
-type GetBakeriesResponse = {
-  contents: BakeriesItemEntity[];
-  numberOfElements: number;
-  pageNumber: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-};
+export class Bakery {
+  constructor(public client: BakeryApiClient) {}
 
-export type GetBakeriesPayload = {
-  name: string | null;
-  page: number;
-};
+  async getItem({ bakeryId }: { bakeryId: number }) {
+    const item = await this.client.getItem({ bakeryId });
+    return item;
+  }
 
-export type CreateUpdateBakeryPayload = {
-  payload: FormData;
-};
+  async createItem({ payload }: CreateUpdateBakeryPayload) {
+    await this.client.createItem({ payload });
+  }
 
-const getBakeries = async ({ page }: Omit<GetBakeriesPayload, 'name'>) => {
-  const resp = await fetcher.get<GetBakeriesResponse>(`/bakery`, { params: { page } });
-  return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
-};
+  async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {
+    await this.client.updateItem({ bakeryId, payload });
+  }
 
-const searchBakeries = async ({ name, page }: GetBakeriesPayload) => {
-  const resp = await fetcher.get<GetBakeriesResponse>('/bakery/search', { params: { name, page } });
-  return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
-};
+  async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
+    const list = await this.client.getList({ page });
+    return list;
+  }
 
-const getBakery = async ({ bakeryId }: { bakeryId: number }) => {
-  const resp = await fetcher.get<BakeryDetailEntity>(`bakery/${bakeryId}`);
-  return resp.data;
-};
-
-const createBakery = async ({ payload }: CreateUpdateBakeryPayload) => {
-  await fetcher.post('bakery', payload, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};
-
-const updateBakery = async ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => {
-  await fetcher.post(`bakery/${bakeryId}`, payload, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};
-export { getBakeries, searchBakeries, getBakery, createBakery, updateBakery };
+  async searchList({ name, page }: GetBakeriesPayload) {
+    const list = await this.client.searchList({ name, page });
+    return list;
+  }
+}

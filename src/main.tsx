@@ -4,7 +4,7 @@ import './index.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
-import { AuthProvider } from '@/context/AuthProvider';
+import { ApiProvider, AuthProvider } from '@/context';
 import { ThemeProvider } from '@emotion/react';
 import App from './App';
 import store from './store';
@@ -24,9 +24,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <ApiProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </ApiProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={true} position="bottom-right" />
     </QueryClientProvider>

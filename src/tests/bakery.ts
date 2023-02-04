@@ -21,3 +21,26 @@ export const fakeBakeries = [
     status: 'UNPOSTING',
   },
 ];
+
+// TODO: 테스트용 데이터 추가 필요
+export class FakeBakeryCLient {
+  getItem() {
+    return {};
+  }
+
+  createItem() {
+    return {};
+  }
+
+  updateItem() {
+    return {};
+  }
+
+  getList() {
+    return {};
+  }
+
+  searchList() {
+    return {};
+  }
+}
