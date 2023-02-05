@@ -40,38 +40,44 @@ const usePagination = () => {
 
   const onSetNext = () => {
     if (!totalPage || pages.includes(totalPage)) {
-      return;
+      return 0;
     }
-    setPages(pages => {
-      return pages.filter(page => page + PAGING_COUNT <= totalPage).map(page => page + PAGING_COUNT);
-    });
+    const nextPages = pages.filter(page => page + PAGING_COUNT <= totalPage).map(page => page + PAGING_COUNT);
+    const nextCurrPage = nextPages[0] - 1;
+    setPages(nextPages);
+    setCurrPage(nextCurrPage);
+    return nextCurrPage;
   };
 
   const onSetPrev = () => {
     if (pages.includes(FIRST_PAGE)) {
-      return;
+      return 0;
     }
-    setPages(pages => {
-      const p = pages[0];
-      const prevPages = Array(PAGING_COUNT)
-        .fill(p)
-        .map((num, idx) => num + idx - PAGING_COUNT);
-      return prevPages;
-    });
+    const p = pages[0];
+    const prevPages = Array(PAGING_COUNT)
+      .fill(p)
+      .map((num, idx) => num + idx - PAGING_COUNT);
+    const prevCurrPage = prevPages[0] - 1;
+    setPages(prevPages);
+    setCurrPage(prevCurrPage);
+    return prevCurrPage;
   };
 
   const onSetEnd = () => {
     if (!totalPage || pages.includes(totalPage)) {
-      return;
+      return 0;
     }
     setPages(getPagesFromTarget({ target: totalPage, total: totalPage }));
+    setCurrPage(totalPage - 1);
+    return totalPage - 1;
   };
 
   const onSetStart = () => {
     if (pages.includes(FIRST_PAGE)) {
-      return;
+      return 0;
     }
     setPages([1, 2, 3, 4, 5]);
+    return 0;
   };
 
   return {

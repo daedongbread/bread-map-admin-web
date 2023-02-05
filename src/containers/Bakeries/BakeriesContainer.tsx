@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
-import { Button, SearchBar, Pagination, Loading, TableLoading, Header, TableCell, StatusCell } from '@/components/Shared';
+import { Button, Header, Loading, Pagination, SearchBar, StatusCell, TableCell, TableLoading } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
@@ -60,11 +60,21 @@ export const BakeriesContainer = () => {
     navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}`);
   };
 
-  const setPageWithNavigate = (callback: (page: number) => void) => (page: number) => {
-    const params = searchParams.get('keyword') || '';
-    const path = params.length ? `${PATH.Bakeries}/search?keyword=${params}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
+  const setPageAndNavigateWithArgs = (callback: (page: number) => void) => (page: number) => {
+    const path = getPagePath(page);
     navigate(path);
     callback(page);
+  };
+
+  const setPageAndNavigateWithoutArgs = (callback: () => number) => () => {
+    const page = callback();
+    const path = getPagePath(page);
+    navigate(path);
+  };
+
+  const getPagePath = (page: number) => {
+    const params = searchParams.get('keyword') || '';
+    return params.length ? `${PATH.Bakeries}/search?keyword=${params}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
   };
 
   const havePrevData = !!searchData?.bakeries?.length || !!data?.bakeries?.length;
@@ -88,11 +98,11 @@ export const BakeriesContainer = () => {
         <Pagination
           pages={pages}
           currPage={currPage}
-          onClickPage={setPageWithNavigate(onSetPage)}
-          onClickNext={onSetNext}
-          onClickPrev={onSetPrev}
-          onClickEnd={onSetEnd}
-          onClickStart={onSetStart}
+          onClickPage={setPageAndNavigateWithArgs(onSetPage)}
+          onClickNext={setPageAndNavigateWithoutArgs(onSetNext)}
+          onClickPrev={setPageAndNavigateWithoutArgs(onSetPrev)}
+          onClickEnd={setPageAndNavigateWithoutArgs(onSetEnd)}
+          onClickStart={setPageAndNavigateWithoutArgs(onSetStart)}
         />
       </Container>
     </>
