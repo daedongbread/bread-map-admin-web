@@ -1,13 +1,11 @@
 import React from 'react';
-
 import type { BakeryMenuEntity } from '@/apis';
 import { BasicSelectOption, BasicSelectTrigger, Button, Input, Preview, SelectBox, SelectOption } from '@/components/Shared';
 import useFileInput from '@/hooks/useFileInput';
-
 import useSelectBox from '@/hooks/useSelectBox';
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
-import { Option } from './LinkForm';
+import { Option } from './LinkArea';
 
 type Props = {
   idx: number;

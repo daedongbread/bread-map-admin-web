@@ -35,3 +35,29 @@ export type BakeryDetailEntity = BakeryDetailBaseEntity & {
   productList: BakeryMenuEntity[];
   status: BakeryStatus;
 };
+
+export type GetBakeriesPayload = {
+  name: string | null;
+  page: number;
+};
+
+export type CreateUpdateBakeryPayload = {
+  payload: FormData;
+};
+
+export type GetBakeriesResponse = {
+  contents: BakeriesItemEntity[];
+  numberOfElements: number;
+  pageNumber: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+};
+
+export interface BakeryApiClient {
+  getItem: ({ bakeryId }: { bakeryId: number }) => Promise<BakeryDetailEntity>;
+  createItem: ({ payload }: CreateUpdateBakeryPayload) => void;
+  updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;
+  getList: ({ page }: Omit<GetBakeriesPayload, 'name'>) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
+  searchList: ({ name, page }: GetBakeriesPayload) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
+}

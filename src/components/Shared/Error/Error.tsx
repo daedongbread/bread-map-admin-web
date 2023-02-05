@@ -2,10 +2,10 @@ import React from 'react';
 import baguette from '/images/baguette.png';
 import styled from '@emotion/styled';
 
-export const Error = ({ errMsg, explanation }: { errMsg: string; explanation?: string }) => {
+export const Error = ({ errMsg, explanation, withImg = true }: { errMsg: string; explanation?: string; withImg?: boolean }) => {
   return (
     <Container>
-      <ImgContainer />
+      {withImg && <ImgContainer />}
       <ErrorMsg>
         <h2>{errMsg}</h2>
         {explanation && <p>{explanation}</p>}

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLogin } from '@/apis';
 import { rememberUser, removeUser } from '@/apis/auth/login';
 import { Logo } from '@/components/Login';
 import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
-import { PATH } from '@/constants';
+import { ERROR_CODE, PATH } from '@/constants';
 import useForm from '@/hooks/useForm';
 import useToggle from '@/hooks/useToggle';
 import { loginStorage, Storage } from '@/utils';
@@ -19,27 +19,36 @@ export const LoginContainer = () => {
     login: { mutate: login, error },
   } = useLogin();
 
-  const { activate: isRemembered, onActive: onActiveRemember, onInactive: onInactiveRemeber, onToggleActive: onToggleRemember } = useToggle();
+  const { activate: isRemembered, onActive: onActiveRemember, onInactive: onInactiveRemember, onToggleActive: onToggleRemember } = useToggle();
   const { form, onChangeForm, onSetForm } = useForm<LoginForm>(initialForm);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const { form, isRemembered } = loginStorage.getMultipleItems([Storage.Form, Storage.IsRemembered]);
     if (form && isRemembered) {
       onActiveRemember();
       onSetForm(form);
     } else {
-      onInactiveRemeber();
+      onInactiveRemember();
     }
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (error) {
-      window.confirm('로그인 에러입니다. 대동빵지도 팀에게 문의주세요.');
+      switch (error.response?.data.code) {
+        case ERROR_CODE.NOT_FOUND_ADMIN:
+          return window.alert('아이디와 비밀번호를 확인해주세요.');
+        default:
+          return window.alert('로그인 에러입니다. 다시 시도해주세요.');
+      }
     }
-  });
+  }, [error]);
 
   const onSubmit = () => {
     const { email, password } = form;
+    if (!email.trim().length || !password.trim().length) {
+      return window.alert('아이디 또는 비밀번호를 입력해주세요.');
+    }
+
     isRemembered ? rememberUser({ email, password }) : removeUser();
     login(
       { email, password },
@@ -76,22 +85,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  max-width: 420px;
-  min-width: 380px;
-  width: 100%;
-`;
-
-const FormWrapper = styled.div`
-  margin-top: 50px;
-`;
-
-const CheckBox = styled.div`
-  display: flex;
-  margin-bottom: 1.6rem;
-
-  > label {
-    color: ${({ theme }) => theme.color.gray600};
-    font-size: 1.6rem;
-    margin-left: 5px;
-  }
+  max-width: 42rem;
+  min-width: 33rem;
+  width: 80%;
 `;

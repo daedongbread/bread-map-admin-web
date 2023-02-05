@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, Dispatch, SetStateAction, useEffect } from 'react';
 import { saveUserToken } from '@/apis/auth/login';
 import { Storage, userStorage } from '@/utils';
 
@@ -8,20 +8,20 @@ export type Auth = {
   expiredAt: number | null;
 };
 
-const AuthContext = React.createContext<{ auth: Auth; setAuth: React.Dispatch<React.SetStateAction<Auth>> } | null>(null);
+const AuthContext = createContext<{ auth: Auth; setAuth: Dispatch<SetStateAction<Auth>> } | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [auth, setAuth] = React.useState<Auth>({ accessToken: null, refreshToken: null, expiredAt: null });
   const token = userStorage.getItem<{ accessToken: string; refreshToken: string; expiredAt: number }>(Storage.Token);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (token) {
       const { accessToken, refreshToken, expiredAt } = token;
       setAuth({ accessToken, refreshToken, expiredAt });
     }
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (auth.accessToken && auth.refreshToken && auth.expiredAt) {
       saveUserToken({ accessToken: auth.accessToken, refreshToken: auth.refreshToken, expiredAt: auth.expiredAt });
     }

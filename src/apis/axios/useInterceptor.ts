@@ -1,9 +1,9 @@
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import React from 'react';
+import type { AxiosResponse } from 'axios';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginResponse, requestRefresh } from '@/apis/auth/login';
 import { fetcher } from '@/apis/axios/fetcher';
-import { PATH } from '@/constants';
+import { ERROR_CODE, PATH } from '@/constants';
 import { useAuth } from '@/hooks/auth';
 import { Storage, userStorage } from '@/utils';
 
@@ -40,7 +40,7 @@ export const useInterceptor = () => {
     async error => {
       const config = error.config;
 
-      if (error.response.data?.code === 40100 && !config._retry) {
+      if (error.response.data?.code === ERROR_CODE.EXPIRED_TOKEN && !config._retry) {
         config._retry = true;
         try {
           const token = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
@@ -73,7 +73,7 @@ export const useInterceptor = () => {
     }
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       fetcher.interceptors.request.eject(reqInterceptor);
       fetcher.interceptors.response.eject(resInterceptor);

@@ -1,8 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { bakerySlice, userSlice } from './slices';
+import { bakerySlice } from './slices';
 
 const reducer = combineReducers({
-  user: userSlice,
   bakery: bakerySlice,
 });
 

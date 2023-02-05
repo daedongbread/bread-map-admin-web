@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Input, SelectBox, BasicSelectTrigger, BasicSelectOption } from '@/components/Shared';
 import type { SelectOption } from '@/components/Shared';
 import useSelectBox from '@/hooks/useSelectBox';
-import { Link, Option } from './LinkForm';
+import { Link, Option } from './LinkArea';
 
 type Props = {
   idx: number;

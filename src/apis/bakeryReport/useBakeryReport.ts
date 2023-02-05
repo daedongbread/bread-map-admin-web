@@ -1,14 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getBakeryReport, updateBakeryReportStatus } from './bakeryReport';
+import { useBakeryReportApi } from '@/context/bakeryReport';
 
 export const useBakeryReport = ({ reportId }: { reportId: number }) => {
+  const { bakeryReport } = useBakeryReportApi();
   const queryClient = useQueryClient();
 
-  const bakeryReportQuery = useQuery(['bakeryReport', { reportId }], () => getBakeryReport({ reportId }), {
+  if (!bakeryReport) {
+    throw new Error('bakeryReportApi를 확인해주세요.');
+  }
+
+  const bakeryReportQuery = useQuery(['bakeryReport', { reportId }], () => bakeryReport.getItem({ reportId }), {
     enabled: Boolean(reportId),
   });
 
-  const editBakeryReportStatus = useMutation(updateBakeryReportStatus, {
+  const editBakeryReportStatus = useMutation(bakeryReport.updateItemStatus, {
     onSuccess: () => {
       return Promise.all([
         queryClient.invalidateQueries('bakeryReport'),

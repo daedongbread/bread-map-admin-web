@@ -1,38 +1,19 @@
-import { BakeryReportStatus } from '@/constants';
-import { fetcher } from '../axios';
-import { BakeryReportsItemEntity } from './types';
+import { BakeryReportApiClient, GetBakeriesPayload, GetBakeryReportPayload, UpdateReportStatusPayload } from '@/apis';
 
-type GetBakeryReportsResponse = {
-  contents: BakeryReportsItemEntity[];
-  numberOfElements: number;
-  pageNumber: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-};
+export class BakeryReport {
+  constructor(public client: BakeryReportApiClient) {}
 
-export type GetBakeryReportsPayload = {
-  page: number;
-};
+  async getItem({ reportId }: GetBakeryReportPayload) {
+    const item = await this.client.getItem({ reportId });
+    return item;
+  }
 
-export type GetBakeryReportPayload = {
-  reportId: number;
-};
+  async updateItemStatus({ reportId, status }: UpdateReportStatusPayload) {
+    await this.client.updateItemStatus({ reportId, status });
+  }
 
-export type UpdateReportStatusPayload = GetBakeryReportPayload & { status: BakeryReportStatus };
-
-const getBakeryReports = async ({ page }: GetBakeryReportsPayload) => {
-  const resp = await fetcher.get<GetBakeryReportsResponse>('/bakery/report', { params: { page } });
-  return { bakeryReports: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
-};
-
-const getBakeryReport = async ({ reportId }: GetBakeryReportPayload) => {
-  const resp = await fetcher.get<BakeryReportsItemEntity>(`/bakery/report/${reportId}`);
-  return resp.data;
-};
-
-const updateBakeryReportStatus = async ({ reportId, status }: UpdateReportStatusPayload) => {
-  await fetcher.patch(`/bakery/report/${reportId}`, { status });
-};
-
-export { getBakeryReports, getBakeryReport, updateBakeryReportStatus };
+  async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
+    const list = await this.client.getList({ page });
+    return list;
+  }
+}

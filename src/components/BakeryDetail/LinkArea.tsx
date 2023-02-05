@@ -26,7 +26,7 @@ type Props = {
   onAddLink: () => void;
 };
 
-export const LinkForm = memo(
+export const LinkArea = memo(
   ({ label, links, openedLinkIdx, onToggleLinkOption, onSelectLinkOption, onChangeLinkValue, onSetLinks, onRemoveLink, onAddLink }: Props) => {
     return (
       <Row>
@@ -40,7 +40,7 @@ export const LinkForm = memo(
                     idx={idx}
                     link={link}
                     opened={openedLinkIdx === idx}
-                    options={options}
+                    options={LINK_OPTIONS}
                     onToggleLinkOption={onToggleLinkOption}
                     onSelectLinkOption={onSelectLinkOption}
                     onChangeLinkValue={onChangeLinkValue}
@@ -61,7 +61,7 @@ export const LinkForm = memo(
   }
 );
 
-const options: Option[] = [
+const LINK_OPTIONS: Option[] = [
   { name: '웹사이트', value: 'websiteURL' },
   { name: '인스타그램', value: 'instagramURL' },
   { name: '페이스북', value: 'facebookURL' },

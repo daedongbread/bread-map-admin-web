@@ -1,5 +1,5 @@
 import { BakeryDetailBaseEntity, BakeryDetailEntity, BakeryStatus } from '@/apis';
-import { Link } from '@/components/BakeryDetail/LinkForm';
+import { Link } from '@/components/BakeryDetail/LinkArea';
 import { SelectOption } from '@/components/Shared';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';

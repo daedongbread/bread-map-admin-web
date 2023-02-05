@@ -51,7 +51,9 @@ export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
   return (
     <Container>
       <Header>
-        <h1>대동빵지도</h1>
+        <Link to={`${PATH.Bakeries}/all`}>
+          <h1>대동빵지도</h1>
+        </Link>
       </Header>
       <ul>
         {MENUS.map(menu => (
@@ -130,6 +132,11 @@ const Container = styled.div`
 
 const Header = styled.div`
   padding: 3rem 2.4rem;
+
+  a {
+    text-decoration: none;
+    color: ${({ theme }) => theme.color.gray900};
+  }
 
   h1 {
     font-size: 2rem;
