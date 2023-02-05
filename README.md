@@ -41,7 +41,8 @@
 ├── apis
 │   ├── axios # instance 선언, interceptor 로직 
 │   ├── bakery # api 분리
-│       ├── bakery.ts # 사용되는 api 
+│       ├── bakery.ts # 사용되는 api class 
+│       ├── bakeryClient.ts # api class에 주입해서 사용하는 client
 │       └── useBakery.ts # Query hooks
 │   └── ...
 ├── components
@@ -89,7 +90,7 @@
 - container 안에 들어가는 컴포넌트들은 components 안에서 만들고, 불러옵니다.
 - 컴포넌트에 들어가는 모든 로직은 container에 작성해줍니다.
 ```tsx
-// containers > LoginContainer.tsx 
+// containers/LoginContainer.tsx 
 
 export const LoginContainer = () => {
     const navigate = useNavigate();
@@ -115,7 +116,7 @@ return (
 );
 ```
 
-### 5-2. module export
+### 5-2. Module Export
 - 대부분의 폴더구조는 아래와 같이 폴더가 나뉘어져있고, 폴더마다 index.ts가 있습니다. 
 ```bash
   ├── Shared
@@ -168,6 +169,145 @@ export type { TableHeader, TableCell, TableProps } from './types';
 ```
 
 [Named Export, Default Export 참고자료](https://ko.javascript.info/import-export)
+
+### 5-3. API Context
+
+- 실 서비스에 사용되는 api는 Context API를 이용합니다.
+- 테스트에 용이하게 DI(Dependency Injection, 의존성 주입)를 이용하여 구현합니다. 
+- 사용되는 api, context 폴더의 구조는 다음과 같습니다.
+
+```bash
+  ├── api
+  │   ├── bakery
+  │       ├── bakery.ts
+  │       ├── bakeryClient.ts
+  │       ├── useBakeries..ts
+  │       ├── useBakery.ts
+  │       ├── types.ts
+  │       └── index.ts
+  │   └── ...
+```
+
+```bash
+  ├── context
+  │   ├── bakery
+  │       ├── BakeryApiContext.tsx
+  │       ├── BakeryApiProvider.tsx
+  │       └── index.ts
+  │   ├── ...
+  │   └── ApiProvider.ts
+```
+
+
+1. client를 주입받을 api class와 client class를 선언합니다.
+```typescript
+// api/bakery/kbakery.ts
+
+export class Bakery {
+  constructor(public client: BakeryApiClient) {}
+
+  async getItem({ bakeryId }: { bakeryId: number }) {
+    const item = await this.client.getItem({ bakeryId });
+    return item;
+  }
+
+  async createItem({ payload }: CreateUpdateBakeryPayload) {
+    await this.client.createItem({ payload });
+  }
+```
+
+
+```typescript
+// apis/bakery/bakeryClient.ts
+
+export class BakeryClient implements BakeryApiClient {
+  async getItem({ bakeryId }: { bakeryId: number }) {
+    const resp = await fetcher.get<BakeryDetailEntity>(`bakery/${bakeryId}`);
+    return resp.data;
+  }
+
+  async createItem({ payload }: CreateUpdateBakeryPayload) {
+    await fetcher.post('bakery', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+```
+
+2. 해당 api의 context와 provider를 만들고, ApiProvider에 추가해줍니다.
+```typescript jsx
+// context/bakery/BakeryApiContext.tsx
+
+export const BakeryApiContext = createContext<{ bakery: Bakery | null }>({ bakery: null });
+
+export const useBakeryApi = () => {
+  return useContext(BakeryApiContext);
+};
+
+```
+
+```typescript jsx
+// context/bakery/BakeryApiProvider.tsx
+
+const client = new BakeryClient();
+const bakery = new Bakery(client);
+
+export const BakeryApiProvider = ({ children }: { children: ReactNode }) => {
+  return <BakeryApiContext.Provider value={{ bakery }}>{children}</BakeryApiContext.Provider>;
+};
+
+```
+
+```typescript jsx
+// context/ApiProvider.tsx
+
+export const ApiProvider = ({ children }: { children: ReactNode }) => {
+  return (
+    <BakeryApiProvider>
+      <BakeryReportApiProvider>{children}</BakeryReportApiProvider>
+    </BakeryApiProvider>
+  );
+};
+
+```
+
+3. React Query를 이용해서 Query hook을 선언할 때 불러와서 사용합니다.
+```typescript jsx
+// apis/bakery/useBakery.ts
+
+export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
+  const { bakery } = useBakeryApi();
+  const queryClient = useQueryClient();
+
+  if (!bakery) {
+    throw new Error('bakeryApi를 확인해주세요.');
+  }
+
+  const bakeryQuery = useQuery(['bakery', { bakeryId }], () => bakery.getItem({ bakeryId }), {
+    enabled: !isNaN(bakeryId),
+  });
+
+  const addBakery = useMutation(bakery.createItem, {
+    onSuccess: () => queryClient.invalidateQueries('getBakeries'),
+  });
+```
+4. 화면에서 api를 이용할 때는 Query hook을 이용합니다.
+```typescript jsx
+// containers/bakeryDetail/BakeryDetailContainers.tsx
+
+const {
+    bakeryQuery: { data: bakery },
+    addBakery,
+    editBakery,
+} = useBakery({ bakeryId: Number(bakeryId) });
+
+// ...
+
+const onCreateForm = (payload: FormData) => {
+    addBakery.mutate( 
+        // ... 
+```
 
 ## 6. 테스트
 
