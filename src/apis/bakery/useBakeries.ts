@@ -5,7 +5,9 @@ import { useBakeryApi } from '@/context/bakery';
 export const useBakeries = () => {
   const { bakery } = useBakeryApi();
 
-  if (!bakery) throw new Error('bakeryApi를 확인해주세요.');
+  if (!bakery) {
+    throw new Error('bakeryApi를 확인해주세요.');
+  }
 
   const bakeriesQuery = ({ name, page }: GetBakeriesPayload) => {
     return useQuery(['getBakeries', { page }], () => bakery.getList({ page }), {

@@ -5,7 +5,9 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
   const { bakery } = useBakeryApi();
   const queryClient = useQueryClient();
 
-  if (!bakery) throw new Error('bakeryApi를 확인해주세요.');
+  if (!bakery) {
+    throw new Error('bakeryApi를 확인해주세요.');
+  }
 
   const bakeryQuery = useQuery(['bakery', { bakeryId }], () => bakery.getItem({ bakeryId }), {
     enabled: !isNaN(bakeryId),

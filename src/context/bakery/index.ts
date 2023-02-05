@@ -1,2 +1,2 @@
-export * from './BakeryApiProvider';
 export * from './BakeryApiContext';
+export * from './BakeryApiProvider';
