@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { ChangeEvent, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { BakerySns } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
 import { Form } from '@/components/BakeryDetail';
-import { Link } from '@/components/BakeryDetail/LinkArea';
+import { SnsLink } from '@/components/BakeryDetail/SnsLinkArea';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
 import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
@@ -42,10 +43,10 @@ export const BakeryDetailContainer = () => {
   } = useBakery({ bakeryId: Number(bakeryId) });
 
   // opened state를 리덕스에 저장하면 안될거같은데..?
-  const { form, formLinks, openedLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
+  const { form, formLinks, openedSnsLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (bakery) {
       dispatch(setForm({ form: bakery })); // image(bakery img 제거하기)
       updateLinksAtForm();
@@ -59,11 +60,11 @@ export const BakeryDetailContainer = () => {
   }, [bakery]);
 
   const updateLinksAtForm = () => {
-    const links: { key: string; value: string }[] = [];
+    const links: SnsLink[] = [];
     if (bakery) {
       for (const [key, value] of Object.entries(bakery)) {
         if (key.includes('URL')) {
-          links.push({ key, value: value as string });
+          links.push({ key: key as BakerySns, value: value as string });
         }
       }
       dispatch(setLinks({ links }));
@@ -90,7 +91,7 @@ export const BakeryDetailContainer = () => {
     dispatch(changeBakeryStatus({ status: status.value }));
   };
 
-  const onChangeBakeryImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeBakeryImg = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const imgPreview = URL.createObjectURL(e.target.files[0]);
     dispatch(changeBakeryImg({ imgPreview }));
@@ -108,7 +109,7 @@ export const BakeryDetailContainer = () => {
     dispatch(changeLinkValue(payload));
   }, []);
 
-  const onSetLinks = useCallback((links: Link[]) => {
+  const onSetLinks = useCallback((links: SnsLink[]) => {
     dispatch(setLinks({ links }));
   }, []);
 
@@ -140,7 +141,7 @@ export const BakeryDetailContainer = () => {
     dispatch(addMenu());
   };
 
-  const onChangeMenuImg = ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => {
+  const onChangeMenuImg = ({ currIdx, e }: { currIdx: number; e: ChangeEvent<HTMLInputElement> }) => {
     if (!e.target.files) return;
 
     const imgPreview = URL.createObjectURL(e.target.files[0]);
@@ -186,8 +187,8 @@ export const BakeryDetailContainer = () => {
       <Form
         origin={bakery}
         form={form}
-        links={formLinks}
-        openedLinkIdx={openedLinkIdx}
+        snsLinks={formLinks}
+        openedSnsLinkIdx={openedSnsLinkIdx}
         openedMenuTypeIdx={openedMenuTypeIdx}
         onChangeForm={onChangeForm}
         onChangeBakeryImg={onChangeBakeryImg}

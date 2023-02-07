@@ -1,42 +1,43 @@
 import React, { memo } from 'react';
+import { BakerySns } from '@/apis';
 import { Button } from '@/components/Shared';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
-import LinkItem from './LinkItem';
+import SnsLinkItem from './SnsLinkItem';
 
 export type Option = {
   name: string;
   value: string;
 };
 
-export type Link = {
-  key: string;
+export type SnsLink = {
+  key: BakerySns;
   value: string;
 };
 
 type Props = {
   label: string;
-  links: Link[];
+  snsLinks: SnsLink[];
   openedLinkIdx: number | null;
   onToggleLinkOption: (currIdx: number) => void;
   onSelectLinkOption: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
   onChangeLinkValue: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
-  onSetLinks: (links: Link[]) => void;
+  onSetLinks: (links: SnsLink[]) => void;
   onRemoveLink: (currIdx: number) => void;
   onAddLink: () => void;
 };
 
-export const LinkArea = memo(
-  ({ label, links, openedLinkIdx, onToggleLinkOption, onSelectLinkOption, onChangeLinkValue, onSetLinks, onRemoveLink, onAddLink }: Props) => {
+export const SnsLinkArea = memo(
+  ({ label, snsLinks, openedLinkIdx, onToggleLinkOption, onSelectLinkOption, onChangeLinkValue, onSetLinks, onRemoveLink, onAddLink }: Props) => {
     return (
       <Row>
         <Row alignTop>
           <label>{label}</label>
           <CustomRowContents>
             <>
-              {links.map((link, idx) => (
+              {snsLinks.map((link, idx) => (
                 <CustomRow key={`link-${idx}`}>
-                  <LinkItem
+                  <SnsLinkItem
                     idx={idx}
                     link={link}
                     opened={openedLinkIdx === idx}

@@ -5,22 +5,22 @@ import { BakeryForm, BakeryFormChangeKey } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
 import { AddressArea } from './AddressArea';
 import { BakeryImgField } from './BakeryImgField';
-import { Link, LinkArea } from './LinkArea';
 import { MenuArea } from './MenuArea';
+import { SnsLink, SnsLinkArea } from './SnsLinkArea';
 import { TextField } from './TextField';
 
 type Props = {
   origin?: BakeryDetailEntity;
   form: BakeryForm;
-  links: Link[];
-  openedLinkIdx: number | null;
+  snsLinks: SnsLink[];
+  openedSnsLinkIdx: number | null;
   openedMenuTypeIdx: number | null;
   onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
   onChangeBakeryImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onToggleLinkOption: (currIdx: number) => void;
   onSelectLinkOption: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
   onChangeLinkValue: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
-  onSetLinks: (links: { key: string; value: string }[]) => void;
+  onSetLinks: (links: SnsLink[]) => void;
   onRemoveLink: (currIdx: number) => void;
   onAddLink: () => void;
   onToggleMenuTypeOption: (currIdx: number) => void;
@@ -34,8 +34,8 @@ type Props = {
 
 export const Form = ({
   form,
-  links,
-  openedLinkIdx,
+  snsLinks,
+  openedSnsLinkIdx,
   openedMenuTypeIdx,
   onChangeForm,
   onChangeBakeryImg,
@@ -70,10 +70,10 @@ export const Form = ({
             onChangeForm={onChangeForm}
             placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'}
           />
-          <LinkArea
+          <SnsLinkArea
             label={'홈페이지'}
-            links={links}
-            openedLinkIdx={openedLinkIdx}
+            snsLinks={snsLinks}
+            openedLinkIdx={openedSnsLinkIdx}
             onToggleLinkOption={onToggleLinkOption}
             onSelectLinkOption={onSelectLinkOption}
             onChangeLinkValue={onChangeLinkValue}
