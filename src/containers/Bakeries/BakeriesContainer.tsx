@@ -13,7 +13,7 @@ export const BakeriesContainer = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [searchText, setSearchText] = React.useState('');
-  const { pages, currPage, onChangeTotalPageCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination();
+  const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
 
   const { bakeriesQuery, searchBakeriesQuery } = useBakeries();
   const { data, isLoading, isFetching } = bakeriesQuery({ name: searchParams.get('keyword'), page: currPage });
@@ -40,7 +40,7 @@ export const BakeriesContainer = () => {
     const page = Number(searchParams.get('page'));
 
     keyword ? setSearchText(keyword) : setSearchText('');
-    onSetPage(page);
+    onGetPage(page);
   }, [searchParams]);
 
   const onChangeText = (text: string) => {
@@ -98,11 +98,11 @@ export const BakeriesContainer = () => {
         <Pagination
           pages={pages}
           currPage={currPage}
-          onClickPage={setPageAndNavigateWithArgs(onSetPage)}
-          onClickNext={setPageAndNavigateWithoutArgs(onSetNext)}
-          onClickPrev={setPageAndNavigateWithoutArgs(onSetPrev)}
-          onClickEnd={setPageAndNavigateWithoutArgs(onSetEnd)}
-          onClickStart={setPageAndNavigateWithoutArgs(onSetStart)}
+          onClickPage={setPageAndNavigateWithArgs(onGetPage)}
+          onClickNext={setPageAndNavigateWithoutArgs(onGetNextPage)}
+          onClickPrev={setPageAndNavigateWithoutArgs(onGetPrevPage)}
+          onClickEnd={setPageAndNavigateWithoutArgs(onGetEndPage)}
+          onClickStart={setPageAndNavigateWithoutArgs(onGetStartPage)}
         />
       </Container>
     </>

@@ -34,11 +34,11 @@ const usePagination = () => {
     setTotalPage(page);
   };
 
-  const onSetPage = (page: number) => {
+  const onGetPage = (page: number) => {
     setCurrPage(page);
   };
 
-  const onSetNext = () => {
+  const onGetNextPage = () => {
     if (!totalPage || pages.includes(totalPage)) {
       return 0;
     }
@@ -49,7 +49,7 @@ const usePagination = () => {
     return nextCurrPage;
   };
 
-  const onSetPrev = () => {
+  const onGetPrevPage = () => {
     if (pages.includes(FIRST_PAGE)) {
       return 0;
     }
@@ -63,7 +63,7 @@ const usePagination = () => {
     return prevCurrPage;
   };
 
-  const onSetEnd = () => {
+  const onGetEndPage = () => {
     if (!totalPage || pages.includes(totalPage)) {
       return 0;
     }
@@ -72,7 +72,7 @@ const usePagination = () => {
     return totalPage - 1;
   };
 
-  const onSetStart = () => {
+  const onGetStartPage = () => {
     if (pages.includes(FIRST_PAGE)) {
       return 0;
     }
@@ -84,11 +84,11 @@ const usePagination = () => {
     pages,
     currPage,
     onChangeTotalPageCount,
-    onSetPage,
-    onSetNext,
-    onSetPrev,
-    onSetEnd,
-    onSetStart,
+    onGetPage,
+    onGetNextPage,
+    onGetPrevPage,
+    onGetEndPage,
+    onGetStartPage,
   };
 };
 
