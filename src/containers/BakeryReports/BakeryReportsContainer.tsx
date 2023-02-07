@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeryReportsItemEntity, useBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
-import { Pagination, Loading, TableLoading, Header, TableCell, StatusCell } from '@/components/Shared';
-import { BAKERY_REPORT_STATUS_OPTIONS, BAKERY_REPORT_TABLE_HEADERS } from '@/constants';
+import { Header, Loading, Pagination, StatusCell, TableCell, TableLoading } from '@/components/Shared';
+import { BAKERY_REPORT_STATUS_OPTIONS, BAKERY_REPORT_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeryReportsContainer = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { pages, currPage, onChangeTotalPageCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination();
 
   const { bakeryReportsQuery } = useBakeryReports();
@@ -28,6 +31,27 @@ export const BakeryReportsContainer = () => {
     data && changeTotalPageCount(data);
   }, [data]);
 
+  useEffect(() => {
+    const page = Number(searchParams.get('page'));
+    onSetPage(page);
+  }, [searchParams]);
+
+  const setPageAndNavigateWithArgs = (callback: (page: number) => void) => (page: number) => {
+    const path = getPagePath(page);
+    navigate(path);
+    callback(page);
+  };
+
+  const setPageAndNavigateWithoutArgs = (callback: () => number) => () => {
+    const page = callback();
+    const path = getPagePath(page);
+    navigate(path);
+  };
+
+  const getPagePath = (page: number) => {
+    return `${PATH.BakeryReports}?page=${page}`;
+  };
+
   const havePrevData = !!bakeryReportsRow?.length;
   const loading = isLoading || isFetching;
 
@@ -43,11 +67,11 @@ export const BakeryReportsContainer = () => {
         <Pagination
           pages={pages}
           currPage={currPage}
-          onClickPage={onSetPage}
-          onClickNext={onSetNext}
-          onClickPrev={onSetPrev}
-          onClickEnd={onSetEnd}
-          onClickStart={onSetStart}
+          onClickPage={setPageAndNavigateWithArgs(onSetPage)}
+          onClickNext={setPageAndNavigateWithoutArgs(onSetNext)}
+          onClickPrev={setPageAndNavigateWithoutArgs(onSetPrev)}
+          onClickEnd={setPageAndNavigateWithoutArgs(onSetEnd)}
+          onClickStart={setPageAndNavigateWithoutArgs(onSetStart)}
         />
       </Container>
     </>
