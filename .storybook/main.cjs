@@ -1,3 +1,6 @@
+const { mergeConfig } = require('vite');
+const viteTsconfig = require('vite-tsconfig-paths');
+
 module.exports = {
   "stories": [
     "../src/**/*.stories.mdx",
@@ -11,6 +14,11 @@ module.exports = {
   "framework": "@storybook/react",
   "core": {
     "builder": "@storybook/builder-vite"
+  },
+  async viteFinal(config) {
+    return mergeConfig(config, {
+      plugins: [viteTsconfig.default()],
+    });
   },
   "features": {
     "storyStoreV7": true
