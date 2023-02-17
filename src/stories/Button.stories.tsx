@@ -1,40 +1,45 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { Button } from '@/components/Shared';
+import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'Example/Button',
+  title: 'Daedong/Button',
   component: Button,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     backgroundColor: { control: 'color' },
   },
 } as ComponentMeta<typeof Button>;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Button> = args => <Button {...args} />;
 
-export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
-Primary.args = {
-  primary: true,
-  label: 'Button',
+export const Gray = Template.bind({});
+Gray.args = {
+  type: 'gray',
+  text: 'gray',
+  btnSize: 'small',
+  fontSize: 'small',
 };
 
-export const Secondary = Template.bind({});
-Secondary.args = {
-  label: 'Button',
+export const Orange = Template.bind({});
+Orange.args = {
+  type: 'orange',
+  text: 'orange',
+  btnSize: 'small',
+  fontSize: 'small',
 };
 
-export const Large = Template.bind({});
-Large.args = {
-  size: 'large',
-  label: 'Button',
+export const LightOrange = Template.bind({});
+LightOrange.args = {
+  type: 'lightOrange',
+  text: 'lightOrange',
+  btnSize: 'small',
+  fontSize: 'small',
 };
 
-export const Small = Template.bind({});
-Small.args = {
-  size: 'small',
-  label: 'Button',
+export const ReverseOrange = Template.bind({});
+ReverseOrange.args = {
+  type: 'reverseOrange',
+  text: 'reverseOrange',
+  btnSize: 'small',
+  fontSize: 'small',
 };
