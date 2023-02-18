@@ -6,7 +6,15 @@ export default {
   title: 'Daedong/Button',
   component: Button,
   argTypes: {
-    backgroundColor: { control: 'color' },
+    type: {
+      control: false,
+    },
+    backgroundColor: {
+      control: false,
+    },
+  },
+  parameters: {
+    layout: 'centered',
   },
 } as ComponentMeta<typeof Button>;
 
