@@ -20,14 +20,6 @@ export default {
 
 const Template: ComponentStory<typeof Button> = args => <Button {...args} />;
 
-export const Gray = Template.bind({});
-Gray.args = {
-  type: 'gray',
-  text: 'gray',
-  btnSize: 'small',
-  fontSize: 'small',
-};
-
 export const Orange = Template.bind({});
 Orange.args = {
   type: 'orange',
@@ -48,6 +40,14 @@ export const ReverseOrange = Template.bind({});
 ReverseOrange.args = {
   type: 'reverseOrange',
   text: 'reverseOrange',
+  btnSize: 'small',
+  fontSize: 'small',
+};
+
+export const Gray = Template.bind({});
+Gray.args = {
+  type: 'gray',
+  text: 'gray',
   btnSize: 'small',
   fontSize: 'small',
 };
