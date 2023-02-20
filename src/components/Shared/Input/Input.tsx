@@ -6,7 +6,7 @@ type InputStyleType = 'plain' | 'gray' | 'disabled' | 'orange';
 type PaddingType = 'small' | 'large';
 
 export type InputProps = {
-  textType?: string;
+  textType?: 'text' | 'number';
   type: InputStyleType;
   padding?: PaddingType;
   placeholder?: string;
@@ -19,7 +19,7 @@ export type InputProps = {
 };
 
 export const Input = ({
-  textType,
+  textType = 'text',
   type,
   padding = 'small',
   placeholder,
@@ -43,7 +43,7 @@ export const Input = ({
 
   const resizeTextarea = (value: string) => {
     let lineCnt = 1;
-    if (value.length > 0 && value.includes('\n')) {
+    if (value?.length > 0 && value.includes('\n')) {
       lineCnt = value.split('\n').length;
       if (lineCnt === textareaPrevLineCnt.current) {
         return;

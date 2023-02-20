@@ -11,7 +11,7 @@ import styled from '@emotion/styled';
 export const BakeryReportsContainer = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { pages, currPage, onChangeTotalPageCount, onSetPage, onSetNext, onSetPrev, onSetEnd, onSetStart } = usePagination();
+  const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
 
   const { bakeryReportsQuery } = useBakeryReports();
   const { data, isLoading, isFetching } = bakeryReportsQuery({ page: currPage });
@@ -33,7 +33,7 @@ export const BakeryReportsContainer = () => {
 
   useEffect(() => {
     const page = Number(searchParams.get('page'));
-    onSetPage(page);
+    onGetPage(page);
   }, [searchParams]);
 
   const setPageAndNavigateWithArgs = (callback: (page: number) => void) => (page: number) => {
@@ -67,11 +67,11 @@ export const BakeryReportsContainer = () => {
         <Pagination
           pages={pages}
           currPage={currPage}
-          onClickPage={setPageAndNavigateWithArgs(onSetPage)}
-          onClickNext={setPageAndNavigateWithoutArgs(onSetNext)}
-          onClickPrev={setPageAndNavigateWithoutArgs(onSetPrev)}
-          onClickEnd={setPageAndNavigateWithoutArgs(onSetEnd)}
-          onClickStart={setPageAndNavigateWithoutArgs(onSetStart)}
+          onClickPage={setPageAndNavigateWithArgs(onGetPage)}
+          onClickNext={setPageAndNavigateWithoutArgs(onGetNextPage)}
+          onClickPrev={setPageAndNavigateWithoutArgs(onGetPrevPage)}
+          onClickEnd={setPageAndNavigateWithoutArgs(onGetEndPage)}
+          onClickStart={setPageAndNavigateWithoutArgs(onGetStartPage)}
         />
       </Container>
     </>

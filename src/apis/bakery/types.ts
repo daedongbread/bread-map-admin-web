@@ -1,5 +1,7 @@
 export type BakeryStatus = 'POSTING' | 'UNPOSTING';
 
+export type BakerySns = 'websiteURL' | 'instagramURL' | 'facebookURL' | 'blogURL';
+
 export type BakeriesItemEntity = {
   bakeryId: number;
   name: string;

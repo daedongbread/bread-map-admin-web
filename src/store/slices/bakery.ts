@@ -1,5 +1,5 @@
 import { BakeryDetailBaseEntity, BakeryDetailEntity, BakeryStatus } from '@/apis';
-import { Link } from '@/components/BakeryDetail/LinkArea';
+import { SnsLink } from '@/components/BakeryDetail/SnsLinkArea';
 import { SelectOption } from '@/components/Shared';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -44,7 +44,7 @@ const initialBakeryForm: BakeryForm = {
   status: 'UNPOSTING',
 };
 
-const initialBakeryLinks = [
+const initialBakeryLinks: SnsLink[] = [
   { key: 'websiteURL', value: '' },
   { key: 'instagramURL', value: '' },
   { key: 'facebookURL', value: '' },
@@ -57,8 +57,8 @@ interface BakeryState {
   loading: boolean;
   error: boolean;
   form: BakeryForm;
-  formLinks: Link[];
-  openedLinkIdx: number | null;
+  formLinks: SnsLink[];
+  openedSnsLinkIdx: number | null;
   openedMenuTypeIdx: number | null;
 }
 
@@ -67,7 +67,7 @@ const initialState: BakeryState = {
   error: false,
   form: initialBakeryForm,
   formLinks: initialBakeryLinks,
-  openedLinkIdx: null,
+  openedSnsLinkIdx: null,
   openedMenuTypeIdx: null,
 };
 
@@ -97,12 +97,12 @@ const bakerySlice = createSlice({
       state.form.image = imgPreview;
     },
     toggleLinkOption(state, action: PayloadAction<{ currIdx: number }>) {
-      const { openedLinkIdx } = state;
+      const { openedSnsLinkIdx } = state;
       const { currIdx } = action.payload;
-      if (currIdx === openedLinkIdx) {
-        state.openedLinkIdx = null;
+      if (currIdx === openedSnsLinkIdx) {
+        state.openedSnsLinkIdx = null;
       } else {
-        state.openedLinkIdx = currIdx;
+        state.openedSnsLinkIdx = currIdx;
       }
     },
     selectLinkOption(state, action: PayloadAction<{ currIdx: number; optionValue: SelectOption['value']; linkValue: string }>) {
@@ -128,7 +128,7 @@ const bakerySlice = createSlice({
       });
       state.form = { ...state.form, ...updatedLinks };
     },
-    setLinks(state, action: PayloadAction<{ links: Link[] }>) {
+    setLinks(state, action: PayloadAction<{ links: SnsLink[] }>) {
       const { links } = action.payload;
       state.formLinks = links;
     },
@@ -137,7 +137,7 @@ const bakerySlice = createSlice({
       state.formLinks.splice(currIdx, 1);
     },
     addLink(state) {
-      state.formLinks.push({ key: '', value: '' });
+      state.formLinks.push({ key: 'blogURL', value: '' });
     },
     toggleMenuTypeOption(state, action: PayloadAction<{ currIdx: number }>) {
       const { openedMenuTypeIdx } = state;

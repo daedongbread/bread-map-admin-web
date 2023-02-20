@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import type { BakeryMenuEntity } from '@/apis';
 import { BasicSelectOption, BasicSelectTrigger, Button, Input, Preview, SelectBox, SelectOption } from '@/components/Shared';
 import useFileInput from '@/hooks/useFileInput';
 import useSelectBox from '@/hooks/useSelectBox';
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
-import { Option } from './LinkArea';
+import { Option } from './SnsLinkArea';
 
 type Props = {
   idx: number;
@@ -16,7 +16,7 @@ type Props = {
   onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string }) => void;
   onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
   onRemoveMenu: (currIdx: number) => void;
-  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => void;
+  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: ChangeEvent<HTMLInputElement> }) => void;
 };
 
 const MenuItem = ({

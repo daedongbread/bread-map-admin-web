@@ -17,7 +17,7 @@ export const BasicSelectTrigger = ({ selectedOption }: { selectedOption: SelectO
 export const StatusSelectTrigger = ({ selectedOption }: { selectedOption: SelectOption | null }) => {
   return (
     <StatusTrigger color={(selectedOption && selectedOption.color) ?? ''}>
-      <span>{selectedOption?.name}</span>
+      <span>{selectedOption?.name || '선택'}</span>
       <ChevronDown />
     </StatusTrigger>
   );

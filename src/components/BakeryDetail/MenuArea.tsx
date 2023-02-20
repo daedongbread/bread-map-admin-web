@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Button } from '@/components/Shared';
 import { ProductItem } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
-import { Option } from './LinkArea';
 import MenuItem from './MenuItem';
+import { Option } from './SnsLinkArea';
 
 type Props = {
   label: string;
@@ -15,7 +15,7 @@ type Props = {
   onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
   onRemoveMenu: (currIdx: number) => void;
   onAddMenu: () => void;
-  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => void;
+  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: ChangeEvent<HTMLInputElement> }) => void;
 };
 
 export const MenuArea = ({
