@@ -1,6 +1,5 @@
 import React from 'react';
-import { BakeriesItemEntity, BakeryDetailEntity, BakeryMenuEntity } from '@/apis';
-import { SnsLink } from '@/components/BakeryDetail/SnsLinkArea';
+import { BakeryDetailEntity, BakeryMenuEntity } from '@/apis';
 import { BakeryForm, ProductItem } from '@/store/slices/bakery';
 import { urlToBlob } from '@/utils/common';
 

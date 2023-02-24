@@ -4,9 +4,10 @@ import styled from '@emotion/styled';
 
 type InputStyleType = 'plain' | 'gray' | 'disabled' | 'orange';
 type PaddingType = 'small' | 'large';
+export type InputTextType = 'text' | 'number' | 'password';
 
 export type InputProps = {
-  textType?: 'text' | 'number';
+  textType?: InputTextType;
   type: InputStyleType;
   padding?: PaddingType;
   placeholder?: string;

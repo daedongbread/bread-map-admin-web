@@ -2,10 +2,9 @@ import React, { ChangeEvent, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BakerySns } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
-import { Form } from '@/components/BakeryDetail';
-import { SnsLink } from '@/components/BakeryDetail/SnsLinkArea';
+import { Form, AddressArea, BakeryImgField, MenuArea, SnsLink, SnsLinkArea, TextField } from '@/components/BakeryDetail/Form';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
-import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
+import { BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -44,6 +43,8 @@ export const BakeryDetailContainer = () => {
 
   // opened state를 리덕스에 저장하면 안될거같은데..?
   const { form, formLinks, openedSnsLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
+  const { name, image, address, latitude, longitude, hours, phoneNumber, productList } = form;
+
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
 
   useEffect(() => {
@@ -184,28 +185,35 @@ export const BakeryDetailContainer = () => {
           ))}
         </SelectBox>
       </div>
-      <Form
-        origin={bakery}
-        form={form}
-        snsLinks={formLinks}
-        openedSnsLinkIdx={openedSnsLinkIdx}
-        openedMenuTypeIdx={openedMenuTypeIdx}
-        onChangeForm={onChangeForm}
-        onChangeBakeryImg={onChangeBakeryImg}
-        onToggleLinkOption={onToggleLinkOption}
-        onSelectLinkOption={onSelectLinkOption}
-        onChangeLinkValue={onChangeLinkValue}
-        onSetLinks={onSetLinks}
-        onRemoveLink={onRemoveLink}
-        onAddLink={onAddLink}
-        onToggleMenuTypeOption={onToggleMenuTypeOption}
-        onSelectMenuTypeOption={onSelectMenuTypeOption}
-        onChangeMenuInput={onChangeMenuInput}
-        onRemoveMenu={onRemoveMenu}
-        onAddMenu={onAddMenu}
-        onChangeMenuImg={onChangeMenuImg}
-        onSaveForm={onSaveForm}
-      />
+      <Form onSaveForm={onSaveForm}>
+        <TextField label={'빵집명'} name={'name'} value={name} onChangeForm={onChangeForm} />
+        <BakeryImgField label={'대표이미지'} previewImg={image} onChangeBakeryImg={onChangeBakeryImg} />
+        <AddressArea label={'주소'} fullAddress={{ address, latitude, longitude }} onChangeForm={onChangeForm} />
+        <TextField textarea label={'시간'} name={'hours'} value={hours || ''} onChangeForm={onChangeForm} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
+        <SnsLinkArea
+          label={'홈페이지'}
+          snsLinks={formLinks}
+          openedLinkIdx={openedSnsLinkIdx}
+          onToggleLinkOption={onToggleLinkOption}
+          onSelectLinkOption={onSelectLinkOption}
+          onChangeLinkValue={onChangeLinkValue}
+          onSetLinks={onSetLinks}
+          onRemoveLink={onRemoveLink}
+          onAddLink={onAddLink}
+        />
+        <TextField label={'전화번호'} name={'phoneNumber'} value={phoneNumber || ''} onChangeForm={onChangeForm} placeholder={'000-000-0000'} />
+        <MenuArea
+          label={'메뉴'}
+          menus={productList}
+          openedMenuTypeIdx={openedMenuTypeIdx}
+          onToggleMenuTypeOption={onToggleMenuTypeOption}
+          onSelectMenuTypeOption={onSelectMenuTypeOption}
+          onChangeMenuInput={onChangeMenuInput}
+          onRemoveMenu={onRemoveMenu}
+          onAddMenu={onAddMenu}
+          onChangeMenuImg={onChangeMenuImg}
+        />
+      </Form>
     </Container>
   );
 };
