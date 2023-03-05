@@ -1,4 +1,5 @@
 import { BakeryReportApiClient, GetBakeriesPayload, GetBakeryReportPayload, UpdateReportStatusPayload } from '@/apis';
+import { fetcher } from '@/apis/axios';
 
 export class BakeryReport {
   constructor(public client: BakeryReportApiClient) {}
@@ -9,7 +10,8 @@ export class BakeryReport {
   }
 
   async updateItemStatus({ reportId, status }: UpdateReportStatusPayload) {
-    await this.client.updateItemStatus({ reportId, status });
+    await updateItemStatus({ reportId, status });
+    // await this.client.updateItemStatus({ reportId, status });
   }
 
   async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
@@ -17,3 +19,8 @@ export class BakeryReport {
     return list;
   }
 }
+
+// TODO: mutation error로 인해 임시로 설정
+const updateItemStatus = async ({ reportId, status }: UpdateReportStatusPayload) => {
+  await fetcher.patch(`/bakery/report/${reportId}`, { status });
+};

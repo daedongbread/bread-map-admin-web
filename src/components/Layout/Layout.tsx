@@ -27,6 +27,8 @@ const Container = styled.div`
   min-height: 100vh;
 
   > aside {
+    z-index: 3;
+    background: ${({ theme }) => theme.color.white};
     width: ${({ theme }) => theme.size.sidebarWidth};
     border-right: ${({ theme }) => `1px solid ${theme.color.gray200}`};
   }

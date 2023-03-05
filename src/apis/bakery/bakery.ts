@@ -1,3 +1,4 @@
+import { fetcher } from '@/apis/axios';
 import { BakeryApiClient, CreateUpdateBakeryPayload, GetBakeriesPayload } from './types';
 
 export class Bakery {
@@ -9,11 +10,13 @@ export class Bakery {
   }
 
   async createItem({ payload }: CreateUpdateBakeryPayload) {
-    await this.client.createItem({ payload });
+    await create({ payload });
+    // await this.client.createItem({ payload });
   }
 
   async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {
-    await this.client.updateItem({ bakeryId, payload });
+    await update({ bakeryId, payload });
+    // await this.client.updateItem({ bakeryId, payload });
   }
 
   async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
@@ -26,3 +29,20 @@ export class Bakery {
     return list;
   }
 }
+
+// TODO: mutation error로 인해 임시로 설정
+const create = async ({ payload }: CreateUpdateBakeryPayload) => {
+  await fetcher.post('bakery', payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+const update = async ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => {
+  await fetcher.post(`bakery/${bakeryId}`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};

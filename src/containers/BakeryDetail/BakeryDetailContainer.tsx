@@ -2,10 +2,9 @@ import React, { ChangeEvent, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BakerySns } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
-import { Form } from '@/components/BakeryDetail';
-import { SnsLink } from '@/components/BakeryDetail/SnsLinkArea';
+import { AddressArea, BakeryImgField, MenuArea, SnsLink, SnsLinkArea, TextField } from '@/components/BakeryDetail/Form';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
-import { BAKERY_STATUS_OPTIONS, PATH } from '@/constants';
+import { BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -44,6 +43,8 @@ export const BakeryDetailContainer = () => {
 
   // opened state를 리덕스에 저장하면 안될거같은데..?
   const { form, formLinks, openedSnsLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
+  const { name, image, address, latitude, longitude, hours, phoneNumber, productList } = form;
+
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
 
   useEffect(() => {
@@ -184,31 +185,77 @@ export const BakeryDetailContainer = () => {
           ))}
         </SelectBox>
       </div>
-      <Form
-        origin={bakery}
-        form={form}
-        snsLinks={formLinks}
-        openedSnsLinkIdx={openedSnsLinkIdx}
-        openedMenuTypeIdx={openedMenuTypeIdx}
-        onChangeForm={onChangeForm}
-        onChangeBakeryImg={onChangeBakeryImg}
-        onToggleLinkOption={onToggleLinkOption}
-        onSelectLinkOption={onSelectLinkOption}
-        onChangeLinkValue={onChangeLinkValue}
-        onSetLinks={onSetLinks}
-        onRemoveLink={onRemoveLink}
-        onAddLink={onAddLink}
-        onToggleMenuTypeOption={onToggleMenuTypeOption}
-        onSelectMenuTypeOption={onSelectMenuTypeOption}
-        onChangeMenuInput={onChangeMenuInput}
-        onRemoveMenu={onRemoveMenu}
-        onAddMenu={onAddMenu}
-        onChangeMenuImg={onChangeMenuImg}
-        onSaveForm={onSaveForm}
-      />
+      <ScrollViewContainer>
+        <ScrollSection>
+          <Forms>
+            <TextField label={'빵집명'} name={'name'} value={name} onChangeForm={onChangeForm} />
+            <BakeryImgField label={'대표이미지'} previewImg={image} onChangeBakeryImg={onChangeBakeryImg} />
+            <AddressArea label={'주소'} fullAddress={{ address, latitude, longitude }} onChangeForm={onChangeForm} />
+            <TextField
+              textarea
+              label={'시간'}
+              name={'hours'}
+              value={hours || ''}
+              onChangeForm={onChangeForm}
+              placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'}
+            />
+            <SnsLinkArea
+              label={'홈페이지'}
+              snsLinks={formLinks}
+              openedLinkIdx={openedSnsLinkIdx}
+              onToggleLinkOption={onToggleLinkOption}
+              onSelectLinkOption={onSelectLinkOption}
+              onChangeLinkValue={onChangeLinkValue}
+              onSetLinks={onSetLinks}
+              onRemoveLink={onRemoveLink}
+              onAddLink={onAddLink}
+            />
+            <TextField label={'전화번호'} name={'phoneNumber'} value={phoneNumber || ''} onChangeForm={onChangeForm} placeholder={'000-000-0000'} />
+            <MenuArea
+              label={'메뉴'}
+              menus={productList}
+              openedMenuTypeIdx={openedMenuTypeIdx}
+              onToggleMenuTypeOption={onToggleMenuTypeOption}
+              onSelectMenuTypeOption={onSelectMenuTypeOption}
+              onChangeMenuInput={onChangeMenuInput}
+              onRemoveMenu={onRemoveMenu}
+              onAddMenu={onAddMenu}
+              onChangeMenuImg={onChangeMenuImg}
+            />
+          </Forms>
+        </ScrollSection>
+        <ScrollSection>
+          <Edit>정보수정</Edit>
+        </ScrollSection>
+        <SaveBtns>
+          <Button type={'reverseOrange'} text={'임시저장'} fontSize={'medium'} btnSize={'medium'} />
+          <Button type={'orange'} text={'저장하기'} fontSize={'medium'} btnSize={'medium'} onClickBtn={onSaveForm} />
+        </SaveBtns>
+      </ScrollViewContainer>
     </Container>
   );
 };
+
+const Forms = styled.form`
+  padding-right: 6rem;
+  margin-bottom: 10rem;
+`;
+
+const SaveBtns = styled.div`
+  display: flex;
+  gap: 10px;
+  padding: 2rem 0 2rem 40rem;
+  position: fixed;
+  left: 30rem;
+  bottom: 0;
+  border-top: ${({ theme }) => `1px solid ${theme.color.gray200}`};
+  width: 100%;
+  background-color: ${({ theme }) => theme.color.white};
+  z-index: 2;
+  > button {
+    width: 18rem;
+  }
+`;
 
 const Container = styled.div`
   min-height: 100vh;
@@ -216,9 +263,45 @@ const Container = styled.div`
   flex-direction: column;
 
   > div {
+    border-bottom: ${({ theme }) => `1px solid ${theme.color.gray200}`};
     padding: 2rem 6rem;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+
+    &:first-of-type {
+      gap: 50rem;
+    }
   }
+`;
+
+const ScrollViewContainer = styled.div`
+  position: relative;
+  height: 100vh;
+  display: flex;
+`;
+
+const ScrollSection = styled.div`
+  overflow: scroll;
+  min-height: 80rem;
+  height: 100%;
+  min-width: 80rem;
+  width: 100%;
+
+  &::-webkit-scrollbar {
+    width: 13px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.color.gray200};
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+  }
+`;
+
+const Edit = styled.div`
+  padding-left: 6rem;
+  min-height: 100vh;
+  height: 500px;
 `;

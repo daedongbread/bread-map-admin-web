@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from '@/components/Shared';
-import type { InputProps } from '@/components/Shared';
+import type { InputTextType, InputProps } from '@/components/Shared';
 import Check from '@/components/Shared/Icons/Check.svg';
 import CheckOrange from '@/components/Shared/Icons/CheckOrange.svg';
 import { LoginForm as LoginFormType } from '@/containers/Login';
@@ -38,8 +38,8 @@ export const LoginForm = ({ form, onChangeForm, isRemembered, onToggleRemember }
   );
 };
 
-const LOGIN_INPUTS: ({ name: keyof LoginFormType; textType?: string } & Pick<InputProps, 'placeholder' | 'type' | 'padding'>)[] = [
-  { name: 'email', placeholder: '아이디', type: 'orange', padding: 'large' },
+const LOGIN_INPUTS: ({ name: keyof LoginFormType; textType: InputTextType } & Pick<InputProps, 'placeholder' | 'type' | 'padding'>)[] = [
+  { name: 'email', placeholder: '아이디', type: 'orange', padding: 'large', textType: 'text' },
   { name: 'password', placeholder: '비밀번호', type: 'orange', padding: 'large', textType: 'password' },
 ];
 
