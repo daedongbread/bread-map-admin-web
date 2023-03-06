@@ -1,4 +1,4 @@
-import { SelectOption } from '@/components/Shared';
+import { SelectOption, TabItem } from '@/components/Shared';
 import { TableHeader } from '@/components/Shared/Table/types';
 import { color } from '@/styles';
 
@@ -21,4 +21,30 @@ export const BAKERY_STATUS_OPTIONS: SelectOption[] = [
   { name: '게시중', value: BAKERY_STATUS.Posting, color: color.green },
 ];
 
-export type BakeryStatus = typeof BAKERY_STATUS[keyof typeof BAKERY_STATUS];
+export const BAKERY_REPORT_TAB_VALUE: Record<string, BakeryReportTabValue> = {
+  Images: 'images',
+  Products: 'products',
+  Information: 'information',
+};
+
+export const BAKERY_REPORT_TAB: TabItem[] = [
+  {
+    name: '대표/메뉴 이미지',
+    value: BAKERY_REPORT_TAB_VALUE.Images,
+    isActive: true,
+  },
+  {
+    name: '메뉴 제보',
+    value: BAKERY_REPORT_TAB_VALUE.Products,
+    isActive: false,
+  },
+  {
+    name: '정보수정',
+    value: BAKERY_REPORT_TAB_VALUE.Information,
+    isActive: false,
+  },
+];
+
+export type BakeryReportTabValue = 'images' | 'products' | 'information';
+
+export type BakeryStatus = (typeof BAKERY_STATUS)[keyof typeof BAKERY_STATUS];

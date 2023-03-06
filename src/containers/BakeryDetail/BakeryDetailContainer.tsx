@@ -3,9 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { BakerySns } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
 import { AddressArea, BakeryImgField, MenuArea, SnsLink, SnsLinkArea, TextField } from '@/components/BakeryDetail/Form';
+import { ReportTab } from '@/components/BakeryDetail/Report';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
-import { BAKERY_STATUS_OPTIONS } from '@/constants';
+import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
+import useTab from '@/hooks/useTab';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   initializeForm,
@@ -46,6 +48,7 @@ export const BakeryDetailContainer = () => {
   const { name, image, address, latitude, longitude, hours, phoneNumber, productList } = form;
 
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
+  const { tabs: reportTabs, selectTab: selectReportTab } = useTab({ tabData: BAKERY_REPORT_TAB });
 
   useEffect(() => {
     if (bakery) {
@@ -225,7 +228,9 @@ export const BakeryDetailContainer = () => {
           </Forms>
         </ScrollSection>
         <ScrollSection>
-          <Edit>정보수정</Edit>
+          <div>
+            <ReportTab tabs={reportTabs} handleSelectReportTab={selectReportTab} />
+          </div>
         </ScrollSection>
         <SaveBtns>
           <Button type={'reverseOrange'} text={'임시저장'} fontSize={'medium'} btnSize={'medium'} />
