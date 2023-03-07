@@ -22,6 +22,4 @@ export const ReportTab = ({ tabs, handleSelectReportTab }: Props) => {
   );
 };
 
-const Container = styled.div`
-  padding: 0 2rem;
-`;
+const Container = styled.div``;

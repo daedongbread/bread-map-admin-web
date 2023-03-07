@@ -180,14 +180,14 @@ export const BakeryDetailContainer = () => {
 
   return (
     <Container>
-      <div>
+      <Header>
         <Button type={'gray'} text={'목록 돌아가기'} btnSize={'small'} onClickBtn={onClickBack} />
         <SelectBox width={120} isOpen={isOpen} onToggleSelectBox={onToggleSelectBox} triggerComponent={<StatusSelectTrigger selectedOption={selectedOption} />}>
           {BAKERY_STATUS_OPTIONS.map((option, idx) => (
             <StatusSelectOption key={idx} active={option.name === selectedOption?.name} option={option} onSelectOption={onSelectBakerysSatusOption} />
           ))}
         </SelectBox>
-      </div>
+      </Header>
       <ScrollViewContainer>
         <ScrollSection>
           <Forms>
@@ -242,7 +242,7 @@ export const BakeryDetailContainer = () => {
 };
 
 const Forms = styled.form`
-  padding-right: 6rem;
+  padding-top: 2rem;
   margin-bottom: 10rem;
 `;
 
@@ -257,6 +257,7 @@ const SaveBtns = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.color.white};
   z-index: 2;
+
   > button {
     width: 18rem;
   }
@@ -266,15 +267,15 @@ const Container = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+`;
 
-  > div {
-    border-bottom: ${({ theme }) => `1px solid ${theme.color.gray200}`};
-    padding: 2rem 6rem;
-    display: flex;
+const Header = styled.div`
+  border-bottom: ${({ theme }) => `1px solid ${theme.color.gray200}`};
+  padding: 2rem 6rem;
+  display: flex;
 
-    &:first-of-type {
-      gap: 50rem;
-    }
+  &:first-of-type {
+    gap: 50rem;
   }
 `;
 
@@ -290,6 +291,7 @@ const ScrollSection = styled.div`
   height: 100%;
   min-width: 80rem;
   width: 100%;
+  padding: 2rem 4rem;
 
   &::-webkit-scrollbar {
     width: 13px;
@@ -303,10 +305,4 @@ const ScrollSection = styled.div`
   ::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0);
   }
-`;
-
-const Edit = styled.div`
-  padding-left: 6rem;
-  min-height: 100vh;
-  height: 500px;
 `;
