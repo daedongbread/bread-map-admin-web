@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReportContentSection } from '@/components/BakeryDetail/Report/ReportContentSection';
+import { Report } from '@/components/BakeryDetail/Report/Report';
 import { Tab, TabItem } from '@/components/Shared';
 import { BAKERY_REPORT_TAB, BakeryReportTabValue } from '@/constants';
 import { Divider } from '@/styles';
@@ -17,7 +17,7 @@ export const ReportTab = ({ tabs, handleSelectReportTab }: Props) => {
         <Tab key={`report-tab-${item.value}`} tab={item} type={'outline'} onSelectReportTab={handleSelectReportTab} />
       ))}
       <Divider />
-      <ReportContentSection type={tabs.find(i => i.isActive)?.value as BakeryReportTabValue} />
+      <Report type={tabs.find(i => i.isActive)?.value as BakeryReportTabValue} />
     </Container>
   );
 };
