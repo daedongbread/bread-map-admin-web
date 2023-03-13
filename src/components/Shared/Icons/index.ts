@@ -10,4 +10,7 @@ export * from './Users';
 export * from './User';
 export * from './Logout';
 export * from './Circle';
-// export { Check } from './Check';
+export * from './CheckLine';
+export * from './Download';
+export * from './Trash';
+export * from './NewBadge';
