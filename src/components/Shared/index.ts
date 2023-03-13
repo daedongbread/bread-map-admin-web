@@ -9,3 +9,4 @@ export * from './Table';
 export * from './Loading';
 export * from './Error';
 export * from './Tab';
+export * from './ImgController';
