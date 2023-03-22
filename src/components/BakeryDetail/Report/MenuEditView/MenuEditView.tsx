@@ -4,7 +4,7 @@ import { SelectableImg, SelectPreviewImg } from '@/components/Shared';
 export const MenuEditView = () => {
   return (
     <div>
-      <SelectPreviewImg isCurrent={false} isSelected={false} isCompleted={false} />
+      <SelectPreviewImg isCurrent={true} isSelected={true} isCompleted={true} />
       <SelectableImg isSelected={false} />
     </div>
   );
