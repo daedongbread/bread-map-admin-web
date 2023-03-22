@@ -8,6 +8,8 @@ type Props = {
   content: string;
 };
 
+// TODO: ReadOnlyInputField 로 변경예정
+//  UI 타입 Props
 const ContentRow = ({ type, title, content }: Props) => {
   return (
     <RowWrapper>
