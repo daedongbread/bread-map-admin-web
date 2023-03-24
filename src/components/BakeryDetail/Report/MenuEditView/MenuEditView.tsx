@@ -1,11 +1,10 @@
 import React from 'react';
-import { SelectableImg, SelectPreviewImg } from '@/components/Shared';
+import { SelectableMenuCard } from '@/components/BakeryDetail/Report/MenuEditView/SelectableMenuCard';
 
 export const MenuEditView = () => {
   return (
     <div>
-      <SelectPreviewImg isCurrent={true} isSelected={true} isCompleted={true} />
-      <SelectableImg isSelected={false} />
+      <SelectableMenuCard />
     </div>
   );
 };
