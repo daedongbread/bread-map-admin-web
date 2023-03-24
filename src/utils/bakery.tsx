@@ -1,5 +1,6 @@
 import React from 'react';
 import { BakeryDetailEntity, BakeryMenuEntity } from '@/apis';
+import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { BakeryForm, ProductItem } from '@/store/slices/bakery';
 import { urlToBlob } from '@/utils/common';
 
@@ -9,7 +10,7 @@ const getUpdateBreadImgFile = async ({ formBread, originBread }: { formBread: Pr
   return file;
 };
 
-export const makeBakeryPayload = async ({ origin, form, formLinks }: { origin?: BakeryDetailEntity; form: BakeryForm; formLinks: Link[] }) => {
+export const makeBakeryPayload = async ({ origin, form, formLinks }: { origin?: BakeryDetailEntity; form: BakeryForm; formLinks: SnsLink[] }) => {
   const formData = new FormData();
 
   const linkPayload: { [key: string]: string } = {};
