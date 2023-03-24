@@ -2,20 +2,20 @@ import React from 'react';
 import { Input } from '@/components/Shared';
 import styled from '@emotion/styled';
 
-type InputFieldLayout = 'inline' | 'block';
+type LabelLayout = 'inline' | 'block';
 
 type Props = {
-  type: 'input' | 'textarea';
-  title: string;
+  type?: 'input' | 'textarea';
+  label?: string;
+  labelLayout?: LabelLayout;
   content: string;
-  layout: InputFieldLayout;
   copyable?: boolean;
 };
-// TODO: 토스트 메시지 만들기
-export const ReadOnlyInputField = ({ type, title, content, layout, copyable = false }: Props) => {
+// TODO: 토스트 메시지 만들기 (복사완료 메세지)
+export const ReadOnlyInputField = ({ type = 'input', label, labelLayout = 'inline', content, copyable = false }: Props) => {
   return (
-    <Container layout={layout} copyable={copyable}>
-      <label>{title}</label>
+    <Container layout={labelLayout} copyable={copyable}>
+      {label && <label>{label}</label>}
       <div>
         <Input textarea={type === 'textarea'} type={'gray'} disabled value={content} />
       </div>
@@ -23,17 +23,19 @@ export const ReadOnlyInputField = ({ type, title, content, layout, copyable = fa
   );
 };
 
-const Container = styled.div<{ layout: InputFieldLayout; copyable: boolean }>`
-  margin: 2rem 0;
+const Container = styled.div<{ layout: LabelLayout; copyable: boolean }>`
+  display: ${({ layout }) => (layout === 'block' ? 'block' : 'flex')};
+  align-items: center;
 
   label {
-    display: ${({ layout }) => (layout === 'block' ? 'block' : 'inline-block')};
     font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: ${({ layout }) => (layout === 'block' ? '1rem' : '0')};
+    min-width: ${({ layout }) => (layout === 'block' ? 'auto' : '4.5rem')};
   }
 
   div {
+    flex: 1;
     cursor: ${({ copyable }) => (copyable ? 'pointer' : 'default')};
   }
 `;

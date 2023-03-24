@@ -29,6 +29,7 @@ export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted }: Props) 
 
 const Container = styled.div<Props>`
   border-radius: 10px;
+  display: inline-block;
   position: relative;
   overflow: hidden;
   width: 8rem;
