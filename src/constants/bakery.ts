@@ -45,6 +45,34 @@ export const BAKERY_REPORT_TAB: TabItem[] = [
   },
 ];
 
+export const BAKERY_IMG_TAB_VALUE: Record<string, BakeryImgTabValue> = {
+  MainImage: 'bakeryReportImage',
+  MenuImage: 'productAddReportImage',
+  ReviewImage: 'reviewImage',
+};
+
+export const BAKERY_IMG_TAB: TabItem[] = [
+  {
+    name: '대표 이미지',
+    value: BAKERY_IMG_TAB_VALUE.MainImage,
+    count: 13,
+    isActive: true,
+  },
+  {
+    name: '메뉴제보 이미지',
+    value: BAKERY_REPORT_TAB_VALUE.MenuImage,
+    count: 14,
+    isActive: false,
+  },
+  {
+    name: '리뷰 이미지',
+    value: BAKERY_REPORT_TAB_VALUE.ReviewImage,
+    count: 25,
+    isActive: false,
+  },
+];
+
 export type BakeryReportTabValue = 'images' | 'products' | 'information';
+export type BakeryImgTabValue = 'bakeryReportImage' | 'productAddReportImage' | 'reviewImage';
 
 export type BakeryStatus = (typeof BAKERY_STATUS)[keyof typeof BAKERY_STATUS];
