@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input } from '@/components/Shared';
+import { useCopyClipboard } from '@/hooks/useCopyClipboard';
 import styled from '@emotion/styled';
 
 type LabelLayout = 'inline' | 'block';
@@ -13,17 +14,20 @@ type Props = {
 };
 // TODO: 토스트 메시지 만들기 (복사완료 메세지)
 export const ReadOnlyInputField = ({ type = 'input', label, labelLayout = 'inline', content, copyable = false }: Props) => {
+  const { isCopied, copyToClipboard } = useCopyClipboard(content);
+
   return (
-    <Container layout={labelLayout} copyable={copyable}>
+    <Container layout={labelLayout} copyable={copyable} copied={isCopied}>
       {label && <label>{label}</label>}
-      <div>
+      <div onClick={copyToClipboard}>
         <Input textarea={type === 'textarea'} type={'gray'} disabled value={content} />
+        <span className="copy_btn">{isCopied ? 'copied' : 'copy'}</span>
       </div>
     </Container>
   );
 };
 
-const Container = styled.div<{ layout: LabelLayout; copyable: boolean }>`
+const Container = styled.div<{ layout: LabelLayout; copyable: boolean; copied: boolean }>`
   display: ${({ layout }) => (layout === 'block' ? 'block' : 'flex')};
   align-items: center;
 
@@ -36,6 +40,34 @@ const Container = styled.div<{ layout: LabelLayout; copyable: boolean }>`
 
   div {
     flex: 1;
+    position: relative;
     cursor: ${({ copyable }) => (copyable ? 'pointer' : 'default')};
+
+    > input {
+      cursor: inherit;
+    }
+
+    :hover {
+      .copy_btn {
+        opacity: 1;
+        transition: 0.5s;
+      }
+    }
+
+    .copy_btn {
+      opacity: 0;
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      background: ${({ theme, copied }) => (copied ? theme.color.primary400 : theme.color.gray400)};
+      border-radius: 12px;
+      height: 2.5rem;
+      padding: 0 1rem;
+      font-size: 1.1rem;
+      color: ${({ theme }) => theme.color.white};
+    }
   }
 `;
