@@ -6,7 +6,6 @@ import styled from '@emotion/styled';
 
 export const Gallery = () => {
   const { tabs: imgTabs, selectTab: selectImgTab } = useTab({ tabData: BAKERY_IMG_TAB });
-
   return (
     <Container>
       <div className="tabs">
@@ -28,10 +27,6 @@ export const Gallery = () => {
 };
 
 const Container = styled.div`
-  .tabs {
-    margin-bottom: 2rem;
-  }
-
   .img_wrapper {
     min-height: 500px;
   }

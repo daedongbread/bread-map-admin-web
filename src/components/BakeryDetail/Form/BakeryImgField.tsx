@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Preview } from '@/components/Shared';
-import useFileInput from '@/hooks/useFileInput';
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
 
@@ -10,16 +9,20 @@ type Props = {
   onChangeBakeryImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const BakeryImgField = ({ label, previewImg, onChangeBakeryImg }: Props) => {
-  const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
-
+export const BakeryImgField = ({ label, previewImg }: Props) => {
   return (
     <Row alignTop>
       <label>{label}</label>
       <RepresentativeImg>
-        <Preview src={getSrc(previewImg)} widthRem={28} heightRem={20} onClickTriggerFile={onClickTriggerFile} />
-        <Button type={'lightOrange'} text={'이미지 변경'} btnSize={'small'} onClickBtn={onClickTriggerFile} />
-        <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={onChangeBakeryImg} />
+        <Preview src={previewImg} widthRem={28} heightRem={20} emptyText={'대표 이미지가 없습니다.'} />
+        <Button
+          type={'lightOrange'}
+          text={'이미지 변경'}
+          btnSize={'small'}
+          onClickBtn={() => {
+            console.log('Not implemented');
+          }}
+        />
       </RepresentativeImg>
     </Row>
   );

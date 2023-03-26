@@ -48,7 +48,13 @@ const MenuItem = ({
             name={'productName'}
             value={menu.productName}
             type={'plain'}
-            onChangeInput={e => onChangeMenuInput({ currIdx: idx, name: 'productName', value: e.target.value })}
+            onChangeInput={e =>
+              onChangeMenuInput({
+                currIdx: idx,
+                name: 'productName',
+                value: e.target.value,
+              })
+            }
           />
         </CustomRow>
         <CustomRow>
@@ -79,7 +85,7 @@ const MenuItem = ({
         </BtnWrapper>
       </LeftContainer>
       <div>
-        <Preview widthRem={16} heightRem={16} src={getSrc(menu.image)} onClickTriggerFile={onClickTriggerFile} />
+        <Preview widthRem={16} heightRem={16} src={getSrc(menu.image)} emptyText={'메뉴 이미지가 없습니다.'} />
       </div>
     </Container>
   );
@@ -107,6 +113,7 @@ const BtnWrapper = styled.div`
   button:first-of-type {
     margin-right: 10px;
   }
+
   // height: 30px;
 `;
 

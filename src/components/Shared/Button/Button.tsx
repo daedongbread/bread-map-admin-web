@@ -2,7 +2,7 @@ import React, { memo, ReactNode } from 'react';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
-type BtnColor = 'orange' | 'lightOrange' | 'reverseOrange' | 'gray' | 'white';
+type BtnColor = 'orange' | 'lightOrange' | 'reverseOrange' | 'gray' | 'lightGray' | 'white';
 type Size = 'large' | 'medium' | 'small';
 
 type ButtonProps = {
@@ -53,6 +53,10 @@ const BUTTON_STYLE: { [key: string]: BtnStyles } = {
   },
   gray: {
     bgColor: color.gray500,
+    fontColor: color.white,
+  },
+  lightGray: {
+    bgColor: color.gray400,
     fontColor: color.white,
   },
   white: {
