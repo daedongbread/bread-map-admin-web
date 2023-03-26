@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLogin } from '@/apis';
 import { MenuCountEntity } from '@/apis/menu/types';
-import { Frown, Pencil, Server, Users, Logout } from '@/components/Shared/Icons';
+import { Pencil, Logout, Meal, Dislike, Profile } from '@/components/Shared/Icons';
 import { PATH, Path } from '@/constants';
 import styled from '@emotion/styled';
 import { MenuItem } from './MenuItem';
@@ -75,7 +75,7 @@ export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
 
 const MENUS = [
   {
-    name: '제보관리',
+    name: '신규 빵집제보',
     path: PATH.BakeryReports,
     icon: <Pencil />,
     noti: 43,
@@ -83,19 +83,19 @@ const MENUS = [
   {
     name: '빵집관리',
     path: `${PATH.Bakeries}/all`,
-    icon: <Server />,
+    icon: <Meal />,
     noti: 141,
   },
   {
     name: '신고목록',
     path: PATH.UserReports,
-    icon: <Frown />,
+    icon: <Dislike />,
     noti: 0,
   },
   {
     name: '사용자관리',
     path: PATH.Users,
-    icon: <Users />,
+    icon: <Profile />,
     noti: 0,
   },
 ];

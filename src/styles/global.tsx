@@ -77,7 +77,8 @@ const style = css`
   }
 
   html,
-  body {
+  body,
+  button {
     font-family: 'Pretendard', sans-serif;
   }
 

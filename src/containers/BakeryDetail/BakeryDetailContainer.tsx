@@ -2,6 +2,8 @@ import React, { useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BakerySns } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
+import { BakeryForm } from '@/components/BakeryDetail/Form';
+import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { ReportTab } from '@/components/BakeryDetail/Report';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
 import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
@@ -11,8 +13,6 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { initializeForm, setForm, setLinks, changeBakeryStatus, changeBakeryImg } from '@/store/slices/bakery';
 import { makeBakeryPayload } from '@/utils';
 import styled from '@emotion/styled';
-import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
-import { BakeryForm } from '@/components/BakeryDetail/Form';
 
 export const BakeryDetailContainer = () => {
   const { bakeryId } = useParams();
@@ -117,26 +117,36 @@ export const BakeryDetailContainer = () => {
             <ReportTab tabs={reportTabs} handleSelectReportTab={selectReportTab} />
           </div>
         </ScrollSection>
-        <SaveBtns>
+      </ScrollViewContainer>
+      <BtnSection>
+        <div className="btn_wrapper">
           <Button type={'reverseOrange'} text={'임시저장'} fontSize={'medium'} btnSize={'medium'} />
           <Button type={'orange'} text={'저장하기'} fontSize={'medium'} btnSize={'medium'} onClickBtn={onSaveForm} />
-        </SaveBtns>
-      </ScrollViewContainer>
+        </div>
+      </BtnSection>
     </Container>
   );
 };
 
-const SaveBtns = styled.div`
-  display: flex;
+const BtnSection = styled.div`
   gap: 10px;
-  padding: 2rem 0 2rem 40rem;
+  height: 8rem;
   position: fixed;
-  left: 30rem;
+  left: 0;
   bottom: 0;
   border-top: ${({ theme }) => `1px solid ${theme.color.gray200}`};
   width: 100%;
   background-color: ${({ theme }) => theme.color.white};
   z-index: 2;
+
+  .btn_wrapper {
+    display: flex;
+    position: absolute;
+    right: 22rem;
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 10px;
+  }
 
   > button {
     width: 18rem;

@@ -1,5 +1,5 @@
-import { BakeryDetailBaseEntity, BakeryDetailEntity, BakeryStatus } from '@/apis';
-import { SnsLink } from '@/components/BakeryDetail/Form';
+import { BakeryDetailBaseEntity, BakeryDetailEntity, BakerySns, BakeryStatus } from '@/apis';
+import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { SelectOption } from '@/components/Shared';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -109,7 +109,7 @@ const bakerySlice = createSlice({
       // 중복 선택 안되도록 구현필요
       const { currIdx, optionValue, linkValue } = action.payload;
       const target = state.formLinks[currIdx];
-      state.formLinks.splice(currIdx, 1, { ...target, key: optionValue });
+      state.formLinks.splice(currIdx, 1, { ...target, key: optionValue as BakerySns });
 
       const updatedLinks: { [name: string]: string } = {};
       state.formLinks.forEach(link => {
