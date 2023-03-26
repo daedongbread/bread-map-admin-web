@@ -5,7 +5,7 @@ import useFileInput from '@/hooks/useFileInput';
 import styled from '@emotion/styled';
 import hamburger from '/images/hamburger.png';
 
-export const ChangeImage = () => {
+export const ImageDiffUploader = () => {
   const [image, setImage] = useState('');
   const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
 

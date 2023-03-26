@@ -85,7 +85,7 @@ const MenuItem = ({
         </BtnWrapper>
       </LeftContainer>
       <div>
-        <Preview widthRem={16} heightRem={16} src={getSrc(menu.image)} onClickTriggerFile={onClickTriggerFile} emptyText={'메뉴 이미지가 없습니다.'} />
+        <Preview widthRem={16} heightRem={16} src={getSrc(menu.image)} emptyText={'메뉴 이미지가 없습니다.'} />
       </div>
     </Container>
   );
