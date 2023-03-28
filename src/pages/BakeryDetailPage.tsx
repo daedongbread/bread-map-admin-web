@@ -14,7 +14,7 @@ import { initializeForm, setForm, setLinks, changeBakeryStatus, changeBakeryImg 
 import { makeBakeryPayload } from '@/utils';
 import styled from '@emotion/styled';
 
-export const BakeryDetailContainer = () => {
+export const BakeryDetailPage = () => {
   const { bakeryId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

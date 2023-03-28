@@ -9,7 +9,7 @@ import usePrevious from '@/hooks/usePrevious';
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
-export const BakeriesContainer = () => {
+export const BakeriesPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [searchText, setSearchText] = React.useState('');

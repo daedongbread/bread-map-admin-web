@@ -15,7 +15,15 @@ type Props = {
   labelMinWidth?: number;
 };
 // TODO: 토스트 메시지 만들기 (복사완료 메세지)
-export const ReadOnlyInputField = ({ type = 'input', label, labelLayout = 'inline', content, copyable = false,  multiLine = false, labelMinWidth = LABEL_MIN_WIDTH }: Props) => {
+export const ReadOnlyInputField = ({
+  type = 'input',
+  label,
+  labelLayout = 'inline',
+  content,
+  copyable = false,
+  multiLine = false,
+  labelMinWidth = LABEL_MIN_WIDTH,
+}: Props) => {
   const { isCopied, copyToClipboard } = useCopyClipboard(content);
 
   return (
