@@ -17,6 +17,7 @@ export type InputProps = {
   onKeypressInput?: (e: KeyboardEvent<HTMLInputElement>) => void;
   name?: string;
   value: string;
+  multiLine?: boolean;
 };
 
 export const Input = ({
@@ -30,18 +31,17 @@ export const Input = ({
   onKeypressInput,
   name,
   value,
+  multiLine = false,
 }: InputProps) => {
   const [textareaRowCnt, setTextareaRowCnt] = useState(1);
   const textareaPrevLineCnt = useRef(1);
-
   const matchedStyle = Object.entries(INPUT_STYLE).find(([key]) => key === type);
+
   if (!matchedStyle) return <input />;
   const { borderColor, fontColor, bgColor, placeholderColor, focusBorderColor, focusBgColor } = matchedStyle[1];
-
   const onChangeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     onChangeInput && onChangeInput(e);
   };
-
   const resizeTextarea = (value: string) => {
     let lineCnt = 1;
     if (value?.length > 0 && value.includes('\n')) {
@@ -53,7 +53,6 @@ export const Input = ({
     }
     setTextareaRowCnt(lineCnt);
   };
-
   useLayoutEffect(() => {
     if (!textarea) {
       return;
@@ -64,7 +63,7 @@ export const Input = ({
   if (textarea) {
     return (
       <CustomTextarea
-        rows={textareaRowCnt}
+        rows={multiLine ? TEXTAREA_MULTILINE_ROW_CNT : textareaRowCnt}
         name={name}
         value={value}
         disabled={disabled}
@@ -100,6 +99,8 @@ export const Input = ({
     );
   }
 };
+
+const TEXTAREA_MULTILINE_ROW_CNT = 3;
 
 type InputStyles = {
   bgColor: string;
