@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input } from '@/components/Shared';
+import { useCopyClipboard } from '@/hooks/useCopyClipboard';
 import styled from '@emotion/styled';
 
 type LabelLayout = 'inline' | 'block';
@@ -23,11 +24,14 @@ export const ReadOnlyInputField = ({
   multiLine = false,
   labelMinWidth = LABEL_MIN_WIDTH,
 }: Props) => {
+  const { isCopied, copyToClipboard } = useCopyClipboard(content);
+
   return (
-    <Container layout={labelLayout} copyable={copyable} multiLine={multiLine} labelMinWidth={labelMinWidth}>
+    <Container layout={labelLayout} copyable={copyable} copied={isCopied} multiLine={multiLine} labelMinWidth={labelMinWidth}>
       {label && <label>{label}</label>}
-      <div>
+      <div onClick={copyToClipboard}>
         <Input textarea={type === 'textarea'} type={'gray'} disabled value={content} multiLine={multiLine} />
+        <span className="copy_btn">{isCopied ? 'copied' : 'copy'}</span>
       </div>
     </Container>
   );
@@ -35,7 +39,7 @@ export const ReadOnlyInputField = ({
 
 const LABEL_MIN_WIDTH = 4.5;
 
-const Container = styled.div<{ layout: LabelLayout; copyable: boolean; multiLine: boolean; labelMinWidth: number }>`
+const Container = styled.div<{ layout: LabelLayout; copyable: boolean; copied: boolean; multiLine: boolean; labelMinWidth: number }>`
   display: ${({ layout }) => (layout === 'block' ? 'block' : 'flex')};
   align-items: ${({ multiLine }) => (multiLine ? 'flex-start' : 'center')};
 
@@ -49,6 +53,34 @@ const Container = styled.div<{ layout: LabelLayout; copyable: boolean; multiLine
 
   div {
     flex: 1;
+    position: relative;
     cursor: ${({ copyable }) => (copyable ? 'pointer' : 'default')};
+
+    > input {
+      cursor: inherit;
+    }
+
+    :hover {
+      .copy_btn {
+        opacity: 1;
+        transition: 0.5s;
+      }
+    }
+
+    .copy_btn {
+      opacity: 0;
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      background: ${({ theme, copied }) => (copied ? theme.color.primary400 : theme.color.gray400)};
+      border-radius: 12px;
+      height: 2.5rem;
+      padding: 0 1rem;
+      font-size: 1.1rem;
+      color: ${({ theme }) => theme.color.white};
+    }
   }
 `;

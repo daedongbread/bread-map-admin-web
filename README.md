@@ -53,7 +53,7 @@
 │   ├── Shared # 공통 컴포넌트
 │   └── ...
 ├── constants # 상수관리
-├── containers # 화면에 해당하는 컴포넌트를 담고있는 컨테이너. 하위폴더는 화면 기준 분리
+├── pages # 화면에 해당하는 컴포넌트를 담고있는 컨테이너. 하위폴더는 화면 기준 분리
 ├── context # 전역/컴포넌트상태 관리가 필요한 경우 사용
 ├── hooks # Custom hooks 정의
 ├── routes
@@ -75,24 +75,21 @@
 일부 컨벤션/방식들은 개선할 예정이고, 의견 환영합니다 🥺
 ```
 
-### 5-1. Presenter Container 구조
-- 페이지에 들어가는 최상위 컴포넌트를 Containers 에 만듭니다.
+### 5-1. Page, Component 구조
+- 페이지에 들어가는 최상위 컴포넌트를 pages 에 만듭니다.
 ```bash
-  ├── container
-  │   ├── Bakeries
-  │   ├── Login
-  │       ├── LoginContainer.tsx # {페이지명칭}Container
-  │       └── index.ts # export components
+  ├── pages
+  │   ├── BakeriesPage.tsx
+  │   ├── LoginPage.tsx
   │   └── ...
 ```
 
 
-- container 안에 들어가는 컴포넌트들은 components 안에서 만들고, 불러옵니다.
-- 컴포넌트에 들어가는 모든 로직은 container에 작성해줍니다.
+- pages 안에 들어가는 컴포넌트들은 components 안에서 만들고, 불러옵니다.
 ```tsx
-// containers/LoginContainer.tsx 
+// pages/LoginPage.tsx 
 
-export const LoginContainer = () => {
+export const LoginPage = () => {
     const navigate = useNavigate();
     const {
         login: { mutate: login, error },
@@ -113,7 +110,7 @@ return (
             <Button type={'orange'} text={'로그인'} onClickBtn={() => onSubmit()} />
         </Wrapper>
     </Container>
-);
+)
 ```
 
 ### 5-2. Module Export
@@ -150,9 +147,9 @@ import { SelectOption } from '@/components/Shared/SelectOption';
 
 1. 컴포넌트, 함수 등등 대부분의 경우, 선언 앞쪽에 export 해줍니다. (Named Export)
 ```typescript jsx
-// ❌ export default BakeriesContainer;
+// ❌ export default BakeriesPage;
 
-export const BakeriesContainer = () => {
+export const BakeriesPage = () => {
 }
 ```
 
@@ -294,7 +291,7 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
 ```
 4. 화면에서 api를 이용할 때는 Query hook을 이용합니다.
 ```typescript jsx
-// containers/bakeryDetail/BakeryDetailContainers.tsx
+// pages/bakeryDetail/BakeryDetailContainers.tsx
 
 const {
     bakeryQuery: { data: bakery },

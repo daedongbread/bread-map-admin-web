@@ -8,7 +8,7 @@ import usePagination from '@/hooks/usePagination';
 import { formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
-export const BakeryReportsContainer = () => {
+export const BakeryReportsPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();

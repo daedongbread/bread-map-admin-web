@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useBakeryReport } from '@/apis';
@@ -10,7 +10,7 @@ import useSelectBox from '@/hooks/useSelectBox';
 import { extractContentsWithType } from '@/utils';
 import styled from '@emotion/styled';
 
-export const BakeryReportDetailContainer = () => {
+export const BakeryReportDetailPage = () => {
   const { reportId } = useParams();
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ export const BakeryReportDetailContainer = () => {
 
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (bakeryReport) {
       const currReportStatus = BAKERY_REPORT_STATUS_OPTIONS.find(option => option.value === bakeryReport.status);
       if (!currReportStatus) {
