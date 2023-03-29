@@ -13,7 +13,7 @@ import styled from '@emotion/styled';
 
 export type LoginForm = typeof initialForm;
 
-export const LoginContainer = () => {
+export const LoginPage = () => {
   const navigate = useNavigate();
   const {
     login: { mutate: login, error },

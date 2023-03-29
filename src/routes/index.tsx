@@ -4,28 +4,24 @@ import { PersistLogin, RequireAuth } from '@/components/Auth';
 import { ControlInterceptor } from '@/components/Auth/ControlInterceptor';
 import { Error, Header } from '@/components/Shared';
 import { PATH } from '@/constants/routes';
-import { BakeriesContainer } from '@/containers/Bakeries';
-import { BakeryDetailContainer } from '@/containers/BakeryDetail';
-import { BakeryReportDetailContainer } from '@/containers/BakeryReportDetail';
-import { BakeryReportsContainer } from '@/containers/BakeryReports';
-import { LoginContainer } from '@/containers/Login/LoginContainer';
+import { BakeriesPage, BakeryDetailPage, BakeryReportDetailPage, BakeryReportsPage, LoginPage } from '@/pages';
 import { loginPageLoader } from '@/routes/loader';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<ControlInterceptor />}>
       <Route path={PATH.Home} element={<Navigate to={PATH.Login} />} />
-      <Route path={PATH.Login} element={<LoginContainer />} loader={loginPageLoader} />
+      <Route path={PATH.Login} element={<LoginPage />} loader={loginPageLoader} />
 
       <Route element={<PersistLogin />}>
         <Route element={<RequireAuth />}>
           <Route path={`${PATH.Bakeries}`} element={<Navigate to={`${PATH.Bakeries}/all`} />} />
-          <Route path={`${PATH.Bakeries}/all`} element={<BakeriesContainer />} />
-          <Route path={`${PATH.Bakeries}/search`} element={<BakeriesContainer />} />
-          <Route path={`${PATH.Bakeries}/new`} element={<BakeryDetailContainer />} />
-          <Route path={`${PATH.Bakeries}/:bakeryId`} element={<BakeryDetailContainer />} />
-          <Route path={PATH.BakeryReports} element={<BakeryReportsContainer />} />
-          <Route path={`${PATH.BakeryReports}/:reportId`} element={<BakeryReportDetailContainer />} />
+          <Route path={`${PATH.Bakeries}/all`} element={<BakeriesPage />} />
+          <Route path={`${PATH.Bakeries}/search`} element={<BakeriesPage />} />
+          <Route path={`${PATH.Bakeries}/new`} element={<BakeryDetailPage />} />
+          <Route path={`${PATH.Bakeries}/:bakeryId`} element={<BakeryDetailPage />} />
+          <Route path={PATH.BakeryReports} element={<BakeryReportsPage />} />
+          <Route path={`${PATH.BakeryReports}/:reportId`} element={<BakeryReportDetailPage />} />
           <Route
             path={PATH.Users}
             element={

@@ -3,7 +3,7 @@ import { Input } from '@/components/Shared';
 import type { InputTextType, InputProps } from '@/components/Shared';
 import Check from '@/components/Shared/Icons/Check.svg';
 import CheckOrange from '@/components/Shared/Icons/CheckOrange.svg';
-import { LoginForm as LoginFormType } from '@/containers/Login';
+import { LoginForm as LoginFormType } from '@/pages';
 import styled from '@emotion/styled';
 
 type Props = {
