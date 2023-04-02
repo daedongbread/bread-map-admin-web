@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 type Props = {
   isSelected: boolean;
-  imageSrc: string;
+  imageSrc?: string;
 };
 
 export const SelectableImg = ({ imageSrc, isSelected }: Props) => {

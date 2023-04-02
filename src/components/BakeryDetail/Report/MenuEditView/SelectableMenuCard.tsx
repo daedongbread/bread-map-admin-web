@@ -1,20 +1,40 @@
 import React, { useState } from 'react';
-import { BakeryMenuReportItemEntity } from '@/apis';
+import { BakeryMenuReportImageEntity, BakeryMenuReportItemEntity } from '@/apis';
 import { Button, ReadOnlyInputField, SelectableImg, SelectPreviewImg } from '@/components/Shared';
 import styled from '@emotion/styled';
 
 type Props = {
   menuReport: BakeryMenuReportItemEntity;
+  onChangeMenuReportImages: (reportId: number, imageIdList: number[]) => void;
+  onDeleteMenuReport: (reportId: number) => void;
 };
 
-export const SelectableMenuCard = ({ menuReport }: Props) => {
-  const [currentImage, setCurrentImage] = useState(0);
+export const SelectableMenuCard = ({ menuReport, onChangeMenuReportImages, onDeleteMenuReport }: Props) => {
+  const [currentImage, setCurrentImage] = useState<BakeryMenuReportImageEntity | undefined>(menuReport.imageList[0]);
+  const [selectedImageIds, setSelectedImageIds] = useState([menuReport.imageList[0].imageId]);
+
+  const handleUpdate = () => {
+    if (selectedImageIds.length === 0) {
+      window.alert('선택된 이미지가 없습니다.');
+      return;
+    }
+    onChangeMenuReportImages(menuReport.reportId, selectedImageIds);
+  };
+
+  const handleDelete = () => {
+    onDeleteMenuReport(menuReport.reportId);
+  };
+
+  const onClickImage = (imageId: number) => {
+    setCurrentImage(menuReport.imageList.find(image => image.imageId === imageId));
+    setSelectedImageIds(prev => (prev.includes(imageId) ? prev.filter(id => id !== imageId) : [...prev, imageId]));
+  };
 
   return (
     <Container>
       <span className="date">{menuReport.createdAt}</span>
       <div className="card">
-        <SelectableImg imageSrc={menuReport.imageList[currentImage].image} isSelected={true} />
+        <SelectableImg imageSrc={currentImage?.image} isSelected={selectedImageIds.includes(currentImage?.imageId || -1)} />
         <div className="menu_info">
           <div className="input_area">
             <ReadOnlyInputField label={'메뉴명'} content={menuReport.name} copyable />
@@ -27,18 +47,20 @@ export const SelectableMenuCard = ({ menuReport }: Props) => {
             {menuReport.imageList.map((item, idx) => (
               <SelectPreviewImg
                 key={`select-preview-${item.imageId}`}
-                isCurrent={currentImage === idx}
-                isSelected={currentImage === idx}
+                isCurrent={currentImage?.imageId === item.imageId}
+                isSelected={selectedImageIds.includes(item.imageId)}
                 isCompleted={item.isRegistered}
+                imageId={item.imageId}
                 imageSrc={item.image}
+                onClickImage={onClickImage}
               />
             ))}
           </div>
         </div>
       </div>
       <div className="btn_wrapper">
-        <Button type={'white'} text={'삭제하기'} btnSize={'small'} />
-        <Button type={'orange'} text={'사진추가'} btnSize={'small'} />
+        <Button type={'white'} text={'삭제하기'} btnSize={'small'} onClickBtn={handleDelete} />
+        <Button type={'orange'} text={'사진추가'} btnSize={'small'} onClickBtn={handleUpdate} />
       </div>
     </Container>
   );
