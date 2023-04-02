@@ -1,27 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BakeryMenuReportItemEntity } from '@/apis';
 import { Button, ReadOnlyInputField, SelectableImg, SelectPreviewImg } from '@/components/Shared';
 import styled from '@emotion/styled';
 
-export const SelectableMenuCard = () => {
+type Props = {
+  menuReport: BakeryMenuReportItemEntity;
+};
+
+export const SelectableMenuCard = ({ menuReport }: Props) => {
+  const [currentImage, setCurrentImage] = useState(0);
+
   return (
     <Container>
-      <span className="date">2021.03.11</span>
+      <span className="date">{menuReport.createdAt}</span>
       <div className="card">
-        <SelectableImg isSelected={true} />
+        <SelectableImg imageSrc={menuReport.imageList[currentImage].image} isSelected={true} />
         <div className="menu_info">
           <div className="input_area">
-            <ReadOnlyInputField label={'메뉴명'} content={'대파명란바게트'} copyable />
+            <ReadOnlyInputField label={'메뉴명'} content={menuReport.name} copyable />
             <div className="input_wrapper">
-              <ReadOnlyInputField label={'가격'} content={'가격'} copyable />
-              <ReadOnlyInputField label={'제보자'} content={'제보자'} copyable />
+              <ReadOnlyInputField label={'가격'} content={menuReport.price} copyable />
+              <ReadOnlyInputField label={'제보자'} content={menuReport.nickName} copyable />
             </div>
           </div>
           <div className="grid_view">
-            {Array(9)
-              .fill(0)
-              .map((item, idx) => (
-                <SelectPreviewImg key={`select-preview-idx-${idx}`} isCurrent={true} isSelected={true} isCompleted={false} />
-              ))}
+            {menuReport.imageList.map((item, idx) => (
+              <SelectPreviewImg
+                key={`select-preview-${item.imageId}`}
+                isCurrent={currentImage === idx}
+                isSelected={currentImage === idx}
+                isCompleted={item.isRegistered}
+                imageSrc={item.image}
+              />
+            ))}
           </div>
         </div>
       </div>

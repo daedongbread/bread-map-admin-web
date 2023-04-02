@@ -9,8 +9,6 @@ type Props = {
   bakeryId: number;
 };
 
-const TEMP_SIZE = 5;
-
 export const InformationEditView = ({ bakeryId }: Props) => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const { bakeryInfoUpdateRequestsQuery, completeBakeryInfoUpdateRequest, deleteBakeryInfoUpdateRequest } = useBakery({ bakeryId });
