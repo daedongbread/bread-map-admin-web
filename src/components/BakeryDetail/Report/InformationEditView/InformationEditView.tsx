@@ -35,7 +35,7 @@ export const InformationEditView = ({ bakeryId }: Props) => {
       {data?.bakeryInfoUpdateRequests.map((bakeryInfoUpdateRequestEntity, idx) => {
         return (
           <div key={`card-${idx}`}>
-            <InfoEditRequestCard data={bakeryInfoUpdateRequestEntity} onCompleteRequest={onCompleteRequest} onDeleteRequest={onDeleteRequest} />
+            <InfoEditRequestCard updateRequest={bakeryInfoUpdateRequestEntity} onCompleteRequest={onCompleteRequest} onDeleteRequest={onDeleteRequest} />
             {idx < data?.bakeryInfoUpdateRequests.length - 1 && <Divider />}
           </div>
         );
