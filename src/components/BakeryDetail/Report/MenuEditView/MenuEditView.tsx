@@ -1,10 +1,44 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useBakery } from '@/apis';
 import { SelectableMenuCard } from '@/components/BakeryDetail/Report/MenuEditView/SelectableMenuCard';
+import { Pagination } from '@/components/Shared';
+import usePagination from '@/hooks/usePagination';
 
-export const MenuEditView = () => {
+type Props = {
+  bakeryId: number;
+};
+
+export const MenuEditView = ({ bakeryId }: Props) => {
+  const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
+  const { bakeryMenuReportsQuery } = useBakery({ bakeryId });
+  const {
+    data,
+    isLoading: isLoadingSearch,
+    isFetching: isFetchingSearch,
+  } = bakeryMenuReportsQuery({
+    bakeryId: bakeryId,
+    page: currPage,
+  });
+
+  useEffect(() => {
+    if (data && data.totalPages) {
+      onChangeTotalPageCount(data.totalPages);
+    }
+  }, [data]);
   return (
     <div>
-      <SelectableMenuCard />
+      {data?.menuReports.map((menuReport, idx) => {
+        return <SelectableMenuCard key={`menu-report-${idx}`} menuReport={menuReport} />;
+      })}
+      <Pagination
+        pages={pages}
+        currPage={currPage}
+        onClickPage={onGetPage}
+        onClickNext={onGetNextPage}
+        onClickPrev={onGetPrevPage}
+        onClickEnd={onGetEndPage}
+        onClickStart={onGetStartPage}
+      />
     </div>
   );
 };

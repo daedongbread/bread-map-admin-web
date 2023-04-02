@@ -23,7 +23,7 @@ export const Report = ({ bakeryId, tabItem }: Props) => {
       return (
         <div>
           <ReportTabTitle title={tabItem.name} count={tabItem.count ?? 0} />
-          <MenuEditView />
+          <MenuEditView bakeryId={bakeryId} />
         </div>
       );
     case BAKERY_REPORT_TAB_VALUE.Information:

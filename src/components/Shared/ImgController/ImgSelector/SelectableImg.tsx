@@ -1,17 +1,17 @@
 import React from 'react';
-import hamburger from '/images/hamburger.png';
 import { CheckLine } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
 
 type Props = {
   isSelected: boolean;
+  imageSrc: string;
 };
 
-export const SelectableImg = ({ isSelected }: Props) => {
+export const SelectableImg = ({ imageSrc, isSelected }: Props) => {
   return (
     <div>
       <ImgContainer>
-        <img src={hamburger} alt={'빵'} />
+        <img src={imageSrc} alt={'빵'} />
         <CheckBox isSelected={isSelected}>
           <CheckLine />
         </CheckBox>

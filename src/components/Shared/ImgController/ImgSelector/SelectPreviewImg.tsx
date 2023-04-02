@@ -1,21 +1,21 @@
 import React from 'react';
 import { CheckLine } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
-import hamburger from '/images/hamburger.png';
 
 type Props = {
   isCurrent: boolean;
   isSelected: boolean;
   isCompleted: boolean;
+  imageSrc: string;
 };
 
-export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted }: Props) => {
+export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted, imageSrc }: Props) => {
   return (
-    <Container isCurrent={isCurrent} isSelected={isSelected} isCompleted={isCompleted}>
+    <Container isCurrent={isCurrent} isSelected={isSelected} isCompleted={isCompleted} imageSrc={imageSrc}>
       <ImgContainer>
-        <img src={hamburger} alt={'빵'} />
+        <img src={imageSrc} alt={'빵'} />
       </ImgContainer>
-      <StatusContainer isCurrent={isCurrent} isSelected={isSelected} isCompleted={isCompleted}>
+      <StatusContainer isCurrent={isCurrent} isSelected={isSelected} isCompleted={isCompleted} imageSrc={imageSrc}>
         {isCompleted && <StatusBadge>추가완료</StatusBadge>}
         {!isCompleted && isSelected && (
           <Circle>
