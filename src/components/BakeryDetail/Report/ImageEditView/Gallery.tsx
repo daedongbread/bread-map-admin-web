@@ -1,20 +1,20 @@
 import React from 'react';
-import { BakeryImgEntity } from '@/apis';
+import { BakeryImageEntity } from '@/apis';
 import { ImgManager, Tab, TabItem } from '@/components/Shared';
 import styled from '@emotion/styled';
 
 type Props = {
   imgTabs: TabItem[];
   onSelectTab: (tab: TabItem) => void;
-  images: BakeryImgEntity[];
+  images: BakeryImageEntity[];
 };
 
 export const Gallery = ({ imgTabs, onSelectTab, images }: Props) => {
   return (
     <Container>
       <div className="tabs">
-        {imgTabs.map(item => (
-          <Tab tab={item} type={'plain'} onSelectReportTab={onSelectTab} />
+        {imgTabs.map((item, idx) => (
+          <Tab key={`tab-${idx}`} tab={item} type={'plain'} onSelectReportTab={onSelectTab} />
         ))}
       </div>
       <div className="img_wrapper">
