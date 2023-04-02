@@ -49,7 +49,7 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     );
   };
 
-  const uploadImage = useMutation((payload: UploadImagePayload) => bakery.uploadImage(payload)); // options
+  const uploadImage = useMutation((payload: UploadImagePayload) => bakery.uploadImage(payload));
 
   const bakeryMenuReportsQuery = ({ bakeryId, page }: GetBakeryMenuReportPayload) => {
     return useQuery(

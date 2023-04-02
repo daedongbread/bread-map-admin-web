@@ -6,11 +6,16 @@ type Props = {
   isNew: boolean;
   isSelected: boolean;
   downloadUrl: string;
+  imageId: number;
+  onClickImage: (imageId: number) => void;
 };
 
-export const ImgManager = ({ isNew, isSelected, downloadUrl }: Props) => {
+export const ImgManager = ({ isNew, isSelected, downloadUrl, imageId, onClickImage }: Props) => {
+  const handleImage = () => {
+    onClickImage(imageId);
+  };
   return (
-    <CheckBoxContainer>
+    <CheckBoxContainer onClick={handleImage}>
       <Container isSelected={isSelected}>
         <ImgHeader>
           <div>{isNew && <NewBadge />}</div>

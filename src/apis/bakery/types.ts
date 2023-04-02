@@ -99,6 +99,10 @@ export type UploadImagePayload = {
   payload: FormData;
 };
 
+export type UploadImageResponse = {
+  imagePath: string;
+};
+
 /**
  * 빵집 메뉴 제보
  * 1. 빵집 메뉴 제보 리스트 조회 (GetBakeryMenuReportPayload, BakeryMenuReportImageEntity, BakeryMenuReportItemEntity, GetBakeryMenuReportsResponse)
@@ -192,14 +196,13 @@ export interface BakeryApiClient {
   getList: ({ page }: Omit<GetBakeriesPayload, 'name'>) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
   searchList: ({ name, page }: GetBakeriesPayload) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
   getImageList: ({ bakeryId, imageType, page }: GetBakeryImagePayload) => Promise<{ images: BakeryImageEntity[]; totalCount: number; totalPages: number }>;
-  uploadImage: ({ payload }: UploadImagePayload) => void;
+  uploadImage: ({ payload }: UploadImagePayload) => Promise<{ imagePath: string }>;
   getBakeryMenuReportList: ({
     bakeryId,
     page,
   }: GetBakeryMenuReportPayload) => Promise<{ menuReports: BakeryMenuReportItemEntity[]; totalCount: number; totalPages: number }>;
   updateBakeryMenuReportImages: ({ bakeryId, reportId, imageIdList }: UpdateBakeryMenuReportImagesPayload) => void;
   deleteBakeryMenuReport: ({ bakeryId, reportId }: DeleteBakeryMenuReportPayload) => void;
-  //
   getBakeryInfoUpdateRequests: ({
     bakeryId,
     page,

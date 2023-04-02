@@ -7,9 +7,16 @@ type Props = {
   imgTabs: TabItem[];
   onSelectTab: (tab: TabItem) => void;
   images: BakeryImageEntity[];
+  selectedImage?: BakeryImageEntity;
+  onChangeImage: (image?: BakeryImageEntity) => void;
 };
 
-export const Gallery = ({ imgTabs, onSelectTab, images }: Props) => {
+export const Gallery = ({ imgTabs, onSelectTab, images, selectedImage, onChangeImage }: Props) => {
+  const onClickImage = (imageId: number) => {
+    // setSelectedImage(prev => (prev?.imageId === imageId ? undefined : images.find(image => image.imageId === imageId)));
+    onChangeImage(selectedImage?.imageId === imageId ? undefined : images.find(image => image.imageId === imageId));
+  };
+
   return (
     <Container>
       <div className="tabs">
@@ -20,7 +27,14 @@ export const Gallery = ({ imgTabs, onSelectTab, images }: Props) => {
       <div className="img_wrapper">
         <div className="grid_view">
           {images.map((item, idx) => (
-            <ImgManager key={`img-manager-${idx}`} isNew={true} isSelected={true} downloadUrl={item.image} />
+            <ImgManager
+              key={`img-manager-${idx}`}
+              isNew={item.isNew}
+              isSelected={selectedImage?.imageId === item.imageId}
+              downloadUrl={item.image}
+              imageId={item.imageId}
+              onClickImage={onClickImage}
+            />
           ))}
         </div>
       </div>

@@ -44,7 +44,9 @@ export class Bakery {
   }
 
   async uploadImage({ payload }: UploadImagePayload) {
-    await this.client.uploadImage({ payload });
+    const result = await this.client.uploadImage({ payload });
+    console.log(result);
+    return result;
   }
 
   async getMenuReports({ bakeryId, page }: GetBakeryMenuReportPayload) {
