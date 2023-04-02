@@ -5,12 +5,12 @@ import { useBakery } from '@/apis/bakery/useBakery';
 import { BakeryForm } from '@/components/BakeryDetail/Form';
 import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { ReportTab } from '@/components/BakeryDetail/Report';
-import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption, SelectOption } from '@/components/Shared';
+import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
 import useTab from '@/hooks/useTab';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { initializeForm, setForm, setLinks, changeBakeryStatus, changeBakeryImg } from '@/store/slices/bakery';
+import { changeBakeryImg, changeBakeryStatus, initializeForm, setForm, setLinks } from '@/store/slices/bakery';
 import { makeBakeryPayload } from '@/utils';
 import styled from '@emotion/styled';
 
@@ -114,7 +114,7 @@ export const BakeryDetailPage = () => {
         </ScrollSection>
         <ScrollSection>
           <div>
-            <ReportTab tabs={reportTabs} handleSelectReportTab={selectReportTab} />
+            <ReportTab bakeryId={Number(bakeryId)} tabs={reportTabs} handleSelectReportTab={selectReportTab} />
           </div>
         </ScrollSection>
       </ScrollViewContainer>

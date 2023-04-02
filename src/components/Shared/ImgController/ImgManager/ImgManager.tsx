@@ -1,5 +1,5 @@
 import React from 'react';
-import { NewBadge, Download, Trash, CheckLine } from '@/components/Shared/Icons';
+import { CheckLine, Download, NewBadge, Trash } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
 
 type Props = {
@@ -51,16 +51,16 @@ const Container = styled.div<{ isSelected: boolean }>`
   border: ${({ isSelected, theme }) => (isSelected ? `4px solid ${theme.color.primary500}` : '4px solid transparent')};
   cursor: pointer;
 
-  > div:first-child {
-    > div:nth-child(2) {
+  > div:first-of-type {
+    > div:nth-of-type(2) {
       opacity: 0;
       transition: 0.3s;
     }
   }
 
   &:hover {
-    > div:first-child {
-      > div:nth-child(2) {
+    > div:first-of-type {
+      > div:nth-of-type(2) {
         opacity: 1;
       }
     }

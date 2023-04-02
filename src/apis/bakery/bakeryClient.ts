@@ -1,4 +1,21 @@
-import { BakeryApiClient, BakeryDetailEntity, CreateUpdateBakeryPayload, GetBakeriesPayload, GetBakeriesResponse } from '@/apis';
+import {
+  BakeryApiClient,
+  BakeryDetailEntity,
+  CompleteBakeryInfoUpdateRequestPayload,
+  CreateUpdateBakeryPayload,
+  DeleteBakeryInfoUpdateRequestPayload,
+  DeleteBakeryMenuReportPayload,
+  GetBakeriesPayload,
+  GetBakeriesResponse,
+  GetBakeryImagePayload,
+  GetBakeryImageResponse,
+  GetBakeryInfoUpdateRequestsPayload,
+  GetBakeryInfoUpdateRequestsResponse,
+  GetBakeryMenuReportPayload,
+  GetBakeryMenuReportsResponse,
+  UpdateBakeryMenuReportImagesPayload,
+  UploadImagePayload,
+} from '@/apis';
 import { fetcher } from '@/apis/axios';
 
 export class BakeryClient implements BakeryApiClient {
@@ -31,5 +48,56 @@ export class BakeryClient implements BakeryApiClient {
   async searchList({ name, page }: GetBakeriesPayload) {
     const resp = await fetcher.get<GetBakeriesResponse>('/bakeries/search', { params: { name, page } });
     return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
+  }
+
+  async getImageList({ bakeryId, imageType, page }: GetBakeryImagePayload) {
+    const resp = await fetcher.get<GetBakeryImageResponse>(`/bakeries/${bakeryId}/images/${imageType}`, { params: { page } });
+    return {
+      images: resp.data.contents,
+      totalCount: resp.data.totalElements,
+      totalPages: resp.data.totalPages,
+    };
+  }
+
+  async uploadImage({ payload }: UploadImagePayload) {
+    await fetcher.post('images', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+
+  async getBakeryMenuReportList({ bakeryId, page }: GetBakeryMenuReportPayload) {
+    const resp = await fetcher.get<GetBakeryMenuReportsResponse>(`/bakeries/${bakeryId}/product-add-reports`, { params: { page } });
+    return {
+      menuReports: resp.data.contents,
+      totalCount: resp.data.totalElements,
+      totalPages: resp.data.totalPages,
+    };
+  }
+
+  async updateBakeryMenuReportImages({ bakeryId, reportId, imageIdList }: UpdateBakeryMenuReportImagesPayload) {
+    await fetcher.patch(`/bakeries/${bakeryId}/product-add-reports/${reportId}`, { imageIdList });
+  }
+
+  async deleteBakeryMenuReport({ bakeryId, reportId }: DeleteBakeryMenuReportPayload) {
+    await fetcher.delete(`/bakeries/${bakeryId}/product-add-reports/${reportId}`);
+  }
+
+  async getBakeryInfoUpdateRequests({ bakeryId, page }: GetBakeryInfoUpdateRequestsPayload) {
+    const resp = await fetcher.get<GetBakeryInfoUpdateRequestsResponse>(`/bakeries/${bakeryId}/update-reports`, { params: { page } });
+    return {
+      bakeryInfoUpdateRequests: resp.data.contents,
+      totalCount: resp.data.totalElements,
+      totalPages: resp.data.totalPages,
+    };
+  }
+
+  async completeBakeryInfoUpdateRequest({ bakeryId, reportId }: CompleteBakeryInfoUpdateRequestPayload) {
+    await fetcher.patch(`/bakeries/${bakeryId}/update-reports/${reportId}`);
+  }
+
+  async deleteBakeryInfoUpdateRequest({ bakeryId, reportId }: DeleteBakeryInfoUpdateRequestPayload) {
+    await fetcher.delete(`/bakeries/${bakeryId}/update-reports/${reportId}`);
   }
 }
