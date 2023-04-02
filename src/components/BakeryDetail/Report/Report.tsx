@@ -2,20 +2,21 @@ import React from 'react';
 import { ImageEditView } from '@/components/BakeryDetail/Report/ImageEditView';
 import { InformationEditView } from '@/components/BakeryDetail/Report/InformationEditView';
 import { MenuEditView } from '@/components/BakeryDetail/Report/MenuEditView';
-import { BAKERY_REPORT_TAB_VALUE } from '@/constants';
 import { ReportTabTitle } from '@/components/BakeryDetail/Report/ReportTabTitle';
 import { TabItem } from '@/components/Shared';
+import { BAKERY_REPORT_TAB_VALUE } from '@/constants';
 
 type Props = {
+  bakeryId: number;
   tabItem: TabItem;
 };
 
-export const Report = ({ tabItem }: Props) => {
+export const Report = ({ bakeryId, tabItem }: Props) => {
   switch (tabItem.value) {
     case BAKERY_REPORT_TAB_VALUE.Images:
       return (
         <div>
-          <ImageEditView />
+          <ImageEditView bakeryId={bakeryId} />
         </div>
       );
     case BAKERY_REPORT_TAB_VALUE.Products:

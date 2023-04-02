@@ -12,7 +12,15 @@ const useTab = ({ tabData }: { tabData: TabItem[] }) => {
     );
   };
 
-  return { tabs, selectTab };
+  const setTabCount = (tab: TabItem, count: number) => {
+    setTabs(prev =>
+      prev.map(item => {
+        return item.name === tab.name ? { ...item, count } : item;
+      })
+    );
+  };
+
+  return { tabs, selectTab, setTabCount };
 };
 
 export default useTab;
