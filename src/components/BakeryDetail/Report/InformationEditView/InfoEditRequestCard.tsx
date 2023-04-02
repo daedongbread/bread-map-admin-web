@@ -4,36 +4,36 @@ import { Button, ReadOnlyInputField } from '@/components/Shared';
 import styled from '@emotion/styled';
 
 type Props = {
-  data: BakeryInfoUpdateRequestEntity;
+  updateRequest: BakeryInfoUpdateRequestEntity;
   onCompleteRequest: (reportId: number) => void;
   onDeleteRequest: (reportId: number) => void;
 };
 
-export const InfoEditRequestCard = ({ data, onCompleteRequest, onDeleteRequest }: Props) => {
+export const InfoEditRequestCard = ({ updateRequest, onCompleteRequest, onDeleteRequest }: Props) => {
   const handleComplete = () => {
-    onCompleteRequest(data.reportId);
+    onCompleteRequest(updateRequest.reportId);
   };
 
   const handleDelete = () => {
-    onDeleteRequest(data.reportId);
+    onDeleteRequest(updateRequest.reportId);
   };
 
   return (
     <Container>
-      <span className="date">{data.createdAt}</span>
+      <span className="date">{updateRequest.createdAt}</span>
       <div className="card">
         <div className="menu_info">
           <div className="input_area">
             <div className="max-w-230">
-              <ReadOnlyInputField label={'제보자'} content={data.nickName} labelMinWidth={6} />
+              <ReadOnlyInputField label={'제보자'} content={updateRequest.nickName} labelMinWidth={6} />
             </div>
-            <ReadOnlyInputField label={'수정 사항'} type={'textarea'} multiLine content={data.content} labelMinWidth={6} />
+            <ReadOnlyInputField label={'수정 사항'} type={'textarea'} multiLine content={updateRequest.content} labelMinWidth={6} />
           </div>
         </div>
       </div>
       <div className="bottom_wrapper">
         <div className="img_wrapper">
-          {data.imageList.map((imageUrl, idx) => (
+          {updateRequest.imageList.map((imageUrl, idx) => (
             <div className="img_item" key={`imgItem-${idx}`}>
               <img src={imageUrl} alt={`제보자가 제공한 이미지 ${idx + 1}`} />
             </div>
