@@ -1,4 +1,3 @@
-import { fetcher } from '@/apis/axios';
 import {
   BakeryApiClient,
   CompleteBakeryInfoUpdateRequestPayload,
@@ -22,13 +21,11 @@ export class Bakery {
   }
 
   async createItem({ payload }: CreateUpdateBakeryPayload) {
-    await create({ payload });
-    // await this.client.createItem({ payload });
+    await this.client.createItem({ payload });
   }
 
   async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {
-    await update({ bakeryId, payload });
-    // await this.client.updateItem({ bakeryId, payload });
+    await this.client.updateItem({ bakeryId, payload });
   }
 
   async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
@@ -47,7 +44,7 @@ export class Bakery {
   }
 
   async uploadImage({ payload }: UploadImagePayload) {
-    await uploadImage({ payload });
+    await this.client.uploadImage({ payload });
   }
 
   async getMenuReports({ bakeryId, page }: GetBakeryMenuReportPayload) {
@@ -64,7 +61,8 @@ export class Bakery {
   }
 
   async getBakeryInfoUpdateRequests({ bakeryId, page }: GetBakeryInfoUpdateRequestsPayload) {
-    await this.client.getBakeryInfoUpdateRequests({ bakeryId, page });
+    const list = await this.client.getBakeryInfoUpdateRequests({ bakeryId, page });
+    return list;
   }
 
   async completeBakeryInfoUpdateRequest({ bakeryId, reportId }: CompleteBakeryInfoUpdateRequestPayload) {
@@ -75,28 +73,3 @@ export class Bakery {
     await this.client.deleteBakeryInfoUpdateRequest({ bakeryId, reportId });
   }
 }
-
-// TODO: mutation error로 인해 임시로 설정
-const create = async ({ payload }: CreateUpdateBakeryPayload) => {
-  await fetcher.post('bakeries', payload, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};
-
-const update = async ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => {
-  await fetcher.post(`bakeries/${bakeryId}`, payload, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};
-
-const uploadImage = async ({ payload }: UploadImagePayload) => {
-  await fetcher.post('images', payload, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-};

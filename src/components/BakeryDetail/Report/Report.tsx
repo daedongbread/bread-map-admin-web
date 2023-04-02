@@ -30,7 +30,7 @@ export const Report = ({ bakeryId, tabItem }: Props) => {
       return (
         <div>
           <ReportTabTitle title={tabItem.name} count={tabItem.count ?? 0} />
-          <InformationEditView />
+          <InformationEditView bakeryId={bakeryId} />
         </div>
       );
     default:
