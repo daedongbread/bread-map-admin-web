@@ -10,7 +10,7 @@ type Props = {
 
 export const MenuEditView = ({ bakeryId }: Props) => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
-  const { bakeryMenuReportsQuery } = useBakery({ bakeryId });
+  const { bakeryMenuReportsQuery, updateMenuReportImages, deleteMenuReport } = useBakery({ bakeryId });
   const {
     data,
     isLoading: isLoadingSearch,
@@ -25,10 +25,26 @@ export const MenuEditView = ({ bakeryId }: Props) => {
       onChangeTotalPageCount(data.totalPages);
     }
   }, [data]);
+
+  const onChangeMenuReportImages = (reportId: number, imageIdList: number[]) => {
+    updateMenuReportImages.mutate({ bakeryId, reportId, imageIdList });
+  };
+
+  const onDeleteMenuReport = (reportId: number) => {
+    deleteMenuReport.mutate({ bakeryId, reportId });
+  };
+
   return (
     <div>
       {data?.menuReports.map((menuReport, idx) => {
-        return <SelectableMenuCard key={`menu-report-${idx}`} menuReport={menuReport} />;
+        return (
+          <SelectableMenuCard
+            key={`menu-report-${idx}`}
+            menuReport={menuReport}
+            onChangeMenuReportImages={onChangeMenuReportImages}
+            onDeleteMenuReport={onDeleteMenuReport}
+          />
+        );
       })}
       <Pagination
         pages={pages}

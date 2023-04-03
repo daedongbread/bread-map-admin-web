@@ -6,16 +6,37 @@ type Props = {
   isCurrent: boolean;
   isSelected: boolean;
   isCompleted: boolean;
+  imageId: number;
   imageSrc: string;
+  onClickImage: (imageId: number) => void;
 };
 
-export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted, imageSrc }: Props) => {
+export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted, imageId, imageSrc, onClickImage }: Props) => {
+  const handleImage = () => {
+    onClickImage(imageId);
+  };
+
   return (
-    <Container isCurrent={isCurrent} isSelected={isSelected} isCompleted={isCompleted} imageSrc={imageSrc}>
+    <Container
+      isCurrent={isCurrent}
+      isSelected={isSelected}
+      isCompleted={isCompleted}
+      imageId={imageId}
+      imageSrc={imageSrc}
+      onClickImage={onClickImage}
+      onClick={handleImage}
+    >
       <ImgContainer>
         <img src={imageSrc} alt={'빵'} />
       </ImgContainer>
-      <StatusContainer isCurrent={isCurrent} isSelected={isSelected} isCompleted={isCompleted} imageSrc={imageSrc}>
+      <StatusContainer
+        isCurrent={isCurrent}
+        isSelected={isSelected}
+        isCompleted={isCompleted}
+        imageId={imageId}
+        imageSrc={imageSrc}
+        onClickImage={onClickImage}
+      >
         {isCompleted && <StatusBadge>추가완료</StatusBadge>}
         {!isCompleted && isSelected && (
           <Circle>

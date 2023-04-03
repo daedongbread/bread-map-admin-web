@@ -60,14 +60,14 @@ export const BAKERY_IMG_TAB: TabItem[] = [
   },
   {
     name: '메뉴제보 이미지',
-    value: BAKERY_REPORT_TAB_VALUE.MenuImage,
-    count: 1,
+    value: BAKERY_IMG_TAB_VALUE.MenuImage,
+    count: 0,
     isActive: false,
   },
   {
     name: '리뷰 이미지',
-    value: BAKERY_REPORT_TAB_VALUE.ReviewImage,
-    count: 1,
+    value: BAKERY_IMG_TAB_VALUE.ReviewImage,
+    count: 0,
     isActive: false,
   },
 ];

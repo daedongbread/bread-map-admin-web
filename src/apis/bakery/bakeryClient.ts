@@ -15,6 +15,7 @@ import {
   GetBakeryMenuReportsResponse,
   UpdateBakeryMenuReportImagesPayload,
   UploadImagePayload,
+  UploadImageResponse,
 } from '@/apis';
 import { fetcher } from '@/apis/axios';
 
@@ -60,11 +61,14 @@ export class BakeryClient implements BakeryApiClient {
   }
 
   async uploadImage({ payload }: UploadImagePayload) {
-    await fetcher.post('images', payload, {
+    const resp = await fetcher.post<UploadImageResponse>('images', payload, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return {
+      imagePath: resp.data.imagePath,
+    };
   }
 
   async getBakeryMenuReportList({ bakeryId, page }: GetBakeryMenuReportPayload) {

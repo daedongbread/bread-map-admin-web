@@ -1,18 +1,30 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
+import { BakeryImageEntity } from '@/apis';
 import { Button, Preview } from '@/components/Shared';
 import { FileImage } from '@/components/Shared/FileImage';
 import useFileInput from '@/hooks/useFileInput';
 import styled from '@emotion/styled';
 import hamburger from '/images/hamburger.png';
 
-export const ImageDiffUploader = () => {
-  const [image, setImage] = useState('');
+type Props = {
+  changeImage?: BakeryImageEntity;
+  onChangeImage: (image?: BakeryImageEntity) => void;
+  onCreateImage: () => void;
+};
+
+export const ImageDiffUploader = ({ changeImage, onChangeImage, onCreateImage }: Props) => {
   const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
 
   const onChangeBakeryImg = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const imgPreview = URL.createObjectURL(e.target.files[0]);
-    setImage(imgPreview);
+    const temp: BakeryImageEntity = {
+      imageId: -1,
+      image: imgPreview,
+      isNew: false,
+    };
+    onChangeImage(temp);
+    e.target.value = ''; // 동일 이미지로 변경 시에도 반영
   };
 
   return (
@@ -25,11 +37,11 @@ export const ImageDiffUploader = () => {
         </div>
         <div className="ml_6">
           <label className="image_label">변경 이미지</label>
-          <FileImage src={getSrc(image)} widthRem={28} heightRem={19} onClickTriggerFile={onClickTriggerFile} />
+          <FileImage src={getSrc(changeImage?.image || '')} widthRem={28} heightRem={19} onClickTriggerFile={onClickTriggerFile} />
           <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={onChangeBakeryImg} />
         </div>
         <div className="btn_wrapper">
-          <Button type={'lightGray'} text={'반영하기'} btnSize={'small'} />
+          <Button type={changeImage ? 'orange' : 'lightGray'} text={'반영하기'} btnSize={'small'} onClickBtn={onCreateImage} />
         </div>
       </div>
     </Container>
