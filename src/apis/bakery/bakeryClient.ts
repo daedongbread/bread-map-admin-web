@@ -26,19 +26,11 @@ export class BakeryClient implements BakeryApiClient {
   }
 
   async createItem({ payload }: CreateUpdateBakeryPayload) {
-    await fetcher.post('bakeries', payload, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    await fetcher.post('bakeries', payload);
   }
 
   async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {
-    await fetcher.post(`bakeries/${bakeryId}`, payload, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    await fetcher.patch(`bakeries/${bakeryId}`, payload);
   }
 
   async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
