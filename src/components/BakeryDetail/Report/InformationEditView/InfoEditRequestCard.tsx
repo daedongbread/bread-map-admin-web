@@ -12,14 +12,16 @@ type Props = {
 };
 
 export const InfoEditRequestCard = ({ updateRequest, onCompleteRequest, onDeleteRequest }: Props) => {
-  const { reportId, createdAt, nickName, content, imageList } = updateRequest;
+  const { reportId, createdAt, nickName, content, imageList, isChange } = updateRequest;
 
   const handleComplete = () => {
     onCompleteRequest(reportId);
   };
 
   const handleDelete = () => {
-    onDeleteRequest(reportId);
+    if (window.confirm('제보를 삭제하시겠습니까?')) {
+      onDeleteRequest(reportId);
+    }
   };
 
   return (
@@ -45,7 +47,7 @@ export const InfoEditRequestCard = ({ updateRequest, onCompleteRequest, onDelete
         </div>
         <div className="btn_wrapper">
           <Button type={'white'} text={'삭제하기'} btnSize={'small'} onClickBtn={handleDelete} />
-          <Button type={'orange'} text={'변경 완료'} btnSize={'small'} onClickBtn={handleComplete} />
+          <Button type={'orange'} text={'변경 완료'} btnSize={'small'} disabled={isChange} onClickBtn={handleComplete} />
         </div>
       </div>
     </Container>

@@ -11,10 +11,11 @@ type ButtonProps = {
   btnSize?: Size;
   fontSize?: Size;
   icon?: ReactNode;
+  disabled?: boolean;
   onClickBtn?: () => void;
 };
 
-export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
+export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, disabled, onClickBtn }: ButtonProps) => {
   const onClickCustomBtn = () => {
     onClickBtn && onClickBtn();
   };
@@ -24,7 +25,7 @@ export const Button = memo(({ type, text, btnSize, fontSize = 'small', icon, onC
   const colors = matchedStyle[1];
 
   return (
-    <CustomBtn type="button" btnSize={btnSize} fontSize={fontSize} {...colors} onClick={onClickCustomBtn}>
+    <CustomBtn disabled={disabled} type="button" btnSize={btnSize} fontSize={fontSize} {...colors} onClick={onClickCustomBtn}>
       {icon}
       {text}
     </CustomBtn>
@@ -35,12 +36,14 @@ type BtnStyles = {
   bgColor: string;
   fontColor: string;
   borderColor?: string;
+  disabledBgColor?: string;
 };
 
 const BUTTON_STYLE: { [key: string]: BtnStyles } = {
   orange: {
     bgColor: color.primary500,
     fontColor: color.white,
+    disabledBgColor: color.primary200,
   },
   lightOrange: {
     bgColor: color.primary400,
@@ -79,6 +82,11 @@ const CustomBtn = styled.button<BtnStyles & { btnSize?: Size; fontSize?: Size }>
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &:disabled {
+    background-color: ${({ disabledBgColor }) => (disabledBgColor ? disabledBgColor : 'red')};
+    cursor: not-allowed;
+  }
   // svg 위치 설정 필요
 `;
 // btnSize 없애고 위아래 패딩으로?..
