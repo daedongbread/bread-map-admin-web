@@ -1,6 +1,8 @@
+import dayjs from 'dayjs';
 import React from 'react';
 import { BakeryInfoUpdateRequestEntity } from '@/apis';
 import { Button, ReadOnlyInputField } from '@/components/Shared';
+import { FORMAT } from '@/constants';
 import styled from '@emotion/styled';
 
 type Props = {
@@ -10,31 +12,33 @@ type Props = {
 };
 
 export const InfoEditRequestCard = ({ updateRequest, onCompleteRequest, onDeleteRequest }: Props) => {
+  const { reportId, createdAt, nickName, content, imageList } = updateRequest;
+
   const handleComplete = () => {
-    onCompleteRequest(updateRequest.reportId);
+    onCompleteRequest(reportId);
   };
 
   const handleDelete = () => {
-    onDeleteRequest(updateRequest.reportId);
+    onDeleteRequest(reportId);
   };
 
   return (
     <Container>
-      <span className="date">{updateRequest.createdAt}</span>
+      <span className="date">{dayjs(createdAt).format(`${FORMAT.DATE_FULL_DOT} ${FORMAT.TIME_HH_MM_COLON}`)}</span>
       <div className="card">
         <div className="menu_info">
           <div className="input_area">
             <div className="max-w-230">
-              <ReadOnlyInputField label={'제보자'} content={updateRequest.nickName} labelMinWidth={6} />
+              <ReadOnlyInputField label={'제보자'} content={nickName} labelMinWidth={6} />
             </div>
-            <ReadOnlyInputField label={'수정 사항'} type={'textarea'} multiLine content={updateRequest.content} labelMinWidth={6} />
+            <ReadOnlyInputField label={'수정 사항'} type={'textarea'} multiLine content={content} labelMinWidth={6} />
           </div>
         </div>
       </div>
       <div className="bottom_wrapper">
         <div className="img_wrapper">
-          {updateRequest.imageList.map((imageUrl, idx) => (
-            <div className="img_item" key={`imgItem-${idx}`}>
+          {imageList.map((imageUrl, idx) => (
+            <div className="img_item" key={`img-item-${idx}`}>
               <img src={imageUrl} alt={`제보자가 제공한 이미지 ${idx + 1}`} />
             </div>
           ))}
@@ -49,10 +53,14 @@ export const InfoEditRequestCard = ({ updateRequest, onCompleteRequest, onDelete
 };
 
 const Container = styled.div`
+  padding: 1.6rem 0;
+
   .date {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+    font-weight: 500;
     display: inline-block;
     margin-bottom: 1rem;
+    color: ${({ theme }) => theme.color.gray700};
   }
 
   .card {
@@ -65,7 +73,7 @@ const Container = styled.div`
 
   .input_area {
     > div {
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
 
     .max-w-230 {

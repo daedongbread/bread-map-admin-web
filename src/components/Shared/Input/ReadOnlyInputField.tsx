@@ -62,7 +62,7 @@ const Container = styled.div<{ layout: LabelLayout; copyable: boolean; copied: b
 
     :hover {
       .copy_btn {
-        opacity: 1;
+        opacity: ${({ copyable }) => (copyable ? 1 : 0)};
         transition: 0.5s;
       }
     }
