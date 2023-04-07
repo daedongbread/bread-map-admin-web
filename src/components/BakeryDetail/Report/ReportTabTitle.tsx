@@ -23,9 +23,6 @@ const Title = styled.div`
   font-weight: 700;
   color: ${({ theme }) => theme.color.gray700};
 
-  &:not(:first-of-type) {
-  }
-
   .count {
     margin-left: 3px;
     color: ${({ theme }) => theme.color.primary500};

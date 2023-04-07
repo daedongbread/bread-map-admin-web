@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 type PreviewProps = {
-  src: string | null;
+  src?: string;
   widthRem: number;
   heightRem: number;
   emptyText: string;
@@ -12,7 +12,7 @@ type PreviewProps = {
 export const Preview = ({ src, widthRem, heightRem, emptyText }: PreviewProps) => {
   return (
     <Container widthRem={widthRem} heightRem={heightRem}>
-      {src ? <img src={src} /> : <span>{emptyText}</span>}
+      {src ? <img src={src} alt={'미리보기'} /> : <span>{emptyText}</span>}
     </Container>
   );
 };
