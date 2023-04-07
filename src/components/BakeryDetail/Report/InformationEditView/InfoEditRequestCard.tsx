@@ -19,9 +19,7 @@ export const InfoEditRequestCard = ({ updateRequest, onCompleteRequest, onDelete
   };
 
   const handleDelete = () => {
-    if (window.confirm('제보를 삭제하시겠습니까?')) {
-      onDeleteRequest(reportId);
-    }
+    onDeleteRequest(reportId);
   };
 
   return (
