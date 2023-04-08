@@ -8,35 +8,20 @@ type Props = {
   isCompleted: boolean;
   imageId: number;
   imageSrc: string;
-  onClickImage: (imageId: number) => void;
+  handleClickPreviewImage: (imageId: number) => void;
 };
 
-export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted, imageId, imageSrc, onClickImage }: Props) => {
-  const handleImage = () => {
-    onClickImage(imageId);
+export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted, imageId, imageSrc, handleClickPreviewImage }: Props) => {
+  const onClickImage = () => {
+    handleClickPreviewImage(imageId);
   };
 
   return (
-    <Container
-      isCurrent={isCurrent}
-      isSelected={isSelected}
-      isCompleted={isCompleted}
-      imageId={imageId}
-      imageSrc={imageSrc}
-      onClickImage={onClickImage}
-      onClick={handleImage}
-    >
+    <Container isCurrent={isCurrent} isCompleted={isCompleted} onClick={onClickImage}>
       <ImgContainer>
-        <img src={imageSrc} alt={'빵'} />
+        <img src={imageSrc} alt={'빵 메뉴 제보 이미지'} />
       </ImgContainer>
-      <StatusContainer
-        isCurrent={isCurrent}
-        isSelected={isSelected}
-        isCompleted={isCompleted}
-        imageId={imageId}
-        imageSrc={imageSrc}
-        onClickImage={onClickImage}
-      >
+      <StatusContainer isCurrent={isCurrent} isSelected={isSelected} isCompleted={isCompleted}>
         {isCompleted && <StatusBadge>추가완료</StatusBadge>}
         {!isCompleted && isSelected && (
           <Circle>
@@ -48,7 +33,7 @@ export const SelectPreviewImg = ({ isCurrent, isSelected, isCompleted, imageId, 
   );
 };
 
-const Container = styled.div<Props>`
+const Container = styled.div<Pick<Props, 'isCurrent' | 'isCompleted'>>`
   border-radius: 10px;
   display: inline-block;
   position: relative;
@@ -57,7 +42,7 @@ const Container = styled.div<Props>`
   height: 8rem;
 
   border: ${({ isCurrent, theme }) => (isCurrent ? `3.5px solid ${theme.color.primary500}` : '3.5px solid transparent')};
-  cursor: ${({ isCompleted }) => (isCompleted ? 'default' : 'pointer')};
+  cursor: pointer;
 `;
 
 const ImgContainer = styled.div`
@@ -79,7 +64,7 @@ const ImgContainer = styled.div`
   }
 `;
 
-const StatusContainer = styled.div<Props>`
+const StatusContainer = styled.div<Pick<Props, 'isCurrent' | 'isSelected' | 'isCompleted'>>`
   position: absolute;
   left: 0;
   top: 0;

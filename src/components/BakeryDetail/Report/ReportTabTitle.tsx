@@ -18,12 +18,10 @@ export const ReportTabTitle = ({ title, count }: Props) => {
 const Title = styled.div`
   display: inline-block;
   margin-right: 2rem;
+  margin-bottom: 1rem;
   font-size: 1.4rem;
   font-weight: 700;
   color: ${({ theme }) => theme.color.gray700};
-
-  &:not(:first-of-type) {
-  }
 
   .count {
     margin-left: 3px;

@@ -10,6 +10,7 @@ type Props = {
   label?: string;
   labelLayout?: LabelLayout;
   content: string;
+  isPrice?: boolean;
   copyable?: boolean;
   multiLine?: boolean;
   labelMinWidth?: number;
@@ -20,17 +21,20 @@ export const ReadOnlyInputField = ({
   label,
   labelLayout = 'inline',
   content,
+  isPrice = false,
   copyable = false,
   multiLine = false,
   labelMinWidth = LABEL_MIN_WIDTH,
 }: Props) => {
   const { isCopied, copyToClipboard } = useCopyClipboard(content);
 
+  const inputContent = isPrice ? `${Number(content).toLocaleString()}원` : content;
+
   return (
     <Container layout={labelLayout} copyable={copyable} copied={isCopied} multiLine={multiLine} labelMinWidth={labelMinWidth}>
       {label && <label>{label}</label>}
       <div onClick={copyToClipboard}>
-        <Input textarea={type === 'textarea'} type={'gray'} disabled value={content} multiLine={multiLine} />
+        <Input textarea={type === 'textarea'} type={'gray'} disabled value={inputContent} multiLine={multiLine} />
         <span className="copy_btn">{isCopied ? 'copied' : 'copy'}</span>
       </div>
     </Container>
@@ -62,7 +66,7 @@ const Container = styled.div<{ layout: LabelLayout; copyable: boolean; copied: b
 
     :hover {
       .copy_btn {
-        opacity: 1;
+        opacity: ${({ copyable }) => (copyable ? 1 : 0)};
         transition: 0.5s;
       }
     }

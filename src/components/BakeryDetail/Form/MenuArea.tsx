@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { Button } from '@/components/Shared';
 import { ProductItem } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
@@ -15,7 +15,7 @@ type Props = {
   onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
   onRemoveMenu: (currIdx: number) => void;
   onAddMenu: () => void;
-  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: ChangeEvent<HTMLInputElement> }) => void;
+  onChangeMenuImg: ({ currIdx }: { currIdx: number }) => void;
 };
 
 export const MenuArea = ({

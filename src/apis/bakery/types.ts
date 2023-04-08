@@ -1,3 +1,5 @@
+import { BakeryForm } from '@/store/slices/bakery';
+
 export type BakeryStatus = 'POSTING' | 'UNPOSTING';
 
 export type BakerySns = 'websiteURL' | 'instagramURL' | 'facebookURL' | 'blogURL';
@@ -30,7 +32,7 @@ export type GetBakeriesResponse = {
 };
 
 export type CreateUpdateBakeryPayload = {
-  payload: FormData;
+  payload: BakeryForm;
 };
 export type BakeryMenuEntity = {
   productId: number;

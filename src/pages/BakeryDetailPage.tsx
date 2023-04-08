@@ -10,8 +10,7 @@ import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
 import useTab from '@/hooks/useTab';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { changeBakeryImg, changeBakeryStatus, initializeForm, setForm, setLinks } from '@/store/slices/bakery';
-import { makeBakeryPayload } from '@/utils';
+import { BakeryForm as BakeryFormType, changeBakeryImg, changeBakeryStatus, initializeForm, setForm, setLinks } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
 
 export const BakeryDetailPage = () => {
@@ -25,7 +24,7 @@ export const BakeryDetailPage = () => {
     editBakery,
   } = useBakery({ bakeryId: Number(bakeryId) });
 
-  // opened state를 리덕스에 저장하면 안될거같은데..?
+  // TODO: opened state를 리덕스에 저장하면 안될거같은데..? 왜있지?
   const { form, formLinks, openedSnsLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
 
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
@@ -60,8 +59,8 @@ export const BakeryDetailPage = () => {
     if (!window.confirm('저장하시겠습니까?')) {
       return;
     }
-    const payload = await makeBakeryPayload({ origin: bakery, form, formLinks });
-    bakeryId ? onUpdateForm(payload) : onCreateForm(payload);
+
+    bakeryId ? onUpdateForm(form) : onCreateForm(form);
   };
 
   const onSelectBakerysSatusOption = (status: SelectOption | null) => {
@@ -72,7 +71,7 @@ export const BakeryDetailPage = () => {
     dispatch(changeBakeryStatus({ status: status.value }));
   };
 
-  const onCreateForm = (payload: FormData) => {
+  const onCreateForm = (payload: BakeryFormType) => {
     addBakery.mutate(
       { payload },
       {
@@ -83,7 +82,7 @@ export const BakeryDetailPage = () => {
     );
   };
 
-  const onUpdateForm = (payload: FormData) => {
+  const onUpdateForm = (payload: BakeryFormType) => {
     editBakery.mutate(
       { bakeryId: Number(bakeryId), payload },
       {
@@ -112,11 +111,13 @@ export const BakeryDetailPage = () => {
         <ScrollSection>
           <BakeryForm />
         </ScrollSection>
-        <ScrollSection>
-          <div>
-            <ReportTab bakeryId={Number(bakeryId)} tabs={reportTabs} handleSelectReportTab={selectReportTab} />
-          </div>
-        </ScrollSection>
+        {bakeryId && (
+          <ScrollSection>
+            <div>
+              <ReportTab bakeryId={Number(bakeryId)} tabs={reportTabs} handleSelectReportTab={selectReportTab} />
+            </div>
+          </ScrollSection>
+        )}
       </ScrollViewContainer>
       <BtnSection>
         <div className="btn_wrapper">

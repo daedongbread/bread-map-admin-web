@@ -23,7 +23,7 @@ const Container = styled.div`
 `;
 
 const ImgContainer = styled.div`
-  width: 30rem;
+  width: 28rem;
   height: 20rem;
   background-image: url(${baguette});
   background-position: center;

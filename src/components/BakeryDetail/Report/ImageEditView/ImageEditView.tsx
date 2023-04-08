@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { BakeryImageEntity, BakeryImageType, useBakery } from '@/apis';
 import { Gallery } from '@/components/BakeryDetail/Report/ImageEditView/Gallery';
 import { ImageDiffUploader } from '@/components/BakeryDetail/Report/ImageEditView/ImageDiffUploader';
-import { Pagination } from '@/components/Shared';
+import { ReportContentArea } from '@/components/BakeryDetail/Report/ReportContentArea';
+import { Pagination, Tab } from '@/components/Shared';
 import { BAKERY_IMG_TAB } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import useTab from '@/hooks/useTab';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { changeForm, changeMenuImg } from '@/store/slices/bakery';
 import { Divider } from '@/styles';
+import { getNumberFromValue, isNumber, urlToFile } from '@/utils';
 import styled from '@emotion/styled';
 
 type Props = {
@@ -14,20 +18,19 @@ type Props = {
 };
 
 export const ImageEditView = ({ bakeryId }: Props) => {
+  const dispatch = useAppDispatch();
+  const { currentImageUploader } = useAppSelector(selector => selector.bakery);
+
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const { tabs: imgTabs, selectTab: selectImgTab, setTabCount: setImgTabCount } = useTab({ tabData: BAKERY_IMG_TAB });
   const [activeTab, setActiveTab] = useState(imgTabs.find(tab => tab.isActive));
   const { bakeryImagesQuery, uploadImage } = useBakery({ bakeryId });
-  const {
-    data,
-    isLoading: isLoadingSearch,
-    isFetching: isFetchingSearch,
-  } = bakeryImagesQuery({
+  const { data, isLoading, isFetching } = bakeryImagesQuery({
     bakeryId: bakeryId,
     imageType: activeTab!.value as keyof BakeryImageType as BakeryImageType,
     page: currPage,
   });
-  const [changeImage, setChangeImage] = useState<BakeryImageEntity | undefined>();
+  const [selectedImage, setSelectedImage] = useState<BakeryImageEntity | undefined>();
 
   useEffect(() => {
     if (data && data.totalPages) {
@@ -42,43 +45,68 @@ export const ImageEditView = ({ bakeryId }: Props) => {
   }, [imgTabs]);
 
   const onChangeImage = (image?: BakeryImageEntity) => {
-    setChangeImage(image);
+    setSelectedImage(image);
   };
 
-  const onCreateImage = async () => {
-    let imageUrl = changeImage?.image;
-    const imageId = changeImage?.imageId;
-
-    if (imageId! < 0 && imageUrl) {
-      const formData = new FormData();
-      const file = await urlToFile(imageUrl, 'holly.jpg', 'image/jpeg');
-      formData.append('image', file);
-      const result = await uploadImage.mutateAsync({ payload: formData });
-      imageUrl = result.imagePath;
+  const createAndGetImageUrl = async () => {
+    const imageUrl = selectedImage?.image;
+    if (!imageUrl) {
+      return;
     }
-    // TODO 현재 이미지로 반영 작업 (imageUrl)
+
+    const formData = new FormData();
+    const file = await urlToFile(imageUrl, 'bread.jpg');
+    formData.append('image', file);
+    const result = await uploadImage.mutateAsync({ payload: formData });
+    return result.imagePath;
   };
-  const urlToFile = async (url: string, filename: string, mimeType: string) => {
-    const response = await fetch(url, { mode: 'no-cors' });
-    const buffer = await response.arrayBuffer();
-    const file = new File([buffer], filename, { type: mimeType });
-    return file;
+
+  const fillBakeryFormImage = async ({ isFromUser, imageUrl }: { isFromUser: boolean; imageUrl: string }) => {
+    if (!currentImageUploader) {
+      return;
+    }
+
+    let url = imageUrl;
+    if (isFromUser) {
+      const result = await createAndGetImageUrl();
+      result ? (url = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
+    }
+
+    if (currentImageUploader.type === 'image') {
+      await dispatch(changeForm({ name: 'image', value: url as never }));
+    } else {
+      if (isNumber(currentImageUploader?.currMenuIdx)) {
+        dispatch(changeMenuImg({ currIdx: getNumberFromValue(currentImageUploader.currMenuIdx), imgPreview: url }));
+      }
+    }
+  };
+
+  const getEmptyName = () => {
+    const tabName = imgTabs.find(tab => tab.isActive)?.name;
+    return tabName ?? '이미지를 불러오지 못했습니다. 대동빵 팀에 문의해주세요.';
   };
 
   return (
     <Container>
-      <ImageDiffUploader changeImage={changeImage} onChangeImage={onChangeImage} onCreateImage={onCreateImage} />
+      <ImageDiffUploader selectedImage={selectedImage} onChangeImage={onChangeImage} fillBakeryFormImage={fillBakeryFormImage} />
       <Divider />
-      <Gallery imgTabs={imgTabs} onSelectTab={selectImgTab} images={data?.images ?? []} selectedImage={changeImage} onChangeImage={onChangeImage} />
-      <Pagination
-        pages={pages}
-        currPage={currPage}
-        onClickPage={onGetPage}
-        onClickNext={onGetNextPage}
-        onClickPrev={onGetPrevPage}
-        onClickEnd={onGetEndPage}
-        onClickStart={onGetStartPage}
-      />
+      <div className="tabs">
+        {imgTabs.map((item, idx) => (
+          <Tab key={`tab-${idx}`} tab={item} type={'plain'} onSelectReportTab={selectImgTab} />
+        ))}
+      </div>
+      <ReportContentArea isEmpty={data?.images?.length === 0} emptyAreaName={getEmptyName()}>
+        <Gallery images={data?.images ?? []} selectedImage={selectedImage} onChangeImage={onChangeImage} />
+        <Pagination
+          pages={pages}
+          currPage={currPage}
+          onClickPage={onGetPage}
+          onClickNext={onGetNextPage}
+          onClickPrev={onGetPrevPage}
+          onClickEnd={onGetEndPage}
+          onClickStart={onGetStartPage}
+        />
+      </ReportContentArea>
     </Container>
   );
 };

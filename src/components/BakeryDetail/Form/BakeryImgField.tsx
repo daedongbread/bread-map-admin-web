@@ -6,23 +6,16 @@ import styled from '@emotion/styled';
 type Props = {
   label: string;
   previewImg: string | null;
-  onChangeBakeryImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeBakeryImg: () => void;
 };
 
-export const BakeryImgField = ({ label, previewImg }: Props) => {
+export const BakeryImgField = ({ label, previewImg, onChangeBakeryImg }: Props) => {
   return (
     <Row alignTop>
       <label>{label}</label>
       <RepresentativeImg>
-        <Preview src={previewImg} widthRem={28} heightRem={20} emptyText={'대표 이미지가 없습니다.'} />
-        <Button
-          type={'lightOrange'}
-          text={'이미지 변경'}
-          btnSize={'small'}
-          onClickBtn={() => {
-            console.log('Not implemented');
-          }}
-        />
+        <Preview src={previewImg || ''} widthRem={28} heightRem={20} emptyText={'대표 이미지가 없습니다.'} />
+        <Button type={'lightOrange'} text={'이미지 변경'} btnSize={'small'} onClickBtn={onChangeBakeryImg} />
       </RepresentativeImg>
     </Row>
   );
