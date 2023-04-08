@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import type { BakeryMenuEntity } from '@/apis';
 import { BasicSelectOption, BasicSelectTrigger, Button, Input, Preview, SelectBox, SelectOption } from '@/components/Shared';
 import useFileInput from '@/hooks/useFileInput';
@@ -16,7 +16,7 @@ type Props = {
   onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string }) => void;
   onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
   onRemoveMenu: (currIdx: number) => void;
-  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: ChangeEvent<HTMLInputElement> }) => void;
+  onChangeMenuImg: ({ currIdx }: { currIdx: number }) => void;
 };
 
 const MenuItem = ({
@@ -30,13 +30,17 @@ const MenuItem = ({
   onRemoveMenu,
   onChangeMenuImg,
 }: Props) => {
-  const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
+  const { getSrc } = useFileInput();
   const { selectedOption, onSelectOption } = useSelectBox(productTypes.find(type => type.value === menu.productType));
 
   const onSelectMenuType = (option: SelectOption | null) => {
     if (!option) return;
     onSelectOption(option); // UI 업데이트
     onSelectMenuTypeOption({ currIdx: idx, optionValue: option?.value });
+  };
+
+  const onChangeMenuImgToUploader = () => {
+    onChangeMenuImg({ currIdx: idx });
   };
 
   return (
@@ -80,12 +84,11 @@ const MenuItem = ({
         </CustomRow>
         <BtnWrapper>
           <Button text={'메뉴 삭제'} type={'gray'} btnSize={'small'} onClickBtn={() => onRemoveMenu(idx)} />
-          <Button text={'이미지 변경'} type={'lightOrange'} btnSize={'small'} onClickBtn={onClickTriggerFile} />
-          <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={e => onChangeMenuImg({ currIdx: idx, e })} />
+          <Button text={'이미지 변경'} type={'lightOrange'} btnSize={'small'} onClickBtn={onChangeMenuImgToUploader} />
         </BtnWrapper>
       </LeftContainer>
       <div>
-        <Preview widthRem={16} heightRem={16} src={getSrc(menu.image)} emptyText={'메뉴 이미지가 없습니다.'} />
+        <Preview widthRem={16} heightRem={16} src={getSrc(menu.image) || ''} emptyText={'메뉴 이미지가 없습니다.'} />
       </div>
     </Container>
   );

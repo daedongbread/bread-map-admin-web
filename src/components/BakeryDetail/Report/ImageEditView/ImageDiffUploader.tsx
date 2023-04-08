@@ -3,8 +3,8 @@ import { BakeryImageEntity } from '@/apis';
 import { Button, Preview } from '@/components/Shared';
 import { FileImage } from '@/components/Shared/FileImage';
 import useFileInput from '@/hooks/useFileInput';
+import { useAppSelector } from '@/store/hooks';
 import styled from '@emotion/styled';
-import hamburger from '/images/hamburger.png';
 
 type Props = {
   selectedImage?: BakeryImageEntity;
@@ -13,6 +13,8 @@ type Props = {
 };
 
 export const ImageDiffUploader = ({ selectedImage, onChangeImage, fillBakeryFormImage }: Props) => {
+  const { currentImageUploader } = useAppSelector(selector => selector.bakery);
+
   const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
 
   const onChangeBakeryImg = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,8 +38,8 @@ export const ImageDiffUploader = ({ selectedImage, onChangeImage, fillBakeryForm
       <div className="chg_wrapper">
         <div>
           <label className="image_label">현재 이미지</label>
-          <Preview src={hamburger} widthRem={28} heightRem={19} emptyText={'대표 이미지가 없습니다.'} />
-          <span className="image_title">대표 이미지</span>
+          <Preview src={currentImageUploader?.url || ''} widthRem={28} heightRem={19} emptyText={'대표 이미지가 없습니다.'} />
+          <span className="image_title">{currentImageUploader?.name}</span>
         </div>
         <div className="ml_6">
           <label className="image_label">변경 이미지</label>

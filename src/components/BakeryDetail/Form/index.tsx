@@ -1,21 +1,19 @@
-import React, { ChangeEvent, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { AddressArea } from '@/components/BakeryDetail/Form/AddressArea';
 import { BakeryImgField } from '@/components/BakeryDetail/Form/BakeryImgField';
 import { MenuArea } from '@/components/BakeryDetail/Form/MenuArea';
 import { SnsLink, SnsLinkArea } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { TextField } from '@/components/BakeryDetail/Form/TextField';
-import { SelectOption } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addLink,
   addMenu,
   BakeryFormChangeKey,
-  changeBakeryImg,
-  changeBakeryStatus,
+  changeCurrentImageUploader,
   changeForm,
   changeLinkValue,
-  changeMenuImg,
   changeMenuInput,
+  ImageUploaderInfo,
   removeLink,
   removeMenu,
   selectLinkOption,
@@ -36,10 +34,13 @@ export const BakeryForm = () => {
     dispatch(changeForm(payload));
   }, []);
 
-  const onChangeBakeryImg = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const imgPreview = URL.createObjectURL(e.target.files[0]);
-    dispatch(changeBakeryImg({ imgPreview }));
+  const onChangeBakeryImg = () => {
+    const bakeryImage: ImageUploaderInfo = {
+      url: image || '',
+      type: 'image',
+      name: '대표 이미지',
+    };
+    dispatch(changeCurrentImageUploader(bakeryImage));
   };
 
   const onToggleLinkOption = useCallback((currIdx: number) => {
@@ -86,11 +87,16 @@ export const BakeryForm = () => {
     dispatch(addMenu());
   };
 
-  const onChangeMenuImg = ({ currIdx, e }: { currIdx: number; e: ChangeEvent<HTMLInputElement> }) => {
-    if (!e.target.files) return;
-
-    const imgPreview = URL.createObjectURL(e.target.files[0]);
-    dispatch(changeMenuImg({ currIdx, imgPreview }));
+  const onChangeMenuImg = ({ currIdx }: { currIdx: number }) => {
+    const target = productList.find((p, idx) => idx === currIdx);
+    const bakeryImage: ImageUploaderInfo = {
+      url: target?.image || '',
+      type: 'menu',
+      name: target?.productName || '메뉴명 없음',
+      // menuId: , 필요없는듯?
+      currMenuIdx: currIdx,
+    };
+    dispatch(changeCurrentImageUploader(bakeryImage));
   };
 
   return (

@@ -53,6 +53,16 @@ const initialBakeryLinks: SnsLink[] = [
 
 export type BakeryFormChangeKey = keyof BakeryDetailBaseEntity;
 
+export type PreviewImageType = 'image' | 'menu';
+
+export type ImageUploaderInfo = {
+  url: string;
+  type: PreviewImageType;
+  name: string;
+  menuId?: number;
+  currMenuIdx?: number;
+};
+
 interface BakeryState {
   loading: boolean;
   error: boolean;
@@ -60,6 +70,7 @@ interface BakeryState {
   formLinks: SnsLink[];
   openedSnsLinkIdx: number | null;
   openedMenuTypeIdx: number | null;
+  currentImageUploader: ImageUploaderInfo | null;
 }
 
 const initialState: BakeryState = {
@@ -69,6 +80,7 @@ const initialState: BakeryState = {
   formLinks: initialBakeryLinks,
   openedSnsLinkIdx: null,
   openedMenuTypeIdx: null,
+  currentImageUploader: null,
 };
 
 const bakerySlice = createSlice({
@@ -171,6 +183,9 @@ const bakerySlice = createSlice({
       const target = state.form.productList[currIdx];
       state.form.productList.splice(currIdx, 1, { ...target, image: imgPreview });
     },
+    changeCurrentImageUploader(state, action: PayloadAction<ImageUploaderInfo | null>) {
+      state.currentImageUploader = action.payload;
+    },
   },
 });
 
@@ -193,4 +208,5 @@ export const {
   removeMenu,
   addMenu,
   changeMenuImg,
+  changeCurrentImageUploader,
 } = bakerySlice.actions;
