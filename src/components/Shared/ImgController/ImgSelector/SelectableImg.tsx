@@ -18,7 +18,7 @@ export const SelectableImg = ({ currentImage, isSelected, handleSelectImage }: P
 
   return (
     <div>
-      {!currentImage && <EmptyPreview widthRem={25} heightRem={25} emptyText={'선택가능한 이미지가 없습니다.'} />}
+      {!currentImage && <EmptyPreview src={''} widthRem={25} heightRem={25} emptyText={'선택가능한 이미지가 없습니다.'} />}
       {currentImage && (
         <>
           <ImgContainer isRegistered={currentImage?.isRegistered}>
