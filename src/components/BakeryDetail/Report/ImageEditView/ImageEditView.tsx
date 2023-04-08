@@ -30,7 +30,7 @@ export const ImageEditView = ({ bakeryId }: Props) => {
     imageType: activeTab!.value as keyof BakeryImageType as BakeryImageType,
     page: currPage,
   });
-  const [selectedImage, setChangeImage] = useState<BakeryImageEntity | undefined>();
+  const [selectedImage, setSelectedImage] = useState<BakeryImageEntity | undefined>();
 
   useEffect(() => {
     if (data && data.totalPages) {
@@ -45,7 +45,7 @@ export const ImageEditView = ({ bakeryId }: Props) => {
   }, [imgTabs]);
 
   const onChangeImage = (image?: BakeryImageEntity) => {
-    setChangeImage(image);
+    setSelectedImage(image);
   };
 
   const createAndGetImageUrl = async () => {
