@@ -306,6 +306,44 @@ const onCreateForm = (payload: FormData) => {
         // ... 
 ```
 
+
+
+### 5-3. 전달받는 함수를 그대로 사용하지 않고, 추가로 로직을 작성해야하는 경우
+
+- View(화면), ViewComponent(화면 내부 컴포넌트)가 있을 때, 함수들을 내려주고 사용할 때 추가 로직을 어디에 쓸지 헷갈릴 수 있습니다.
+
+```typescript
+// MenuEditView.tsx
+
+  const onChangeMenuReportImages = (reportId: number, imageIdList: number[]) => {
+    updateMenuReportImages.mutate({ bakeryId, reportId, imageIdList });
+  };
+
+  const onDeleteMenuReport = (reportId: number) => {
+    if (window.confirm('메뉴 제보를 삭제하시겠습니까?')) {
+      deleteMenuReport.mutate({ bakeryId, reportId });
+    }
+  };
+```
+
+```typescript
+// MenuEditView 내부 컴포넌트 (SelectableMenuCard)
+
+  const handleUpdate = () => {
+    if (selectedImageIds.length === 0) {
+      window.alert('선택된 이미지가 없습니다.');
+      return;
+    }
+    onChangeMenuReportImages(reportId, selectedImageIds);
+  };
+
+  const handleDelete = () => {
+    onDeleteMenuReport(reportId);
+  };
+```
+- 공통적인 로직은 View 영역에 작성합니다. -> `MenuEditView의 onDeleteMenuReport` (무조건 삭제할건지 한번 확인)
+- 개별 아이템에서 확인이 필요한 경우, 내부 컴포넌트에서 작성합니다. -> `SelectableMenuCard의 handleUpdate` (selectedImgs가 있는지 확인하는중)
+
 ## 6. 테스트
 
 ### 6-1. 테스트 실행 방법
