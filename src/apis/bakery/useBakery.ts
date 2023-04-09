@@ -35,6 +35,8 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     },
   });
 
+  const bakeryReportNewStatusQuery = useQuery(['bakeryReportNewStatus'], () => bakery.getBakeryReportNewStatus({ bakeryId }));
+
   const bakeryImagesQuery = ({ bakeryId, imageType, page }: GetBakeryImagePayload) => {
     return useQuery(
       ['getBakeryImages', { bakeryId, imageType, page }],
@@ -104,6 +106,7 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     bakeryQuery,
     addBakery,
     editBakery,
+    bakeryReportNewStatusQuery,
     bakeryImagesQuery,
     uploadImage,
     deleteImage,

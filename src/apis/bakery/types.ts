@@ -8,6 +8,7 @@ export type BakerySns = 'websiteURL' | 'instagramURL' | 'facebookURL' | 'blogURL
  * 빵집 관리
  * 1. 빵집 조회 (GetBakeriesPayload, BakeriesItemEntity, GetBakeriesResponse)
  * 2. 빵집 상세 조회 (BakeryDetailBaseEntity, BakeryDetailEntity, BakeryMenuEntity)
+ * 3. 빵집 제보 데이터 -- 대표/메뉴/리뷰이미지, 메뉴제보, 정보수정 -- 신규 등록 여부 조회 (GetBakeryReportNewStatusEntity)
  */
 export type GetBakeriesPayload = {
   name: string | null;
@@ -60,6 +61,12 @@ export type BakeryDetailEntity = BakeryDetailBaseEntity & {
   facilityInfoList: string[]; // PARKING...
   productList: BakeryMenuEntity[];
   status: BakeryStatus;
+};
+
+export type GetBakeryReportNewStatusEntity = {
+  adminImageIsNew: boolean;
+  productAddReportIsNew: boolean;
+  bakeryUpdateReportIsNew: boolean;
 };
 
 /**
@@ -204,6 +211,7 @@ export interface BakeryApiClient {
   updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;
   getList: ({ page }: Omit<GetBakeriesPayload, 'name'>) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
   searchList: ({ name, page }: GetBakeriesPayload) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
+  getBakeryReportNewStatus: ({ bakeryId }: { bakeryId: number }) => Promise<GetBakeryReportNewStatusEntity>;
   getImageList: ({ bakeryId, imageType, page }: GetBakeryImagePayload) => Promise<{ images: BakeryImageEntity[]; totalCount: number; totalPages: number }>;
   uploadImage: ({ payload }: UploadImagePayload) => Promise<{ imagePath: string }>;
   deleteImage: ({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) => void;

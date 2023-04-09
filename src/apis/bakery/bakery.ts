@@ -39,6 +39,11 @@ export class Bakery {
     return list;
   }
 
+  async getBakeryReportNewStatus({ bakeryId }: { bakeryId: number }) {
+    const result = await this.client.getBakeryReportNewStatus({ bakeryId });
+    return result;
+  }
+
   async getImages({ bakeryId, imageType, page }: GetBakeryImagePayload) {
     const list = await this.client.getImageList({ bakeryId, imageType, page });
     return list;

@@ -14,6 +14,7 @@ import {
   GetBakeryInfoUpdateRequestsResponse,
   GetBakeryMenuReportPayload,
   GetBakeryMenuReportsResponse,
+  GetBakeryReportNewStatusEntity,
   UpdateBakeryMenuReportImagesPayload,
   UploadImagePayload,
   UploadImageResponse,
@@ -42,6 +43,11 @@ export class BakeryClient implements BakeryApiClient {
   async searchList({ name, page }: GetBakeriesPayload) {
     const resp = await fetcher.get<GetBakeriesResponse>('/bakeries/search', { params: { name, page } });
     return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
+  }
+
+  async getBakeryReportNewStatus({ bakeryId }: { bakeryId: number }) {
+    const resp = await fetcher.get<GetBakeryReportNewStatusEntity>(`/bakeries/${bakeryId}/is-new-bar`);
+    return resp.data;
   }
 
   async getImageList({ bakeryId, imageType, page }: GetBakeryImagePayload) {

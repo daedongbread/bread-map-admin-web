@@ -1,1 +1,1 @@
-export * from './ReportTab';
+export * from './ReportView';

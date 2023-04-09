@@ -11,11 +11,11 @@ type Props = {
   handleSelectReportTab: (tab: TabItem) => void;
 };
 
-export const ReportTab = ({ bakeryId, tabs, handleSelectReportTab }: Props) => {
+export const ReportView = ({ bakeryId, tabs, handleSelectReportTab }: Props) => {
   return (
     <Container>
       {tabs.map(item => (
-        <Tab key={`report-tab-${item.value}`} tab={item} type={'outline'} onSelectReportTab={handleSelectReportTab} />
+        <Tab key={`report-tab-${item.value}`} tab={item} type={'outline'} updatedStyle={'dot'} onSelectReportTab={handleSelectReportTab} />
       ))}
       <Divider />
       <Report bakeryId={bakeryId} tabItem={tabs.find(i => i.isActive) as TabItem} />
