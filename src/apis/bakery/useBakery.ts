@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import {
   CompleteBakeryInfoUpdateRequestPayload,
   CreateUpdateBakeryPayload,
+  DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
   GetBakeryImagePayload,
@@ -50,6 +51,10 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
   };
 
   const uploadImage = useMutation((payload: UploadImagePayload) => bakery.uploadImage(payload));
+
+  const deleteImage = useMutation((payload: DeleteBakeryImagePayload) => bakery.deleteImage(payload), {
+    onSuccess: (data, variables) => queryClient.invalidateQueries(['getBakeryImages', { bakeryId: variables.bakeryId, imageType: variables.imageType }]),
+  });
 
   const bakeryMenuReportsQuery = ({ bakeryId, page }: GetBakeryMenuReportPayload) => {
     return useQuery(
@@ -101,6 +106,7 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     editBakery,
     bakeryImagesQuery,
     uploadImage,
+    deleteImage,
     bakeryMenuReportsQuery,
     updateMenuReportImages,
     deleteMenuReport,

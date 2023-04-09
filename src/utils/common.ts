@@ -1,5 +1,5 @@
+import axios from 'axios';
 import { SelectOption } from '@/components/Shared';
-import { PATH } from '@/constants';
 
 const blobToFile = (theBlob: Blob, fileName: string): File => {
   return new File([theBlob as any], fileName, {
@@ -8,7 +8,7 @@ const blobToFile = (theBlob: Blob, fileName: string): File => {
   });
 };
 
-const urlToFile = async (url: string, fileName: string): Promise<File> => {
+export const urlToFile = async (url: string, fileName: string): Promise<File> => {
   const file = await fetch(url)
     .then(r => r.blob())
     .then(blobFile => blobToFile(blobFile, fileName));
@@ -16,11 +16,7 @@ const urlToFile = async (url: string, fileName: string): Promise<File> => {
   return file;
 };
 
-const urlToBlob = async (url: string, fileName: string): Promise<Blob> => {
-  return await fetch(url).then(r => r.blob());
-};
-
-const formatTextToOptionObj = ({ constants, targetText }: { constants: SelectOption[]; targetText: string }) => {
+export const formatTextToOptionObj = ({ constants, targetText }: { constants: SelectOption[]; targetText: string }) => {
   const option = constants.find(option => option.value === targetText);
   if (!option || !option.color) {
     return { color: '', text: '' };
@@ -29,4 +25,25 @@ const formatTextToOptionObj = ({ constants, targetText }: { constants: SelectOpt
   return { color: option.color, text: option.name };
 };
 
-export { urlToFile, urlToBlob, formatTextToOptionObj };
+const toDataURL = async (url: string) => {
+  try {
+    const response = await axios.get(url, { responseType: 'blob' });
+    const imageDataUrl = URL.createObjectURL(response.data);
+    return imageDataUrl;
+  } catch (err) {
+    window.alert('이미지 정보를 만드는데 실패했습니다. 계속 실패시 문의해주세요.');
+  }
+};
+
+export const downloadImage = async (url: string, filename: string) => {
+  const link = document.createElement('a');
+  const result = await toDataURL(url);
+  if (!result) {
+    return window.alert('이미지 정보를 가져오는데 실패했습니다. 다시 시도해주세요.');
+  }
+  link.href = result;
+  link.download = `${filename}.png`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};

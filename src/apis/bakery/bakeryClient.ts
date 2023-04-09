@@ -3,6 +3,7 @@ import {
   BakeryDetailEntity,
   CompleteBakeryInfoUpdateRequestPayload,
   CreateUpdateBakeryPayload,
+  DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
   GetBakeriesPayload,
@@ -61,6 +62,10 @@ export class BakeryClient implements BakeryApiClient {
     return {
       imagePath: resp.data.imagePath,
     };
+  }
+
+  async deleteImage({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) {
+    await fetcher.delete(`/bakeries/${bakeryId}/images/${imageType}/${imageId}`);
   }
 
   async getBakeryMenuReportList({ bakeryId, page }: GetBakeryMenuReportPayload) {

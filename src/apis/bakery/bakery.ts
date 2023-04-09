@@ -2,6 +2,7 @@ import {
   BakeryApiClient,
   CompleteBakeryInfoUpdateRequestPayload,
   CreateUpdateBakeryPayload,
+  DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
   GetBakeriesPayload,
@@ -45,8 +46,11 @@ export class Bakery {
 
   async uploadImage({ payload }: UploadImagePayload) {
     const result = await this.client.uploadImage({ payload });
-    console.log(result);
     return result;
+  }
+
+  async deleteImage({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) {
+    await this.client.deleteImage({ bakeryId, imageType, imageId });
   }
 
   async getMenuReports({ bakeryId, page }: GetBakeryMenuReportPayload) {

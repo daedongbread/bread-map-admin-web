@@ -7,9 +7,10 @@ type Props = {
   images: BakeryImageEntity[];
   selectedImage?: BakeryImageEntity;
   onChangeImage: (image?: BakeryImageEntity) => void;
+  handleDeleteBakeryImage: (imageId: number) => void;
 };
 
-export const Gallery = ({ images, selectedImage, onChangeImage }: Props) => {
+export const Gallery = ({ images, selectedImage, onChangeImage, handleDeleteBakeryImage }: Props) => {
   const onClickImage = (imageId: number) => {
     onChangeImage(selectedImage?.imageId === imageId ? undefined : images.find(image => image.imageId === imageId));
   };
@@ -26,6 +27,7 @@ export const Gallery = ({ images, selectedImage, onChangeImage }: Props) => {
               downloadUrl={item.image}
               imageId={item.imageId}
               onClickImage={onClickImage}
+              handleDeleteImage={handleDeleteBakeryImage}
             />
           ))}
         </div>

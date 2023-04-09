@@ -66,6 +66,7 @@ export type BakeryDetailEntity = BakeryDetailBaseEntity & {
  * 빵집 대표/메뉴 이미지
  * 1. 빵집 관련 이미지 조회 (BakeryImageType, GetBakeryImagePayload, BakeryImageEntity, GetBakeryImageResponse)
  * 2. 임시 이미지 업로드 (UploadImagePayload)
+ * 3. 빵집 관련 이미지 삭제 (DeleteBakeryImagePayload)
  */
 export enum BakeryImageType {
   /** 대표 이미지 */
@@ -103,6 +104,12 @@ export type UploadImagePayload = {
 
 export type UploadImageResponse = {
   imagePath: string;
+};
+
+export type DeleteBakeryImagePayload = {
+  bakeryId: number;
+  imageType: BakeryImageType;
+  imageId: number;
 };
 
 /**
@@ -199,6 +206,7 @@ export interface BakeryApiClient {
   searchList: ({ name, page }: GetBakeriesPayload) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
   getImageList: ({ bakeryId, imageType, page }: GetBakeryImagePayload) => Promise<{ images: BakeryImageEntity[]; totalCount: number; totalPages: number }>;
   uploadImage: ({ payload }: UploadImagePayload) => Promise<{ imagePath: string }>;
+  deleteImage: ({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) => void;
   getBakeryMenuReportList: ({
     bakeryId,
     page,
