@@ -5,6 +5,7 @@ import {
   DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
+  GetBakeryImageMenuBarPayload,
   GetBakeryImagePayload,
   GetBakeryInfoUpdateRequestsPayload,
   GetBakeryMenuReportPayload,
@@ -29,11 +30,18 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     onSuccess: () => queryClient.invalidateQueries('getBakeries'),
   });
 
-  const editBakery = useMutation((payload: { bakeryId: number } & CreateUpdateBakeryPayload) => bakery.updateItem(payload), {
-    onSuccess: () => {
-      return Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
-    },
-  });
+  const editBakery = useMutation(
+    (
+      payload: {
+        bakeryId: number;
+      } & CreateUpdateBakeryPayload
+    ) => bakery.updateItem(payload),
+    {
+      onSuccess: () => {
+        return Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
+      },
+    }
+  );
 
   const bakeryReportNewStatusQuery = useQuery(['bakeryReportNewStatus'], () => bakery.getBakeryReportNewStatus({ bakeryId }));
 
@@ -55,7 +63,14 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
   const uploadImage = useMutation((payload: UploadImagePayload) => bakery.uploadImage(payload));
 
   const deleteImage = useMutation((payload: DeleteBakeryImagePayload) => bakery.deleteImage(payload), {
-    onSuccess: (data, variables) => queryClient.invalidateQueries(['getBakeryImages', { bakeryId: variables.bakeryId, imageType: variables.imageType }]),
+    onSuccess: (data, variables) =>
+      queryClient.invalidateQueries([
+        'getBakeryImages',
+        {
+          bakeryId: variables.bakeryId,
+          imageType: variables.imageType,
+        },
+      ]),
   });
 
   const bakeryMenuReportsQuery = ({ bakeryId, page }: GetBakeryMenuReportPayload) => {
@@ -102,6 +117,12 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     onSuccess: () => queryClient.invalidateQueries('getBakeryInfoUpdateRequests'),
   });
 
+  const bakeryImageMenuBarQuery = ({ bakeryId }: GetBakeryImageMenuBarPayload) => {
+    return useQuery(['getBakeryImageMenuBar', { bakeryId }], () => bakery.getBakeryImageMenuBar({ bakeryId }), {
+      enabled: !isNaN(bakeryId),
+    });
+  };
+
   return {
     bakeryQuery,
     addBakery,
@@ -116,5 +137,6 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     bakeryInfoUpdateRequestsQuery,
     completeBakeryInfoUpdateRequest,
     deleteBakeryInfoUpdateRequest,
+    bakeryImageMenuBarQuery,
   };
 };

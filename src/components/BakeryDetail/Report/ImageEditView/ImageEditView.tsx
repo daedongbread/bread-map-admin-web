@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BakeryImageEntity, BakeryImageType, useBakery } from '@/apis';
+import { BakeryImageEntity, BakeryImageType, GetBakeryImageMenuBarResponse, useBakery } from '@/apis';
 import { Gallery } from '@/components/BakeryDetail/Report/ImageEditView/Gallery';
 import { ImageDiffUploader } from '@/components/BakeryDetail/Report/ImageEditView/ImageDiffUploader';
 import { ReportContentArea } from '@/components/BakeryDetail/Report/ReportContentArea';
@@ -19,17 +19,21 @@ type Props = {
 
 export const ImageEditView = ({ bakeryId }: Props) => {
   const dispatch = useAppDispatch();
-  const { currentImageUploader } = useAppSelector(selector => selector.bakery);
+  const { form, currentImageUploader } = useAppSelector(selector => selector.bakery);
 
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const { tabs: imgTabs, selectTab: selectImgTab, setTabCount: setImgTabCount } = useTab({ tabData: BAKERY_IMG_TAB });
   const [activeTab, setActiveTab] = useState(imgTabs.find(tab => tab.isActive));
-  const { bakeryImagesQuery, uploadImage, deleteImage } = useBakery({ bakeryId });
+  const { bakeryImagesQuery, uploadImage, deleteImage, bakeryImageMenuBarQuery } = useBakery({ bakeryId });
   const { data, isLoading, isFetching } = bakeryImagesQuery({
     bakeryId: bakeryId,
     imageType: activeTab!.value as keyof BakeryImageType as BakeryImageType,
     page: currPage,
   });
+  const { data: menuBarData } = bakeryImageMenuBarQuery({
+    bakeryId: bakeryId,
+  });
+  type DynamicKey = `${keyof GetBakeryImageMenuBarResponse}`;
   const [selectedImage, setSelectedImage] = useState<BakeryImageEntity | undefined>();
 
   useEffect(() => {
@@ -76,13 +80,23 @@ export const ImageEditView = ({ bakeryId }: Props) => {
       await dispatch(changeForm({ name: 'image', value: url as never }));
     } else {
       if (isNumber(currentImageUploader?.currMenuIdx)) {
-        dispatch(changeMenuImg({ currIdx: getNumberFromValue(currentImageUploader.currMenuIdx), imgPreview: url }));
+        dispatch(
+          changeMenuImg({
+            currIdx: getNumberFromValue(currentImageUploader.currMenuIdx),
+            imgPreview: url,
+          })
+        );
       }
     }
   };
 
-  const handleDeleteBakeryImage = async (imageId: number) => {
-    // TODO: 이미 사용하고 있는지 검증 필요
+  const handleDeleteBakeryImage = async (imageId: number, imageUrl: string) => {
+    const hasFormImageUrl = form.image === imageUrl || form.productList.some(item => item.image === imageUrl);
+    if (hasFormImageUrl) {
+      window.alert('사용중인 이미지입니다. 변경후 시도해주세요.');
+      return;
+    }
+
     if (window.confirm('이미지를 삭제하시겠습니까? 삭제시 대표/메뉴 이미지로 사용할 수 없습니다.')) {
       const imageType = imgTabs.find(tab => tab.isActive)?.value;
       if (!imageType) {
@@ -103,7 +117,13 @@ export const ImageEditView = ({ bakeryId }: Props) => {
       <Divider />
       <div className="tabs">
         {imgTabs.map((item, idx) => (
-          <Tab key={`tab-${idx}`} tab={item} type={'plain'} onSelectReportTab={selectImgTab} />
+          <Tab
+            key={`tab-${idx}`}
+            tab={item}
+            count={menuBarData ? menuBarData[`${item.value}Num` as DynamicKey] : 0}
+            type={'plain'}
+            onSelectReportTab={selectImgTab}
+          />
         ))}
       </div>
       <ReportContentArea isEmpty={data?.images?.length === 0} emptyAreaName={getEmptyName()}>

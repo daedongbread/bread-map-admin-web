@@ -8,6 +8,8 @@ import {
   DeleteBakeryMenuReportPayload,
   GetBakeriesPayload,
   GetBakeriesResponse,
+  GetBakeryImageMenuBarPayload,
+  GetBakeryImageMenuBarResponse,
   GetBakeryImagePayload,
   GetBakeryImageResponse,
   GetBakeryInfoUpdateRequestsPayload,
@@ -106,5 +108,14 @@ export class BakeryClient implements BakeryApiClient {
 
   async deleteBakeryInfoUpdateRequest({ bakeryId, reportId }: DeleteBakeryInfoUpdateRequestPayload) {
     await fetcher.delete(`/bakeries/${bakeryId}/update-reports/${reportId}`);
+  }
+
+  async getBakeryImageMenuBar({ bakeryId }: GetBakeryImageMenuBarPayload) {
+    const resp = await fetcher.get<GetBakeryImageMenuBarResponse>(`/bakeries/${bakeryId}/image-bar`);
+    return {
+      bakeryReportImageNum: resp.data.bakeryReportImageNum,
+      productAddReportImageNum: resp.data.productAddReportImageNum,
+      reviewImageNum: resp.data.reviewImageNum,
+    };
   }
 }
