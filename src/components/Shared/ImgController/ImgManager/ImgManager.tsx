@@ -9,7 +9,7 @@ type Props = {
   downloadUrl: string;
   imageId: number;
   onClickImage: (imageId: number) => void;
-  handleDeleteImage: (imageId: number) => void;
+  handleDeleteImage: (imageId: number, imageUrl: string) => void;
 };
 
 export const ImgManager = ({ isNew, isSelected, downloadUrl, imageId, onClickImage, handleDeleteImage }: Props) => {
@@ -24,7 +24,7 @@ export const ImgManager = ({ isNew, isSelected, downloadUrl, imageId, onClickIma
   };
 
   const onDeleteImage = () => {
-    handleDeleteImage(imageId);
+    handleDeleteImage(imageId, downloadUrl);
   };
 
   return (

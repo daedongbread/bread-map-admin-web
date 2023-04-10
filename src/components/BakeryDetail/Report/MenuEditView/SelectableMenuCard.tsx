@@ -15,7 +15,7 @@ export const SelectableMenuCard = ({ menuReport, onChangeMenuReportImages, onDel
   const { imageList, reportId, createdAt, name, price, nickName } = menuReport;
 
   const [currentImage, setCurrentImage] = useState<BakeryMenuReportImageEntity | null>(imageList.find(i => !i.isRegistered) || null);
-  const [selectedImageIds, setSelectedImageIds] = useState([imageList[0].imageId]);
+  const [selectedImageIds, setSelectedImageIds] = useState(imageList.length > 0 ? [imageList[0].imageId] : []);
 
   const isSavedAllImage = !imageList.some(i => !i.isRegistered);
 

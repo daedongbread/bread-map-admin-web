@@ -7,7 +7,7 @@ type Props = {
   images: BakeryImageEntity[];
   selectedImage?: BakeryImageEntity;
   onChangeImage: (image?: BakeryImageEntity) => void;
-  handleDeleteBakeryImage: (imageId: number) => void;
+  handleDeleteBakeryImage: (imageId: number, imageUrl: string) => void;
 };
 
 export const Gallery = ({ images, selectedImage, onChangeImage, handleDeleteBakeryImage }: Props) => {

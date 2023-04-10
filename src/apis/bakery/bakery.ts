@@ -6,19 +6,19 @@ import {
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
   GetBakeriesPayload,
+  GetBakeryImageMenuBarPayload,
   GetBakeryImagePayload,
   GetBakeryInfoUpdateRequestsPayload,
   GetBakeryMenuReportPayload,
   UpdateBakeryMenuReportImagesPayload,
   UploadImagePayload,
-} from './types';
+} from '@/apis';
 
 export class Bakery {
   constructor(public client: BakeryApiClient) {}
 
   async getItem({ bakeryId }: { bakeryId: number }) {
-    const item = await this.client.getItem({ bakeryId });
-    return item;
+    return await this.client.getItem({ bakeryId });
   }
 
   async createItem({ payload }: CreateUpdateBakeryPayload) {
@@ -30,28 +30,23 @@ export class Bakery {
   }
 
   async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
-    const list = await this.client.getList({ page });
-    return list;
+    return await this.client.getList({ page });
   }
 
   async searchList({ name, page }: GetBakeriesPayload) {
-    const list = await this.client.searchList({ name, page });
-    return list;
+    return await this.client.searchList({ name, page });
   }
 
   async getBakeryReportNewStatus({ bakeryId }: { bakeryId: number }) {
-    const result = await this.client.getBakeryReportNewStatus({ bakeryId });
-    return result;
+    return await this.client.getBakeryReportNewStatus({ bakeryId });
   }
 
   async getImages({ bakeryId, imageType, page }: GetBakeryImagePayload) {
-    const list = await this.client.getImageList({ bakeryId, imageType, page });
-    return list;
+    return await this.client.getImageList({ bakeryId, imageType, page });
   }
 
   async uploadImage({ payload }: UploadImagePayload) {
-    const result = await this.client.uploadImage({ payload });
-    return result;
+    return await this.client.uploadImage({ payload });
   }
 
   async deleteImage({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) {
@@ -59,8 +54,7 @@ export class Bakery {
   }
 
   async getMenuReports({ bakeryId, page }: GetBakeryMenuReportPayload) {
-    const list = await this.client.getBakeryMenuReportList({ bakeryId, page });
-    return list;
+    return await this.client.getBakeryMenuReportList({ bakeryId, page });
   }
 
   async updateMenuReportImages({ bakeryId, reportId, imageIdList }: UpdateBakeryMenuReportImagesPayload) {
@@ -72,8 +66,7 @@ export class Bakery {
   }
 
   async getBakeryInfoUpdateRequests({ bakeryId, page }: GetBakeryInfoUpdateRequestsPayload) {
-    const list = await this.client.getBakeryInfoUpdateRequests({ bakeryId, page });
-    return list;
+    return await this.client.getBakeryInfoUpdateRequests({ bakeryId, page });
   }
 
   async completeBakeryInfoUpdateRequest({ bakeryId, reportId }: CompleteBakeryInfoUpdateRequestPayload) {
@@ -82,5 +75,9 @@ export class Bakery {
 
   async deleteBakeryInfoUpdateRequest({ bakeryId, reportId }: DeleteBakeryInfoUpdateRequestPayload) {
     await this.client.deleteBakeryInfoUpdateRequest({ bakeryId, reportId });
+  }
+
+  async getBakeryImageMenuBar({ bakeryId }: GetBakeryImageMenuBarPayload) {
+    return await this.client.getBakeryImageMenuBar({ bakeryId });
   }
 }

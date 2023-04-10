@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useEffect } from 'react';
-import { Button, Input, SelectBox, BasicSelectTrigger, BasicSelectOption } from '@/components/Shared';
 import type { SelectOption } from '@/components/Shared';
+import { BasicSelectOption, BasicSelectTrigger, Button, Input, SelectBox } from '@/components/Shared';
 import useSelectBox from '@/hooks/useSelectBox';
-import { SnsLink, Option } from './SnsLinkArea';
+import { Option, SnsLink } from './SnsLinkArea';
 
 type Props = {
   idx: number;
@@ -51,7 +51,7 @@ const SnsLinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectL
           <BasicSelectOption key={idx} option={option} onSelectOption={onSelectLink} />
         ))}
       </SelectBox>
-      <Input type={'plain'} onChangeInput={e => onChangeLink(e)} value={link.value} />
+      <Input type={'plain'} onChangeInput={e => onChangeLink(e)} value={link.value || ''} />
       <Button type={'gray'} text={'삭제'} btnSize={'small'} onClickBtn={() => onRemoveLink(idx)} />
     </>
   );

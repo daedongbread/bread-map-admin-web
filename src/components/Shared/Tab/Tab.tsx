@@ -12,12 +12,13 @@ export type TabItem = {
 
 type Props = {
   tab: TabItem;
+  count?: number;
   type: 'plain' | 'outline';
   onSelectReportTab: (tab: TabItem) => void;
   updatedStyle?: 'dot';
 };
 
-export const Tab = ({ tab, type, onSelectReportTab, updatedStyle }: Props) => {
+export const Tab = ({ tab, count, type, onSelectReportTab, updatedStyle }: Props) => {
   const matchedStyle = Object.entries(TAB_STYLE).find(([key]) => key === type);
   if (!matchedStyle) {
     throw new Error('Tab 컴포넌트 스타일이 없습니다.');
@@ -36,7 +37,7 @@ export const Tab = ({ tab, type, onSelectReportTab, updatedStyle }: Props) => {
       onClick={() => onSelectReportTab(tab)}
     >
       <span>{tab.name}</span>
-      {tab.count && <span className="count">{tab.count}</span>}
+      {count && <span className="count">{count}</span>}
     </CustomTab>
   );
 };

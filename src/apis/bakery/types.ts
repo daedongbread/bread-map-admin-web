@@ -74,6 +74,7 @@ export type GetBakeryReportNewStatusEntity = {
  * 1. 빵집 관련 이미지 조회 (BakeryImageType, GetBakeryImagePayload, BakeryImageEntity, GetBakeryImageResponse)
  * 2. 임시 이미지 업로드 (UploadImagePayload)
  * 3. 빵집 관련 이미지 삭제 (DeleteBakeryImagePayload)
+ * 4. 이미지 메뉴바 갯수 조회 (GetBakeryImageMenuBarPayload, GetBakeryImageMenuBarResponse)
  */
 export enum BakeryImageType {
   /** 대표 이미지 */
@@ -117,6 +118,16 @@ export type DeleteBakeryImagePayload = {
   bakeryId: number;
   imageType: BakeryImageType;
   imageId: number;
+};
+
+export type GetBakeryImageMenuBarPayload = {
+  bakeryId: number;
+};
+
+export type GetBakeryImageMenuBarResponse = {
+  bakeryReportImageNum: number;
+  productAddReportImageNum: number;
+  reviewImageNum: number;
 };
 
 /**
@@ -209,22 +220,41 @@ export interface BakeryApiClient {
   getItem: ({ bakeryId }: { bakeryId: number }) => Promise<BakeryDetailEntity>;
   createItem: ({ payload }: CreateUpdateBakeryPayload) => void;
   updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;
-  getList: ({ page }: Omit<GetBakeriesPayload, 'name'>) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
-  searchList: ({ name, page }: GetBakeriesPayload) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
+  getList: ({ page }: Omit<GetBakeriesPayload, 'name'>) => Promise<{
+    bakeries: BakeriesItemEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
+  searchList: ({ name, page }: GetBakeriesPayload) => Promise<{
+    bakeries: BakeriesItemEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
   getBakeryReportNewStatus: ({ bakeryId }: { bakeryId: number }) => Promise<GetBakeryReportNewStatusEntity>;
-  getImageList: ({ bakeryId, imageType, page }: GetBakeryImagePayload) => Promise<{ images: BakeryImageEntity[]; totalCount: number; totalPages: number }>;
+  getImageList: ({ bakeryId, imageType, page }: GetBakeryImagePayload) => Promise<{
+    images: BakeryImageEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
   uploadImage: ({ payload }: UploadImagePayload) => Promise<{ imagePath: string }>;
   deleteImage: ({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) => void;
-  getBakeryMenuReportList: ({
-    bakeryId,
-    page,
-  }: GetBakeryMenuReportPayload) => Promise<{ menuReports: BakeryMenuReportItemEntity[]; totalCount: number; totalPages: number }>;
+  getBakeryMenuReportList: ({ bakeryId, page }: GetBakeryMenuReportPayload) => Promise<{
+    menuReports: BakeryMenuReportItemEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
   updateBakeryMenuReportImages: ({ bakeryId, reportId, imageIdList }: UpdateBakeryMenuReportImagesPayload) => void;
   deleteBakeryMenuReport: ({ bakeryId, reportId }: DeleteBakeryMenuReportPayload) => void;
-  getBakeryInfoUpdateRequests: ({
-    bakeryId,
-    page,
-  }: GetBakeryInfoUpdateRequestsPayload) => Promise<{ bakeryInfoUpdateRequests: BakeryInfoUpdateRequestEntity[]; totalCount: number; totalPages: number }>;
+  getBakeryInfoUpdateRequests: ({ bakeryId, page }: GetBakeryInfoUpdateRequestsPayload) => Promise<{
+    bakeryInfoUpdateRequests: BakeryInfoUpdateRequestEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
   completeBakeryInfoUpdateRequest: ({ bakeryId, reportId }: CompleteBakeryInfoUpdateRequestPayload) => void;
   deleteBakeryInfoUpdateRequest: ({ bakeryId, reportId }: DeleteBakeryInfoUpdateRequestPayload) => void;
+  getBakeryImageMenuBar: ({ bakeryId }: GetBakeryImageMenuBarPayload) => Promise<{
+    bakeryReportImageNum: number;
+    productAddReportImageNum: number;
+    reviewImageNum: number;
+  }>;
 }
