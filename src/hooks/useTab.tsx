@@ -20,7 +20,11 @@ const useTab = ({ tabData }: { tabData: TabItem[] }) => {
     );
   };
 
-  return { tabs, selectTab, setTabCount };
+  const setUpdateStatusTab = (data: Record<string, boolean>) => {
+    setTabs(prev => prev.map(tab => ({ ...tab, isUpdated: data[`${tab.value}IsNew`] })));
+  };
+
+  return { tabs, selectTab, setTabCount, setUpdateStatusTab };
 };
 
 export default useTab;

@@ -4,7 +4,7 @@ import { BakerySns } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
 import { BakeryForm } from '@/components/BakeryDetail/Form';
 import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
-import { ReportTab } from '@/components/BakeryDetail/Report';
+import { ReportView } from '@/components/BakeryDetail/Report';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
@@ -22,13 +22,14 @@ export const BakeryDetailPage = () => {
     bakeryQuery: { data: bakery },
     addBakery,
     editBakery,
+    bakeryReportNewStatusQuery: { data: bakeryReportNewStatus },
   } = useBakery({ bakeryId: Number(bakeryId) });
 
   // TODO: opened state를 리덕스에 저장하면 안될거같은데..? 왜있지?
   const { form, formLinks, openedSnsLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
 
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
-  const { tabs: reportTabs, selectTab: selectReportTab } = useTab({ tabData: BAKERY_REPORT_TAB });
+  const { tabs: reportTabs, selectTab: selectReportTab, setUpdateStatusTab: setUpdateStatusReportTab } = useTab({ tabData: BAKERY_REPORT_TAB });
 
   useEffect(() => {
     if (bakery) {
@@ -42,6 +43,14 @@ export const BakeryDetailPage = () => {
       dispatch(initializeForm());
     }
   }, [bakery]);
+
+  useEffect(() => {
+    if (!bakeryReportNewStatus) {
+      return;
+    }
+
+    setUpdateStatusReportTab(bakeryReportNewStatus);
+  }, [bakeryReportNewStatus]);
 
   const updateLinksAtForm = () => {
     const links: SnsLink[] = [];
@@ -114,7 +123,7 @@ export const BakeryDetailPage = () => {
         {bakeryId && (
           <ScrollSection>
             <div>
-              <ReportTab bakeryId={Number(bakeryId)} tabs={reportTabs} handleSelectReportTab={selectReportTab} />
+              <ReportView bakeryId={Number(bakeryId)} tabs={reportTabs} handleSelectReportTab={selectReportTab} />
             </div>
           </ScrollSection>
         )}

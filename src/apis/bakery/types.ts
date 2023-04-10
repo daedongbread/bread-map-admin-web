@@ -8,6 +8,7 @@ export type BakerySns = 'websiteURL' | 'instagramURL' | 'facebookURL' | 'blogURL
  * 빵집 관리
  * 1. 빵집 조회 (GetBakeriesPayload, BakeriesItemEntity, GetBakeriesResponse)
  * 2. 빵집 상세 조회 (BakeryDetailBaseEntity, BakeryDetailEntity, BakeryMenuEntity)
+ * 3. 빵집 제보 데이터 -- 대표/메뉴/리뷰이미지, 메뉴제보, 정보수정 -- 신규 등록 여부 조회 (GetBakeryReportNewStatusEntity)
  */
 export type GetBakeriesPayload = {
   name: string | null;
@@ -62,10 +63,17 @@ export type BakeryDetailEntity = BakeryDetailBaseEntity & {
   status: BakeryStatus;
 };
 
+export type GetBakeryReportNewStatusEntity = {
+  adminImageIsNew: boolean;
+  productAddReportIsNew: boolean;
+  bakeryUpdateReportIsNew: boolean;
+};
+
 /**
  * 빵집 대표/메뉴 이미지
  * 1. 빵집 관련 이미지 조회 (BakeryImageType, GetBakeryImagePayload, BakeryImageEntity, GetBakeryImageResponse)
  * 2. 임시 이미지 업로드 (UploadImagePayload)
+ * 3. 빵집 관련 이미지 삭제 (DeleteBakeryImagePayload)
  */
 export enum BakeryImageType {
   /** 대표 이미지 */
@@ -103,6 +111,12 @@ export type UploadImagePayload = {
 
 export type UploadImageResponse = {
   imagePath: string;
+};
+
+export type DeleteBakeryImagePayload = {
+  bakeryId: number;
+  imageType: BakeryImageType;
+  imageId: number;
 };
 
 /**
@@ -197,8 +211,10 @@ export interface BakeryApiClient {
   updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;
   getList: ({ page }: Omit<GetBakeriesPayload, 'name'>) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
   searchList: ({ name, page }: GetBakeriesPayload) => Promise<{ bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }>;
+  getBakeryReportNewStatus: ({ bakeryId }: { bakeryId: number }) => Promise<GetBakeryReportNewStatusEntity>;
   getImageList: ({ bakeryId, imageType, page }: GetBakeryImagePayload) => Promise<{ images: BakeryImageEntity[]; totalCount: number; totalPages: number }>;
   uploadImage: ({ payload }: UploadImagePayload) => Promise<{ imagePath: string }>;
+  deleteImage: ({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) => void;
   getBakeryMenuReportList: ({
     bakeryId,
     page,

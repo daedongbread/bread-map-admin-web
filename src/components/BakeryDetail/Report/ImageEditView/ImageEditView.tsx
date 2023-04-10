@@ -24,7 +24,7 @@ export const ImageEditView = ({ bakeryId }: Props) => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const { tabs: imgTabs, selectTab: selectImgTab, setTabCount: setImgTabCount } = useTab({ tabData: BAKERY_IMG_TAB });
   const [activeTab, setActiveTab] = useState(imgTabs.find(tab => tab.isActive));
-  const { bakeryImagesQuery, uploadImage } = useBakery({ bakeryId });
+  const { bakeryImagesQuery, uploadImage, deleteImage } = useBakery({ bakeryId });
   const { data, isLoading, isFetching } = bakeryImagesQuery({
     bakeryId: bakeryId,
     imageType: activeTab!.value as keyof BakeryImageType as BakeryImageType,
@@ -81,6 +81,17 @@ export const ImageEditView = ({ bakeryId }: Props) => {
     }
   };
 
+  const handleDeleteBakeryImage = async (imageId: number) => {
+    // TODO: 이미 사용하고 있는지 검증 필요
+    if (window.confirm('이미지를 삭제하시겠습니까? 삭제시 대표/메뉴 이미지로 사용할 수 없습니다.')) {
+      const imageType = imgTabs.find(tab => tab.isActive)?.value;
+      if (!imageType) {
+        return;
+      }
+      await deleteImage.mutateAsync({ bakeryId, imageId, imageType: imageType as BakeryImageType });
+    }
+  };
+
   const getEmptyName = () => {
     const tabName = imgTabs.find(tab => tab.isActive)?.name;
     return tabName ?? '이미지를 불러오지 못했습니다. 대동빵 팀에 문의해주세요.';
@@ -96,7 +107,7 @@ export const ImageEditView = ({ bakeryId }: Props) => {
         ))}
       </div>
       <ReportContentArea isEmpty={data?.images?.length === 0} emptyAreaName={getEmptyName()}>
-        <Gallery images={data?.images ?? []} selectedImage={selectedImage} onChangeImage={onChangeImage} />
+        <Gallery images={data?.images ?? []} selectedImage={selectedImage} onChangeImage={onChangeImage} handleDeleteBakeryImage={handleDeleteBakeryImage} />
         <Pagination
           pages={pages}
           currPage={currPage}

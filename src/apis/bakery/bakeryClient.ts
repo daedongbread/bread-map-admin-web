@@ -3,6 +3,7 @@ import {
   BakeryDetailEntity,
   CompleteBakeryInfoUpdateRequestPayload,
   CreateUpdateBakeryPayload,
+  DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
   GetBakeriesPayload,
@@ -13,6 +14,7 @@ import {
   GetBakeryInfoUpdateRequestsResponse,
   GetBakeryMenuReportPayload,
   GetBakeryMenuReportsResponse,
+  GetBakeryReportNewStatusEntity,
   UpdateBakeryMenuReportImagesPayload,
   UploadImagePayload,
   UploadImageResponse,
@@ -43,6 +45,11 @@ export class BakeryClient implements BakeryApiClient {
     return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
   }
 
+  async getBakeryReportNewStatus({ bakeryId }: { bakeryId: number }) {
+    const resp = await fetcher.get<GetBakeryReportNewStatusEntity>(`/bakeries/${bakeryId}/is-new-bar`);
+    return resp.data;
+  }
+
   async getImageList({ bakeryId, imageType, page }: GetBakeryImagePayload) {
     const resp = await fetcher.get<GetBakeryImageResponse>(`/bakeries/${bakeryId}/images/${imageType}`, { params: { page } });
     return {
@@ -61,6 +68,10 @@ export class BakeryClient implements BakeryApiClient {
     return {
       imagePath: resp.data.imagePath,
     };
+  }
+
+  async deleteImage({ bakeryId, imageType, imageId }: DeleteBakeryImagePayload) {
+    await fetcher.delete(`/bakeries/${bakeryId}/images/${imageType}/${imageId}`);
   }
 
   async getBakeryMenuReportList({ bakeryId, page }: GetBakeryMenuReportPayload) {

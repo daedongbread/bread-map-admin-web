@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { CheckLine, Download, NewBadge, Trash } from '@/components/Shared/Icons';
+import { downloadImage } from '@/utils';
 import styled from '@emotion/styled';
 
 type Props = {
@@ -8,28 +9,40 @@ type Props = {
   downloadUrl: string;
   imageId: number;
   onClickImage: (imageId: number) => void;
+  handleDeleteImage: (imageId: number) => void;
 };
 
-export const ImgManager = ({ isNew, isSelected, downloadUrl, imageId, onClickImage }: Props) => {
-  const handleImage = () => {
-    onClickImage(imageId);
+export const ImgManager = ({ isNew, isSelected, downloadUrl, imageId, onClickImage, handleDeleteImage }: Props) => {
+  const handleImage = (e: SyntheticEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).tagName === 'IMG') {
+      onClickImage(imageId);
+    }
   };
+
+  const handleDownloadImage = async () => {
+    await downloadImage(downloadUrl, `bread-map-${imageId}`);
+  };
+
+  const onDeleteImage = () => {
+    handleDeleteImage(imageId);
+  };
+
   return (
     <CheckBoxContainer onClick={handleImage}>
       <Container isSelected={isSelected}>
         <ImgHeader>
           <div>{isNew && <NewBadge />}</div>
           <Buttons>
-            <Button>
+            <Button onClick={handleDownloadImage}>
               <Download />
             </Button>
-            <Button>
+            <Button onClick={onDeleteImage}>
               <Trash />
             </Button>
           </Buttons>
         </ImgHeader>
         <ImgContainer>
-          <img src={downloadUrl || `http://placehold.it/320x300`} alt={'빵'} />
+          <img src={downloadUrl} alt={'이미지'} />
         </ImgContainer>
       </Container>
       {isSelected && (
