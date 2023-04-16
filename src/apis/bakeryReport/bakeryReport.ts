@@ -22,5 +22,5 @@ export class BakeryReport {
 
 // TODO: mutation error로 인해 임시로 설정
 const updateItemStatus = async ({ reportId, status }: UpdateReportStatusPayload) => {
-  await fetcher.patch(`/bakery/report/${reportId}`, { status });
+  await fetcher.patch(`/bakery-add-reports/${reportId}`, { status });
 };

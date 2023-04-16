@@ -1,5 +1,5 @@
 import type { AxiosResponse } from 'axios';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LoginResponse, requestRefresh } from '@/apis/auth/login';
 import { fetcher } from '@/apis/axios/fetcher';
@@ -39,6 +39,10 @@ export const useInterceptor = () => {
     },
     async error => {
       const config = error.config;
+
+      if (error.response.data?.code === ERROR_CODE.CLIENT_FAILED) {
+        return;
+      }
 
       if (error.response.data?.code === ERROR_CODE.EXPIRED_TOKEN && !config._retry) {
         config._retry = true;
