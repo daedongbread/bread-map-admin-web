@@ -41,6 +41,7 @@ export const useInterceptor = () => {
       const config = error.config;
 
       if (error.response.data?.code === ERROR_CODE.CLIENT_FAILED) {
+        console.error('client 에러..', error.response);
         return;
       }
 
