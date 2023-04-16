@@ -11,6 +11,7 @@ import useSelectBox from '@/hooks/useSelectBox';
 import useTab from '@/hooks/useTab';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { BakeryForm as BakeryFormType, changeBakeryImg, changeBakeryStatus, initializeForm, setForm, setLinks } from '@/store/slices/bakery';
+import { validateForm } from '@/utils/bakery';
 import styled from '@emotion/styled';
 
 export const BakeryDetailPage = () => {
@@ -66,6 +67,9 @@ export const BakeryDetailPage = () => {
 
   const onSaveForm = async () => {
     if (!window.confirm('저장하시겠습니까?')) {
+      return;
+    }
+    if (!validateForm(form)) {
       return;
     }
 

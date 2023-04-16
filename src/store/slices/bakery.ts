@@ -40,7 +40,7 @@ const initialBakeryForm: BakeryForm = {
   websiteURL: '',
   phoneNumber: '',
   facilityInfoList: [],
-  productList: [initialProductItem],
+  productList: [],
   status: 'UNPOSTING',
 };
 
