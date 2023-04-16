@@ -1,5 +1,7 @@
 import React, { SyntheticEvent } from 'react';
 import { CheckLine, Download, NewBadge, Trash } from '@/components/Shared/Icons';
+import { SkeletonImage } from '@/components/Shared/Image/SkeletonImage';
+import useResizeCrop from '@/hooks/useResizeCrop';
 import { downloadImage } from '@/utils';
 import styled from '@emotion/styled';
 
@@ -13,6 +15,8 @@ type Props = {
 };
 
 export const ImgManager = ({ isNew, isSelected, downloadUrl, imageId, onClickImage, handleDeleteImage }: Props) => {
+  const { resizedImgSrc } = useResizeCrop({ imageSrc: downloadUrl });
+
   const handleImage = (e: SyntheticEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).tagName === 'IMG') {
       onClickImage(imageId);
@@ -41,9 +45,13 @@ export const ImgManager = ({ isNew, isSelected, downloadUrl, imageId, onClickIma
             </Button>
           </Buttons>
         </ImgHeader>
-        <ImgContainer>
-          <img src={downloadUrl} alt={'이미지'} />
-        </ImgContainer>
+        {resizedImgSrc ? (
+          <ImgContainer>
+            <img src={resizedImgSrc} alt={'이미지'} />
+          </ImgContainer>
+        ) : (
+          <SkeletonImage />
+        )}
       </Container>
       {isSelected && (
         <CheckBox>
