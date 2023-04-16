@@ -43,7 +43,9 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     }
   );
 
-  const bakeryReportNewStatusQuery = useQuery(['bakeryReportNewStatus'], () => bakery.getBakeryReportNewStatus({ bakeryId }));
+  const bakeryReportNewStatusQuery = useQuery(['bakeryReportNewStatus'], () => bakery.getBakeryReportNewStatus({ bakeryId }), {
+    enabled: !isNaN(bakeryId),
+  });
 
   const bakeryImagesQuery = ({ bakeryId, imageType, page }: GetBakeryImagePayload) => {
     return useQuery(
