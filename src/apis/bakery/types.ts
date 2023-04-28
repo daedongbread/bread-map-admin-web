@@ -78,11 +78,11 @@ export type GetBakeryReportNewStatusEntity = {
  */
 export enum BakeryImageType {
   /** 대표 이미지 */
-  BakeryReportImage = 'bakeryReportImage',
+  BakeryReportImage = 'bakery-report-image',
   /** 제보 이미지 */
-  ProductAddReportImage = 'productAddReportImage',
+  ProductAddReportImage = 'product-add-report-image',
   /** 리뷰 이미지 */
-  ReviewImage = 'reviewImage',
+  ReviewImage = 'review-image',
 }
 
 export type GetBakeryImagePayload = {

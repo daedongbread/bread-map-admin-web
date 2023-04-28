@@ -49,9 +49,9 @@ export const BAKERY_REPORT_TAB: TabItem[] = [
 ];
 
 export const BAKERY_IMG_TAB_VALUE: Record<string, BakeryImgTabValue> = {
-  MainImage: 'bakeryReportImage',
-  MenuImage: 'productAddReportImage',
-  ReviewImage: 'reviewImage',
+  MainImage: 'bakery-report-image',
+  MenuImage: 'product-add-report-image',
+  ReviewImage: 'review-image',
 };
 
 export const BAKERY_IMG_TAB: TabItem[] = [
@@ -76,6 +76,6 @@ export const BAKERY_IMG_TAB: TabItem[] = [
 ];
 
 export type BakeryReportTabValue = 'adminImage' | 'productAddReport' | 'bakeryUpdateReport';
-export type BakeryImgTabValue = 'bakeryReportImage' | 'productAddReportImage' | 'reviewImage';
+export type BakeryImgTabValue = 'bakery-report-image' | 'product-add-report-image' | 'review-image';
 
 export type BakeryStatus = (typeof BAKERY_STATUS)[keyof typeof BAKERY_STATUS];
