@@ -10,7 +10,8 @@ import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
 import useTab from '@/hooks/useTab';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { BakeryForm as BakeryFormType, changeBakeryImg, changeBakeryStatus, initializeForm, setForm, setLinks } from '@/store/slices/bakery';
+import { BakeryForm as BakeryFormType, changeBakeryImg, changeBakeryStatus, initializeForm, ProductItem, setForm, setLinks } from '@/store/slices/bakery';
+import { urlToFile } from '@/utils';
 import { validateForm } from '@/utils/bakery';
 import styled from '@emotion/styled';
 
@@ -24,6 +25,7 @@ export const BakeryDetailPage = () => {
     addBakery,
     editBakery,
     bakeryReportNewStatusQuery: { data: bakeryReportNewStatus },
+    uploadImage,
   } = useBakery({ bakeryId: Number(bakeryId) });
 
   // TODO: opened state를 리덕스에 저장하면 안될거같은데..? 왜있지?
@@ -65,6 +67,43 @@ export const BakeryDetailPage = () => {
     }
   };
 
+  const createAndGetImageUrl = async (previewUrl: string) => {
+    // ImageEditView와 동일한 로직, TODO: 나중에 공통으로 빼기?
+    const imageUrl = previewUrl;
+    if (!imageUrl) {
+      return;
+    }
+
+    const formData = new FormData();
+    const file = await urlToFile(imageUrl, 'bread.jpg');
+    formData.append('image', file);
+    const result = await uploadImage.mutateAsync({ payload: formData });
+    return result.imagePath;
+  };
+
+  const uploadAllImages = async () => {
+    let image = '';
+    let products: ProductItem[] = [];
+
+    if (form.image) {
+      const result = await createAndGetImageUrl(form.image);
+      result ? (image = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
+    }
+
+    if (form.productList.length > 0) {
+      products = await Promise.all(
+        form.productList.map(async bread => {
+          if (bread.image) {
+            const result = await createAndGetImageUrl(bread.image);
+            return { ...bread, image: result ? result : null }; // TODO: 이미지 실패시 어떻게 처리?
+          } else return bread;
+        })
+      );
+    }
+
+    return { image, products };
+  };
+
   const onSaveForm = async () => {
     if (!window.confirm('저장하시겠습니까?')) {
       return;
@@ -73,7 +112,13 @@ export const BakeryDetailPage = () => {
       return;
     }
 
-    bakeryId ? onUpdateForm(form) : onCreateForm(form);
+    if (bakeryId) {
+      onUpdateForm(form);
+    } else {
+      // 새로 생성하는 경우, 이미지를 새로 업로드한 경우는 이미지 업로드 과정 진행
+      const { image, products } = await uploadAllImages();
+      onCreateForm({ ...form, image, productList: products });
+    }
   };
 
   const onSelectBakerysSatusOption = (status: SelectOption | null) => {
@@ -90,6 +135,10 @@ export const BakeryDetailPage = () => {
       {
         onSuccess: () => {
           navigate(-1); // TODO: 완료됨 UI 필요
+        },
+        onError: err => {
+          // TODO: error 안탐. 확인필요
+          console.log('create err..', err);
         },
       }
     );

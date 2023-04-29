@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
+import { useParams } from 'react-router-dom';
 import type { BakeryMenuEntity } from '@/apis';
 import { BasicSelectOption, BasicSelectTrigger, Button, Input, Preview, SelectBox, SelectOption } from '@/components/Shared';
 import useFileInput from '@/hooks/useFileInput';
 import useSelectBox from '@/hooks/useSelectBox';
+import { useAppDispatch } from '@/store/hooks';
+import { changeMenuImg } from '@/store/slices/bakery';
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
 import { Option } from './SnsLinkArea';
@@ -30,7 +33,9 @@ const MenuItem = ({
   onRemoveMenu,
   onChangeMenuImg,
 }: Props) => {
-  const { getSrc } = useFileInput();
+  const dispatch = useAppDispatch();
+  const { bakeryId } = useParams();
+  const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
   const { selectedOption, onSelectOption } = useSelectBox(productTypes.find(type => type.value === menu.productType));
 
   const onSelectMenuType = (option: SelectOption | null) => {
@@ -39,8 +44,20 @@ const MenuItem = ({
     onSelectMenuTypeOption({ currIdx: idx, optionValue: option?.value });
   };
 
+  // 생성시에는 이미지 로컬 등록, 수정시에는 Report 컴포넌트에서 수정되도록
+  const handleClickBtn = () => {
+    bakeryId ? onChangeMenuImgToUploader() : onClickTriggerFile();
+  };
+
   const onChangeMenuImgToUploader = () => {
     onChangeMenuImg({ currIdx: idx });
+  };
+
+  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const file = e.target.files[0];
+
+    dispatch(changeMenuImg({ currIdx: idx, imgPreview: URL.createObjectURL(file) }));
   };
 
   return (
@@ -84,11 +101,12 @@ const MenuItem = ({
         </CustomRow>
         <BtnWrapper>
           <Button text={'메뉴 삭제'} type={'gray'} btnSize={'small'} onClickBtn={() => onRemoveMenu(idx)} />
-          <Button text={'이미지 변경'} type={'lightOrange'} btnSize={'small'} onClickBtn={onChangeMenuImgToUploader} />
+          <Button text={'이미지 변경'} type={'lightOrange'} btnSize={'small'} onClickBtn={handleClickBtn} />
         </BtnWrapper>
       </LeftContainer>
       <div>
         <Preview widthRem={16} heightRem={16} src={getSrc(menu.image) || ''} emptyText={'메뉴 이미지가 없습니다.'} />
+        <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
       </div>
     </Container>
   );

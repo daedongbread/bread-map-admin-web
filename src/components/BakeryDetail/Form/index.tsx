@@ -34,6 +34,8 @@ export const BakeryForm = () => {
     dispatch(changeForm(payload));
   }, []);
 
+  // 수정시에는 form 말고 오른쪽 report 페이지에서 이미지 관리
+  // 생성시에는 로컬에서 이미지를 변경할 수 있음.
   const onChangeBakeryImg = () => {
     const bakeryImage: ImageUploaderInfo = {
       url: image || '',
@@ -43,6 +45,19 @@ export const BakeryForm = () => {
     dispatch(changeCurrentImageUploader(bakeryImage));
   };
 
+  const onChangeMenuImg = ({ currIdx }: { currIdx: number }) => {
+    const target = productList.find((p, idx) => idx === currIdx);
+    const bakeryImage: ImageUploaderInfo = {
+      url: target?.image || '',
+      type: 'menu',
+      name: target?.productName || '메뉴명 없음',
+      // menuId: , 필요없는듯?
+      currMenuIdx: currIdx,
+    };
+    dispatch(changeCurrentImageUploader(bakeryImage));
+  };
+
+  // TODO: 굳이 여기서 할 필요 있나? 옮길까?
   const onToggleLinkOption = useCallback((currIdx: number) => {
     dispatch(toggleLinkOption({ currIdx }));
   }, []);
@@ -87,22 +102,10 @@ export const BakeryForm = () => {
     dispatch(addMenu());
   };
 
-  const onChangeMenuImg = ({ currIdx }: { currIdx: number }) => {
-    const target = productList.find((p, idx) => idx === currIdx);
-    const bakeryImage: ImageUploaderInfo = {
-      url: target?.image || '',
-      type: 'menu',
-      name: target?.productName || '메뉴명 없음',
-      // menuId: , 필요없는듯?
-      currMenuIdx: currIdx,
-    };
-    dispatch(changeCurrentImageUploader(bakeryImage));
-  };
-
   return (
     <Forms>
       <TextField label={'빵집명'} name={'name'} value={name} onChangeForm={onChangeForm} />
-      <BakeryImgField label={'대표이미지'} previewImg={image} onChangeBakeryImg={onChangeBakeryImg} />
+      <BakeryImgField label={'대표이미지'} previewImg={image} onChangeBakeryImg={onChangeBakeryImg} onChangeForm={onChangeForm} />
       <AddressArea label={'주소'} fullAddress={{ address, latitude, longitude }} onChangeForm={onChangeForm} />
       <TextField textarea label={'시간'} name={'hours'} value={hours || ''} onChangeForm={onChangeForm} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
       <SnsLinkArea
