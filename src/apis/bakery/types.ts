@@ -19,6 +19,10 @@ export type GetBakeriesPayload = {
 export type BakeriesItemEntity = {
   bakeryId: number;
   name: string;
+  bakeryReportImageNum: number;
+  productAddReportNum: number;
+  bakeryUpdateReportNum: number;
+  newReviewNum: number;
   createdAt: string;
   modifiedAt: string;
   status: BakeryStatus;

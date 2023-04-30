@@ -3,10 +3,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
 import { BakeriesTable, BakeryFilter, BakeryInfoAndFilter, BakeryTotalCount } from '@/components/Bakeries';
 import { Button, Header, Loading, Pagination, SearchBar, StatusCell, TableCell, TableLoading } from '@/components/Shared';
-import { BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
+import { AlarmCell } from '@/components/Shared/Table/Cell/AlarmCell';
+import { BAKERY_ALARM_OPTIONS, BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
-import { formatTextToOptionObj } from '@/utils';
+import { formatTextToOAlarmArr, formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeriesPage = () => {
@@ -124,10 +125,22 @@ export const BakeriesPage = () => {
 export const getBakeryTableData = (contents: BakeriesItemEntity[]) => {
   let rows: TableCell[] = [];
   if (contents.length > 0) {
+    // status, alarms 수정
     rows = contents.map(item => {
       const status = formatTextToOptionObj({ constants: BAKERY_STATUS_OPTIONS, targetText: item.status });
+      const { bakeryReportImageNum, productAddReportNum, bakeryUpdateReportNum, newReviewNum, ...rest } = item;
+      const alarms = formatTextToOAlarmArr({
+        constants: BAKERY_ALARM_OPTIONS,
+        targetObj: { bakeryReportImageNum, productAddReportNum, bakeryUpdateReportNum, newReviewNum },
+      });
+
+      // TODO: 자동으로 매핑되도록
       return {
-        ...item,
+        bakeryId: item.bakeryId,
+        name: item.name,
+        alarm: <AlarmCell alarms={alarms} />,
+        createdAt: item.createdAt,
+        modifiedAt: item.modifiedAt,
         status: <StatusCell color={status.color} text={status.text} />,
       };
     });
