@@ -14,7 +14,7 @@ export class BakeryReport {
     // await this.client.updateItemStatus({ reportId, status });
   }
 
-  async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
+  async getList({ page }: Omit<GetBakeriesPayload, 'name' | 'filterBy'>) {
     const list = await this.client.getList({ page });
     return list;
   }
