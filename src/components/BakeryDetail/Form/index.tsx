@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { AddressArea } from '@/components/BakeryDetail/Form/AddressArea';
 import { BakeryImgField } from '@/components/BakeryDetail/Form/BakeryImgField';
+import { FacilityField } from '@/components/BakeryDetail/Form/FacilityField';
 import { MenuArea } from '@/components/BakeryDetail/Form/MenuArea';
 import { SnsLink, SnsLinkArea } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { TextField } from '@/components/BakeryDetail/Form/TextField';
@@ -17,6 +18,7 @@ import {
   removeLink,
   removeMenu,
   selectLinkOption,
+  toggleFacility,
   selectMenuTypeOption,
   setLinks,
   toggleLinkOption,
@@ -102,6 +104,10 @@ export const BakeryForm = () => {
     dispatch(addMenu());
   };
 
+  const onToggleFacility = (facilityValue: string) => {
+    dispatch(toggleFacility({ value: facilityValue }));
+  };
+
   return (
     <Forms>
       <TextField label={'빵집명'} name={'name'} value={name} onChangeForm={onChangeForm} />
@@ -120,6 +126,7 @@ export const BakeryForm = () => {
         onAddLink={onAddLink}
       />
       <TextField label={'전화번호'} name={'phoneNumber'} value={phoneNumber || ''} onChangeForm={onChangeForm} placeholder={'000-000-0000'} />
+      <FacilityField label={'시설정보'} onToggleFacility={onToggleFacility} />
       <MenuArea
         label={'메뉴'}
         menus={productList}

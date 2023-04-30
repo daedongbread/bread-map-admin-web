@@ -151,6 +151,11 @@ const bakerySlice = createSlice({
     addLink(state) {
       state.formLinks.push({ key: 'blogURL', value: '' });
     },
+    toggleFacility(state, action: PayloadAction<{ value: string }>) {
+      const { value } = action.payload;
+      const list = state.form.facilityInfoList;
+      list.includes(value) ? (state.form.facilityInfoList = list.filter(item => item !== value)) : state.form.facilityInfoList.push(value);
+    },
     toggleMenuTypeOption(state, action: PayloadAction<{ currIdx: number }>) {
       const { openedMenuTypeIdx } = state;
       const { currIdx } = action.payload;
@@ -202,6 +207,7 @@ export const {
   setLinks,
   removeLink,
   addLink,
+  toggleFacility,
   toggleMenuTypeOption,
   selectMenuTypeOption,
   changeMenuInput,

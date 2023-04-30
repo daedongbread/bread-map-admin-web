@@ -14,7 +14,7 @@ export const BakeryFilter = ({ currFilterValue, onChangeFilter }: Props) => {
     <Container>
       <div className="grid">
         {BAKERY_FILTER.map((filter, idx) => (
-          <FilterItem isOdd={(idx + 1) % 2 === 0}>
+          <FilterItem key={filter.value} isOdd={(idx + 1) % 2 === 0}>
             <input type="checkbox" id={filter.value} checked={currFilterValue.includes(filter.value)} onChange={() => onChangeFilter(filter)} />
             <label htmlFor={filter.value}>{filter.name}</label>
           </FilterItem>

@@ -65,6 +65,16 @@ export const BAKERY_FILTER = [
   },
 ];
 
+// 빵집 상세 > 빵집 시설 정보
+export const BAKERY_FACILITY_VALUE: Record<string, BakeryFacilityValue> = {
+  Parking: 'PARKING',
+  Wifi: 'WIFI',
+  Delivery: 'DELIVERY',
+  Pet: 'PET',
+  Shipping: 'SHIPPING',
+  Booking: 'BOOKING',
+};
+
 // 빵집 상세 > 빵집 제보 탭 (등록된 빵집인 경우에만 사용)
 export const BAKERY_REPORT_TAB_VALUE: Record<string, BakeryReportTabValue> = {
   Images: 'adminImage',
@@ -124,5 +134,6 @@ export const BAKERY_IMG_TAB: TabItem[] = [
 export type BakeryFilterValue = 'bakery-report-image' | 'product-add-report' | 'bakery-update-report' | 'new-review';
 export type BakeryReportTabValue = 'adminImage' | 'productAddReport' | 'bakeryUpdateReport';
 export type BakeryImgTabValue = 'bakery-report-image' | 'product-add-report-image' | 'review-image';
+export type BakeryFacilityValue = 'PARKING' | 'WIFI' | 'DELIVERY' | 'PET' | 'SHIPPING' | 'BOOKING';
 
 export type BakeryStatus = (typeof BAKERY_STATUS)[keyof typeof BAKERY_STATUS];
