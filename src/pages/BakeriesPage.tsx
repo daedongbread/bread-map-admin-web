@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
-import { BakeriesTable, BakeryFilter, BakeryInfoAndFilter, BakeryTotalCount } from '@/components/Bakeries';
+import { BakeriesTable, BakeryFilter, BakeryInfoAndFilter } from '@/components/Bakeries';
 import { Button, Header, Loading, Pagination, SearchBar, StatusCell, TableCell, TableLoading } from '@/components/Shared';
 import { AlarmCell } from '@/components/Shared/Table/Cell/AlarmCell';
 import { BAKERY_ALARM_OPTIONS, BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
@@ -16,6 +16,7 @@ export const BakeriesPage = () => {
   const [searchText, setSearchText] = useState('');
   const [currFilterValue, setCurrFilterValue] = useState<string[]>([]);
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
+  const [total, setTotal] = useState(0);
 
   const { bakeriesQuery } = useBakeries();
   const { data, isLoading, isFetching } = bakeriesQuery({
@@ -35,6 +36,13 @@ export const BakeriesPage = () => {
   const onChangeFilter = (filter: { name: string; value: string }) => {
     setCurrFilterValue(prev => (currFilterValue.includes(filter.value) ? prev.filter(i => i !== filter.value) : [...prev, filter.value]));
   };
+
+  useEffect(() => {
+    const isHaveOtherCondition = !!searchParams.get('keyword') || !!Number(searchParams.get('page')) || !!searchParams.get('filter');
+    if (!isHaveOtherCondition && data) {
+      setTotal(data.totalCount);
+    }
+  }, [data]);
 
   useEffect(() => {
     // 키워드를 새로 입력하거나 필터가 변경될 때마다 페이지 초기화
@@ -99,7 +107,7 @@ export const BakeriesPage = () => {
             <SearchBar placeholder={'빵집 이름으로 검색하기'} text={searchText} onChangeText={onChangeText} onSearch={onSearch} />
           </SearchBarWrapper>
           <BakeryInfoAndFilter
-            totalCount={444}
+            totalCount={total}
             filter={<BakeryFilter currFilterValue={currFilterValue} onChangeFilter={onChangeFilter} />}
             searchBtn={<Button text={'조회'} type={'orange'} btnSize={'small'} onClickBtn={onSearch} />}
           />

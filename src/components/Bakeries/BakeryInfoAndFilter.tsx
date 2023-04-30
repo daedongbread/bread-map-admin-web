@@ -17,7 +17,8 @@ export const BakeryInfoAndFilter = ({ totalCount, filter, searchBtn }: Props) =>
       <FilterContainer>
         <div className="count">
           <div>미확인 알람</div>
-          <div>125</div>
+          <div>준비중</div>
+          {/*   TODO: 미확인 알람 갯수 어떻게 가져올지? */}
         </div>
         {filter}
         {searchBtn}
