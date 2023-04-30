@@ -18,7 +18,7 @@ export class BakeryReportClient implements BakeryReportApiClient {
     await fetcher.patch(`/bakery-add-reports/${reportId}`, { status });
   }
 
-  async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
+  async getList({ page }: Omit<GetBakeriesPayload, 'name' | 'filterBy'>) {
     const resp = await fetcher.get<GetBakeryReportsResponse>('/bakery-add-reports', { params: { page } });
     return { bakeryReports: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
   }
