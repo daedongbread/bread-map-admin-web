@@ -63,7 +63,6 @@ const Container = styled.div`
 `;
 
 const PagesWrapper = styled.div<{ currPage: number }>`
-  width: 230px;
   height: inherit;
 
   ul {

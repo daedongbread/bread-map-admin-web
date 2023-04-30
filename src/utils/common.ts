@@ -25,6 +25,24 @@ export const formatTextToOptionObj = ({ constants, targetText }: { constants: Se
   return { color: option.color, text: option.name };
 };
 
+export const formatTextToOAlarmArr = ({ constants, targetObj }: { constants: (SelectOption & { bgColor: string })[]; targetObj: Record<string, number> }) => {
+  const alarmArr: { color: string; bgColor: string; text: string }[] = [];
+
+  Object.entries(targetObj).forEach(([key, value]) => {
+    const option = constants.find(option => option.value === key);
+    if (!option || !option.color) {
+      return { color: '', bgColor: '', text: '' };
+    }
+
+    // value가 0이면 리턴하지말기
+    if (value !== 0) {
+      alarmArr.push({ color: option.color, bgColor: option.bgColor, text: `${option.name} ${value}` });
+    }
+  });
+
+  return alarmArr;
+};
+
 const toDataURL = async (url: string) => {
   try {
     const response = await axios.get(url, { responseType: 'blob' });

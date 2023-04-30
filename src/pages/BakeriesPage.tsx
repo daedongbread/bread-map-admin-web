@@ -1,27 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeriesItemEntity, useBakeries } from '@/apis';
-import { BakeriesTable } from '@/components/Bakeries';
+import { BakeriesTable, BakeryFilter, BakeryInfoAndFilter } from '@/components/Bakeries';
 import { Button, Header, Loading, Pagination, SearchBar, StatusCell, TableCell, TableLoading } from '@/components/Shared';
-import { BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
+import { AlarmCell } from '@/components/Shared/Table/Cell/AlarmCell';
+import { BAKERY_ALARM_OPTIONS, BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
-import { formatTextToOptionObj } from '@/utils';
+import { formatTextToOAlarmArr, formatTextToOptionObj } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeriesPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [searchText, setSearchText] = React.useState('');
+  const [searchText, setSearchText] = useState('');
+  const [currFilterValue, setCurrFilterValue] = useState<string[]>([]);
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
+  const [total, setTotal] = useState(0);
 
-  const { bakeriesQuery, searchBakeriesQuery } = useBakeries();
-  const { data, isLoading, isFetching } = bakeriesQuery({ name: searchParams.get('keyword'), page: currPage });
-  const {
-    data: searchData,
-    isLoading: isLoadingSearch,
-    isFetching: isFetchingSearch,
-  } = searchBakeriesQuery({ name: searchParams.get('keyword'), page: currPage });
+  const { bakeriesQuery } = useBakeries();
+  const { data, isLoading, isFetching } = bakeriesQuery({
+    name: searchParams.get('keyword') || '',
+    page: currPage,
+    filterBy: searchParams.get('filter') || '',
+  });
 
   const prevKeyword = usePrevious(searchParams.get('keyword'));
 
@@ -31,14 +33,30 @@ export const BakeriesPage = () => {
     }
   };
 
+  const onChangeFilter = (filter: { name: string; value: string }) => {
+    setCurrFilterValue(prev => (currFilterValue.includes(filter.value) ? prev.filter(i => i !== filter.value) : [...prev, filter.value]));
+  };
+
   useEffect(() => {
-    changeTotalPageCount(searchParams.get('keyword') ? searchData : data);
-  }, [searchData, data]);
+    const isHaveOtherCondition = !!searchParams.get('keyword') || !!Number(searchParams.get('page')) || !!searchParams.get('filter');
+    if (!isHaveOtherCondition && data) {
+      setTotal(data.totalCount);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // 키워드를 새로 입력하거나 필터가 변경될 때마다 페이지 초기화
+    if (searchParams.get('keyword') || currFilterValue) {
+      changeTotalPageCount(data);
+    }
+  }, [data, currFilterValue]);
 
   useEffect(() => {
     const keyword = searchParams.get('keyword');
     const page = Number(searchParams.get('page'));
+    const filter = searchParams.get('filter');
 
+    filter ? setCurrFilterValue(filter.split(',')) : setCurrFilterValue([]);
     keyword ? setSearchText(keyword) : setSearchText('');
     onGetPage(page);
   }, [searchParams]);
@@ -53,11 +71,9 @@ export const BakeriesPage = () => {
 
   const onSearch = () => {
     const trimmedSearchText = searchText.trim();
-    if (trimmedSearchText.length === 0) {
-      return;
-    }
     const page = prevKeyword !== trimmedSearchText ? 0 : currPage;
-    navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}`);
+    const filter = currFilterValue.join(',');
+    navigate(`${PATH.Bakeries}/search?keyword=${trimmedSearchText}&page=${page}&filter=${filter}`);
   };
 
   const setPageAndNavigateWithArgs = (callback: (page: number) => void) => (page: number) => {
@@ -77,10 +93,10 @@ export const BakeriesPage = () => {
     return params.length ? `${PATH.Bakeries}/search?keyword=${params}&page=${page}` : `${PATH.Bakeries}/all?&page=${page}`;
   };
 
-  const havePrevData = !!searchData?.bakeries?.length || !!data?.bakeries?.length;
-  const loading = isLoading || isLoadingSearch || isFetching || isFetchingSearch;
+  const havePrevData = !!data?.bakeries?.length;
+  const loading = isLoading || isFetching;
 
-  const bakeryData = getBakeryTableData(searchParams.get('keyword') && searchData?.bakeries ? searchData?.bakeries : data?.bakeries ? data.bakeries : []);
+  const bakeryData = getBakeryTableData(data?.bakeries ? data.bakeries : []);
 
   return (
     <>
@@ -90,6 +106,11 @@ export const BakeriesPage = () => {
           <SearchBarWrapper>
             <SearchBar placeholder={'빵집 이름으로 검색하기'} text={searchText} onChangeText={onChangeText} onSearch={onSearch} />
           </SearchBarWrapper>
+          <BakeryInfoAndFilter
+            totalCount={total}
+            filter={<BakeryFilter currFilterValue={currFilterValue} onChangeFilter={onChangeFilter} />}
+            searchBtn={<Button text={'조회'} type={'orange'} btnSize={'small'} onClickBtn={onSearch} />}
+          />
           <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
         </TopContainer>
         <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={BAKERY_TABLE_HEADERS} />}>
@@ -112,10 +133,22 @@ export const BakeriesPage = () => {
 export const getBakeryTableData = (contents: BakeriesItemEntity[]) => {
   let rows: TableCell[] = [];
   if (contents.length > 0) {
+    // status, alarms 수정
     rows = contents.map(item => {
       const status = formatTextToOptionObj({ constants: BAKERY_STATUS_OPTIONS, targetText: item.status });
+      const { bakeryReportImageNum, productAddReportNum, bakeryUpdateReportNum, newReviewNum, ...rest } = item;
+      const alarms = formatTextToOAlarmArr({
+        constants: BAKERY_ALARM_OPTIONS,
+        targetObj: { bakeryReportImageNum, productAddReportNum, bakeryUpdateReportNum, newReviewNum },
+      });
+
+      // TODO: 자동으로 매핑되도록
       return {
-        ...item,
+        bakeryId: item.bakeryId,
+        name: item.name,
+        alarm: <AlarmCell alarms={alarms} />,
+        createdAt: item.createdAt,
+        modifiedAt: item.modifiedAt,
         status: <StatusCell color={status.color} text={status.text} />,
       };
     });
@@ -132,11 +165,13 @@ const Container = styled.div`
 
 const TopContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  height: 6.8rem;
   margin-bottom: 2.8rem;
+  // align-items: center;
 `;
 
 const SearchBarWrapper = styled.div`
   flex: 1;
-  margin-right: 2.8rem;
+  height: 100%;
+  margin-right: 2.4rem;
 `;

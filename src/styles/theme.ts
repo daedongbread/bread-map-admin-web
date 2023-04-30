@@ -29,8 +29,16 @@ export const color = {
   primary200: '#FFC5B3',
   primary100: '#FFF1EC',
   prmary50: '#FFF6F4',
-  green: '#1EC780',
+  blue100: '#E1EFFE',
+  blue800: '#1E429F',
+  green: '#1EC780', // TODO: 색상코드 확인 or 이름변경
+  green100: '#DEF7EC',
+  green800: '#03543F',
   red: '#F3213B',
+  red200: '#FBD5D5',
+  red800: '#9B1C1C',
+  pink: '#FDDCFC',
+  blueGray: '#4B5563',
 };
 
 export const theme = {

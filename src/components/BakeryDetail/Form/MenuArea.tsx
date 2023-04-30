@@ -57,7 +57,7 @@ export const MenuArea = ({
 
 const MENU_TYPES: Option[] = [
   { name: '빵', value: 'BREAD' },
-  { name: '야채', value: 'BEVERAGE' },
+  { name: '음료', value: 'BEVERAGE' },
   { name: '기타', value: 'ETC' },
 ];
 

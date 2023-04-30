@@ -36,6 +36,11 @@ export const SearchBar = ({ placeholder, text, onChangeText, onSearch }: Props) 
 
 const Container = styled.div`
   position: relative;
+  height: 100%;
+
+  > input {
+    height: 100%;
+  }
 
   button {
     position: absolute;

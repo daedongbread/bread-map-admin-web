@@ -13,11 +13,16 @@ export type BakerySns = 'websiteURL' | 'instagramURL' | 'facebookURL' | 'blogURL
 export type GetBakeriesPayload = {
   name: string | null;
   page: number;
+  filterBy: string;
 };
 
 export type BakeriesItemEntity = {
   bakeryId: number;
   name: string;
+  bakeryReportImageNum: number;
+  productAddReportNum: number;
+  bakeryUpdateReportNum: number;
+  newReviewNum: number;
   createdAt: string;
   modifiedAt: string;
   status: BakeryStatus;
@@ -220,12 +225,7 @@ export interface BakeryApiClient {
   getItem: ({ bakeryId }: { bakeryId: number }) => Promise<BakeryDetailEntity>;
   createItem: ({ payload }: CreateUpdateBakeryPayload) => void;
   updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;
-  getList: ({ page }: Omit<GetBakeriesPayload, 'name'>) => Promise<{
-    bakeries: BakeriesItemEntity[];
-    totalCount: number;
-    totalPages: number;
-  }>;
-  searchList: ({ name, page }: GetBakeriesPayload) => Promise<{
+  getList: ({ page, name, filterBy }: GetBakeriesPayload) => Promise<{
     bakeries: BakeriesItemEntity[];
     totalCount: number;
     totalPages: number;
