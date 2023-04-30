@@ -29,12 +29,8 @@ export class Bakery {
     await this.client.updateItem({ bakeryId, payload });
   }
 
-  async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
-    return await this.client.getList({ page });
-  }
-
-  async searchList({ name, page }: GetBakeriesPayload) {
-    return await this.client.searchList({ name, page });
+  async getList({ page, name, filterBy }: GetBakeriesPayload) {
+    return await this.client.getList({ page, name, filterBy });
   }
 
   async getBakeryReportNewStatus({ bakeryId }: { bakeryId: number }) {

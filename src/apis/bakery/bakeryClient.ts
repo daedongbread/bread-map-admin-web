@@ -37,13 +37,8 @@ export class BakeryClient implements BakeryApiClient {
     await fetcher.patch(`bakeries/${bakeryId}`, payload);
   }
 
-  async getList({ page }: Omit<GetBakeriesPayload, 'name'>) {
-    const resp = await fetcher.get<GetBakeriesResponse>(`/bakeries`, { params: { page } });
-    return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
-  }
-
-  async searchList({ name, page }: GetBakeriesPayload) {
-    const resp = await fetcher.get<GetBakeriesResponse>('/bakeries/search', { params: { name, page } });
+  async getList({ page, name, filterBy }: GetBakeriesPayload) {
+    const resp = await fetcher.get<GetBakeriesResponse>(`/bakeries`, { params: { page, name, filterBy } });
     return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
   }
 

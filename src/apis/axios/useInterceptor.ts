@@ -61,8 +61,8 @@ export const useInterceptor = () => {
             }
           }
         } catch (err) {
-          window.confirm('장시간 사용하지않아 다시 로그인이 필요합니다.');
-          navigate(PATH.Login, { replace: true });
+          // window.confirm('장시간 사용하지않아 다시 로그인이 필요합니다.');
+          // navigate(PATH.Login, { replace: true });
           return Promise.reject(error);
         }
       } else {

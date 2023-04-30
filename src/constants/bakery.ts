@@ -2,6 +2,7 @@ import { SelectOption, TabItem } from '@/components/Shared';
 import { TableHeader } from '@/components/Shared/Table/types';
 import { color } from '@/styles';
 
+// 빵집 리스트 - 테이블 정보
 export const BAKERY_TABLE_HEADERS: TableHeader[] = [
   { key: 'bakeryId', name: '빵집 번호' },
   { key: 'name', name: '빵집 이름' },
@@ -11,6 +12,7 @@ export const BAKERY_TABLE_HEADERS: TableHeader[] = [
   { key: 'status', name: '상태' },
 ];
 
+// 빵집 게시 상태
 export const BAKERY_STATUS = {
   Unposting: 'UNPOSTING',
   Posting: 'POSTING',
@@ -21,6 +23,34 @@ export const BAKERY_STATUS_OPTIONS: SelectOption[] = [
   { name: '게시중', value: BAKERY_STATUS.Posting, color: color.green },
 ];
 
+// 빵집 리스트 > 조회 필터
+export const BAKERY_FILTER_VALUE: Record<string, BakeryFilterValue> = {
+  NewMainImage: 'bakery-report-image',
+  NewMenu: 'product-add-report',
+  NewInformation: 'bakery-update-report',
+  NewReview: 'new-review',
+};
+
+export const BAKERY_FILTER = [
+  {
+    name: '대표 이미지',
+    value: BAKERY_FILTER_VALUE.NewMainImage,
+  },
+  {
+    name: '메뉴 제보',
+    value: BAKERY_FILTER_VALUE.NewMenu,
+  },
+  {
+    name: '정보 수정',
+    value: BAKERY_FILTER_VALUE.NewInformation,
+  },
+  {
+    name: '신규 리뷰',
+    value: BAKERY_FILTER_VALUE.NewReview,
+  },
+];
+
+// 빵집 상세 > 빵집 제보 탭 (등록된 빵집인 경우에만 사용)
 export const BAKERY_REPORT_TAB_VALUE: Record<string, BakeryReportTabValue> = {
   Images: 'adminImage',
   Products: 'productAddReport',
@@ -48,6 +78,7 @@ export const BAKERY_REPORT_TAB: TabItem[] = [
   },
 ];
 
+// 빵집 상세 > 빵집 제보 탭 > 이미지 탭
 export const BAKERY_IMG_TAB_VALUE: Record<string, BakeryImgTabValue> = {
   MainImage: 'bakery-report-image',
   MenuImage: 'product-add-report-image',
@@ -75,6 +106,7 @@ export const BAKERY_IMG_TAB: TabItem[] = [
   },
 ];
 
+export type BakeryFilterValue = 'bakery-report-image' | 'product-add-report' | 'bakery-update-report' | 'new-review';
 export type BakeryReportTabValue = 'adminImage' | 'productAddReport' | 'bakeryUpdateReport';
 export type BakeryImgTabValue = 'bakery-report-image' | 'product-add-report-image' | 'review-image';
 
