@@ -64,7 +64,7 @@ export const SelectableReviewCard = ({ newReview, onChangeReviewImages, onDelete
             </div>
           </div>
         </div>
-        <ReadOnlyInputField label={'리뷰글'} type={'textarea'} multiLine content={Array(20).fill(content).join(',')} />
+        <ReadOnlyInputField label={'리뷰글'} type={'textarea'} multiLine content={content} />
       </div>
       <div className="card">
         <SelectableImg currentImage={currentImage} isSelected={selectedImageIds.includes(currentImage?.imageId || -1)} handleSelectImage={handleSelectImage} />
