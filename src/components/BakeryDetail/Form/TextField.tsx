@@ -1,15 +1,14 @@
 import React from 'react';
 import { Input } from '@/components/Shared/Input';
-import { BakeryFormChangeKey } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 
 type Props = {
   label: string;
   textarea?: boolean;
   placeholder?: string;
-  name: BakeryFormChangeKey;
+  name: string;
   value: string;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
+  onChangeForm: (payload: { name: string; value: string }) => void;
 };
 
 export const TextField = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {

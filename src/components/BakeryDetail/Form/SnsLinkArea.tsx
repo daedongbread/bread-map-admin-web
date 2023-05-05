@@ -1,6 +1,8 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { BakerySns } from '@/apis';
 import { Button } from '@/components/Shared';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { addLink, changeLinkValue, removeLink, selectLinkOption, setLinks, toggleLinkOption } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
 import SnsLinkItem from './SnsLinkItem';
@@ -17,50 +19,67 @@ export type SnsLink = {
 
 type Props = {
   label: string;
-  snsLinks: SnsLink[];
-  openedLinkIdx: number | null;
-  onToggleLinkOption: (currIdx: number) => void;
-  onSelectLinkOption: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
-  onChangeLinkValue: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
-  onSetLinks: (links: SnsLink[]) => void;
-  onRemoveLink: (currIdx: number) => void;
-  onAddLink: () => void;
 };
 
-export const SnsLinkArea = memo(
-  ({ label, snsLinks, openedLinkIdx, onToggleLinkOption, onSelectLinkOption, onChangeLinkValue, onSetLinks, onRemoveLink, onAddLink }: Props) => {
-    return (
-      <Row>
-        <Row alignTop>
-          <label>{label}</label>
-          <CustomRowContents>
-            <>
-              {snsLinks.map((link, idx) => (
-                <CustomRow key={`link-${idx}`}>
-                  <SnsLinkItem
-                    idx={idx}
-                    link={link}
-                    opened={openedLinkIdx === idx}
-                    options={LINK_OPTIONS}
-                    onToggleLinkOption={onToggleLinkOption}
-                    onSelectLinkOption={onSelectLinkOption}
-                    onChangeLinkValue={onChangeLinkValue}
-                    onRemoveLink={onRemoveLink}
-                  />
-                </CustomRow>
-              ))}
-            </>
-            <Row>
-              <BtnWrapper>
-                <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} onClickBtn={onAddLink} />
-              </BtnWrapper>
-            </Row>
-          </CustomRowContents>
-        </Row>
+export const SnsLinkArea = ({ label }: Props) => {
+  const dispatch = useAppDispatch();
+  const { formLinks: snsLinks, openedSnsLinkIdx } = useAppSelector(selector => selector.bakery);
+
+  const onToggleLinkOption = (currIdx: number) => {
+    dispatch(toggleLinkOption({ currIdx }));
+  };
+
+  const onSelectLinkOption = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+    dispatch(selectLinkOption(payload));
+  };
+
+  const onChangeLinkValue = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+    dispatch(changeLinkValue(payload));
+  };
+
+  const onSetLinks = (links: SnsLink[]) => {
+    dispatch(setLinks({ links }));
+  };
+
+  const onRemoveLink = (currIdx: number) => {
+    dispatch(removeLink({ currIdx }));
+  };
+
+  const onAddLink = () => {
+    dispatch(addLink());
+  };
+
+  return (
+    <Row>
+      <Row alignTop>
+        <label>{label}</label>
+        <CustomRowContents>
+          <>
+            {snsLinks.map((link, idx) => (
+              <CustomRow key={`link-${idx}`}>
+                <SnsLinkItem
+                  idx={idx}
+                  link={link}
+                  opened={openedSnsLinkIdx === idx}
+                  options={LINK_OPTIONS}
+                  onToggleLinkOption={onToggleLinkOption}
+                  onSelectLinkOption={onSelectLinkOption}
+                  onChangeLinkValue={onChangeLinkValue}
+                  onRemoveLink={onRemoveLink}
+                />
+              </CustomRow>
+            ))}
+          </>
+          <Row>
+            <BtnWrapper>
+              <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} onClickBtn={onAddLink} />
+            </BtnWrapper>
+          </Row>
+        </CustomRowContents>
       </Row>
-    );
-  }
-);
+    </Row>
+  );
+};
 
 const LINK_OPTIONS: Option[] = [
   { name: '웹사이트', value: 'websiteURL' },

@@ -1,6 +1,15 @@
 import React from 'react';
 import { Button } from '@/components/Shared';
-import { ProductItem } from '@/store/slices/bakery';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+  addMenu,
+  changeCurrentImageUploader,
+  changeMenuInput,
+  ImageUploaderInfo,
+  removeMenu,
+  selectMenuTypeOption,
+  toggleMenuTypeOption,
+} from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
 import MenuItem from './MenuItem';
@@ -8,32 +17,52 @@ import { Option } from './SnsLinkArea';
 
 type Props = {
   label: string;
-  menus: ProductItem[];
-  openedMenuTypeIdx: number | null;
-  onToggleMenuTypeOption: (currIdx: number) => void;
-  onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string }) => void;
-  onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
-  onRemoveMenu: (currIdx: number) => void;
-  onAddMenu: () => void;
-  onChangeMenuImg: ({ currIdx }: { currIdx: number }) => void;
 };
 
-export const MenuArea = ({
-  label,
-  menus,
-  openedMenuTypeIdx,
-  onToggleMenuTypeOption,
-  onSelectMenuTypeOption,
-  onChangeMenuInput,
-  onRemoveMenu,
-  onAddMenu,
-  onChangeMenuImg,
-}: Props) => {
+export const MenuArea = ({ label }: Props) => {
+  const dispatch = useAppDispatch();
+  const {
+    form: { productList },
+    openedMenuTypeIdx,
+  } = useAppSelector(selector => selector.bakery);
+
+  const onToggleMenuTypeOption = (currIdx: number) => {
+    dispatch(toggleMenuTypeOption({ currIdx }));
+  };
+
+  const onSelectMenuTypeOption = ({ currIdx, optionValue }: { currIdx: number; optionValue: string }) => {
+    dispatch(selectMenuTypeOption({ currIdx, optionValue }));
+  };
+
+  const onChangeMenuInput = (payload: { currIdx: number; name: string; value: string }) => {
+    dispatch(changeMenuInput(payload));
+  };
+
+  const onRemoveMenu = (currIdx: number) => {
+    dispatch(removeMenu({ currIdx }));
+  };
+
+  const onAddMenu = () => {
+    dispatch(addMenu());
+  };
+
+  const onChangeMenuImg = ({ currIdx }: { currIdx: number }) => {
+    const target = productList.find((p, idx) => idx === currIdx);
+    const bakeryImage: ImageUploaderInfo = {
+      url: target?.image || '',
+      type: 'menu',
+      name: target?.productName || '메뉴명 없음',
+      // menuId: , 필요없는듯?
+      currMenuIdx: currIdx,
+    };
+    dispatch(changeCurrentImageUploader(bakeryImage));
+  };
+
   return (
     <Row alignTop>
       <label>{label}</label>
       <RowContents>
-        {menus?.map((item, idx) => (
+        {productList?.map((item, idx) => (
           <MenuItem
             key={`menu-${idx}`}
             idx={idx}
