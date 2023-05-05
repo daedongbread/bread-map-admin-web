@@ -1,19 +1,24 @@
 import React from 'react';
 import { Booking, Delivery, Parking, Pet, Shipping, Wifi } from '@/components/Shared/Icons';
 import { BAKERY_FACILITY_VALUE } from '@/constants';
-import { useAppSelector } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { toggleFacility } from '@/store/slices/bakery';
 import { Row, theme } from '@/styles';
 import styled from '@emotion/styled';
 
 type Props = {
   label: string;
-  onToggleFacility: (facilityValue: string) => void;
 };
 
-export const FacilityField = ({ label, onToggleFacility }: Props) => {
+export const FacilityField = ({ label }: Props) => {
+  const dispatch = useAppDispatch();
   const {
     form: { facilityInfoList },
   } = useAppSelector(selector => selector.bakery);
+
+  const onToggleFacility = (facilityValue: string) => {
+    dispatch(toggleFacility({ value: facilityValue }));
+  };
 
   return (
     <Row>

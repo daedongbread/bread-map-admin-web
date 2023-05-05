@@ -1,15 +1,14 @@
 import React from 'react';
 import { Input } from '@/components/Shared/Input';
-import { BakeryFormChangeKey } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 
 type Props = {
   label: string;
   textarea?: boolean;
   placeholder?: string;
-  name: BakeryFormChangeKey;
+  name: string;
   value: string;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
+  onChangeForm: (payload: { name: string; value: string }) => void;
 };
 
 export const TextField = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {
@@ -23,7 +22,7 @@ export const TextField = ({ label, textarea = false, placeholder, name, value, o
           placeholder={placeholder || ''}
           textarea={textarea}
           value={value}
-          onChangeInput={e => onChangeForm({ name, value: e.target.value as never })}
+          onChangeInput={e => onChangeForm({ name, value: e.target.value })}
         />
       </RowContents>
     </Row>

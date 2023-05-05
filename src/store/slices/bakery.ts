@@ -1,11 +1,12 @@
-import { BakeryDetailBaseEntity, BakeryDetailEntity, BakerySns, BakeryStatus } from '@/apis';
+import { BakeryDetailBaseEntity, BakerySns, BakeryStatus } from '@/apis';
 import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { SelectOption } from '@/components/Shared';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-// 타입지정시 reducer type error..
-export type BakeryForm = BakeryDetailBaseEntity & {
+export type BakeryForm = Omit<BakeryDetailBaseEntity, 'latitude' | 'longitude'> & {
+  latitude: string;
+  longitude: string;
   productList: ProductItem[];
   status: BakeryStatus | null;
   facilityInfoList: string[];
@@ -31,8 +32,8 @@ const initialBakeryForm: BakeryForm = {
   name: '',
   image: null,
   address: '',
-  latitude: 0,
-  longitude: 0,
+  latitude: '',
+  longitude: '',
   hours: '',
   instagramURL: '',
   facebookURL: '',
@@ -87,16 +88,15 @@ const bakerySlice = createSlice({
   name: 'bakery',
   initialState,
   reducers: {
-    changeForm(state, action: PayloadAction<{ name: BakeryFormChangeKey; value: never }>) {
-      // naver type 수정필요
+    changeForm(state, action: PayloadAction<{ name: string; value: string }>) {
       const { name, value } = action.payload;
-      state.form[name] = value;
+      state.form[name as BakeryFormChangeKey] = value;
     },
     initializeForm(state) {
       state.form = initialBakeryForm;
       state.formLinks = initialBakeryLinks;
     },
-    setForm(state, action: PayloadAction<{ form: BakeryDetailEntity }>) {
+    setForm(state, action: PayloadAction<{ form: BakeryForm }>) {
       const { form } = action.payload;
       state.form = form;
     },

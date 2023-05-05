@@ -36,7 +36,7 @@ export const BakeryDetailPage = () => {
 
   useEffect(() => {
     if (bakery) {
-      dispatch(setForm({ form: bakery })); // image(bakery img 제거하기)
+      dispatch(setForm({ form: { ...bakery, latitude: String(bakery.latitude), longitude: String(bakery.longitude) } }));
       updateLinksAtForm();
       onSelectOption(BAKERY_STATUS_OPTIONS.find(option => option.value === bakery.status) || null);
       if (bakery.image) {
