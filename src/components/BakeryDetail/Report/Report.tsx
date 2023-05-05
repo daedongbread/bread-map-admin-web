@@ -1,7 +1,7 @@
 import React from 'react';
 import { ImageEditView } from '@/components/BakeryDetail/Report/ImageEditView';
-import { InformationEditView } from '@/components/BakeryDetail/Report/InformationEditView';
-import { MenuEditView } from '@/components/BakeryDetail/Report/MenuEditView';
+import { InformationReportView } from '@/components/BakeryDetail/Report/InformationReportView';
+import { MenuReportView } from '@/components/BakeryDetail/Report/MenuReportView';
 import { NewReviewView } from '@/components/BakeryDetail/Report/NewReviewView';
 import { TabItem } from '@/components/Shared';
 import { BAKERY_REPORT_TAB_VALUE } from '@/constants';
@@ -16,9 +16,9 @@ export const Report = ({ bakeryId, tabItem }: Props) => {
     case BAKERY_REPORT_TAB_VALUE.Images:
       return <ImageEditView bakeryId={bakeryId} />;
     case BAKERY_REPORT_TAB_VALUE.Products:
-      return <MenuEditView bakeryId={bakeryId} />;
+      return <MenuReportView bakeryId={bakeryId} />;
     case BAKERY_REPORT_TAB_VALUE.Information:
-      return <InformationEditView bakeryId={bakeryId} />;
+      return <InformationReportView bakeryId={bakeryId} />;
     case BAKERY_REPORT_TAB_VALUE.Reviews:
       return <NewReviewView bakeryId={bakeryId} />;
     default:

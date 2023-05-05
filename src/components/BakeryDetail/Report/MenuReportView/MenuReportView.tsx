@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useBakery } from '@/apis';
-import { SelectableMenuCard } from '@/components/BakeryDetail/Report/MenuEditView/SelectableMenuCard';
+import { SelectableMenuCard } from '@/components/BakeryDetail/Report/MenuReportView/SelectableMenuCard';
 import { ReportContentArea } from '@/components/BakeryDetail/Report/ReportContentArea';
 import { ReportTabTitle } from '@/components/BakeryDetail/Report/ReportTabTitle';
 import { Pagination } from '@/components/Shared';
@@ -12,7 +12,7 @@ type Props = {
   bakeryId: number;
 };
 
-export const MenuEditView = ({ bakeryId }: Props) => {
+export const MenuReportView = ({ bakeryId }: Props) => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const { bakeryMenuReportsQuery, updateMenuReportImages, deleteMenuReport } = useBakery({ bakeryId });
   const { data, isLoading, isFetching } = bakeryMenuReportsQuery({
