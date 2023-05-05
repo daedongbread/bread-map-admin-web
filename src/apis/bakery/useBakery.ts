@@ -5,11 +5,15 @@ import {
   DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
+  DeleteBakeryNewReviewPayload,
   GetBakeryImageMenuBarPayload,
   GetBakeryImagePayload,
   GetBakeryInfoUpdateRequestsPayload,
   GetBakeryMenuReportPayload,
+  GetBakeryNewReviewsPayload,
   UpdateBakeryMenuReportImagesPayload,
+  UpdateBakeryNewReviewExposeStatusPayload,
+  UpdateBakeryNewReviewImagesPayload,
   UploadImagePayload,
 } from '@/apis';
 import { useBakeryApi } from '@/context/bakery';
@@ -119,6 +123,35 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     onSuccess: () => queryClient.invalidateQueries('getBakeryInfoUpdateRequests'),
   });
 
+  const bakeryNewReviewsQuery = ({ bakeryId, page }: GetBakeryNewReviewsPayload) => {
+    return useQuery(
+      ['getBakeryNewReviews', { bakeryId, page }],
+      () =>
+        bakery.getBakeryNewReviewList({
+          bakeryId,
+          page,
+        }),
+      {
+        enabled: !isNaN(page),
+      }
+    );
+  };
+
+  const updateBakeryNewReviewExposeStatus = useMutation(
+    (payload: UpdateBakeryNewReviewExposeStatusPayload) => bakery.updateBakeryNewReviewExposeStatus(payload),
+    {
+      onSuccess: () => Promise.all([queryClient.invalidateQueries('getBakeryImages'), queryClient.invalidateQueries('getBakeryNewReviews')]),
+    }
+  );
+
+  const updateBakeryNewReviewImages = useMutation((payload: UpdateBakeryNewReviewImagesPayload) => bakery.updateBakeryNewReviewImages(payload), {
+    onSuccess: () => Promise.all([queryClient.invalidateQueries('getBakeryImages'), queryClient.invalidateQueries('getBakeryNewReviews')]),
+  });
+
+  const deleteBakeryNewReview = useMutation((payload: DeleteBakeryNewReviewPayload) => bakery.deleteBakeryNewReview(payload), {
+    onSuccess: () => queryClient.invalidateQueries('getBakeryNewReviews'),
+  });
+
   const bakeryImageMenuBarQuery = ({ bakeryId }: GetBakeryImageMenuBarPayload) => {
     return useQuery(['getBakeryImageMenuBar', { bakeryId }], () => bakery.getBakeryImageMenuBar({ bakeryId }), {
       enabled: !isNaN(bakeryId),
@@ -139,6 +172,10 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     bakeryInfoUpdateRequestsQuery,
     completeBakeryInfoUpdateRequest,
     deleteBakeryInfoUpdateRequest,
+    bakeryNewReviewsQuery,
+    updateBakeryNewReviewExposeStatus,
+    updateBakeryNewReviewImages,
+    deleteBakeryNewReview,
     bakeryImageMenuBarQuery,
   };
 };

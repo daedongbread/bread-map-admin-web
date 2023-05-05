@@ -5,12 +5,16 @@ import {
   DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
+  DeleteBakeryNewReviewPayload,
   GetBakeriesPayload,
   GetBakeryImageMenuBarPayload,
   GetBakeryImagePayload,
   GetBakeryInfoUpdateRequestsPayload,
   GetBakeryMenuReportPayload,
+  GetBakeryNewReviewsPayload,
   UpdateBakeryMenuReportImagesPayload,
+  UpdateBakeryNewReviewExposeStatusPayload,
+  UpdateBakeryNewReviewImagesPayload,
   UploadImagePayload,
 } from '@/apis';
 
@@ -71,6 +75,19 @@ export class Bakery {
 
   async deleteBakeryInfoUpdateRequest({ bakeryId, reportId }: DeleteBakeryInfoUpdateRequestPayload) {
     await this.client.deleteBakeryInfoUpdateRequest({ bakeryId, reportId });
+  }
+
+  async getBakeryNewReviewList({ bakeryId, page }: GetBakeryNewReviewsPayload) {
+    return await this.client.getBakeryNewReviewList({ bakeryId, page });
+  }
+  async updateBakeryNewReviewExposeStatus({ bakeryId, reviewId }: UpdateBakeryNewReviewExposeStatusPayload) {
+    await this.client.updateBakeryNewReviewExposeStatus({ bakeryId, reviewId });
+  }
+  async deleteBakeryNewReview({ bakeryId, reviewId }: DeleteBakeryNewReviewPayload) {
+    await this.client.deleteBakeryNewReview({ bakeryId, reviewId });
+  }
+  async updateBakeryNewReviewImages({ bakeryId, reviewId, imageIdList }: UpdateBakeryNewReviewImagesPayload) {
+    await this.client.updateBakeryNewReviewImages({ bakeryId, reviewId, imageIdList });
   }
 
   async getBakeryImageMenuBar({ bakeryId }: GetBakeryImageMenuBarPayload) {

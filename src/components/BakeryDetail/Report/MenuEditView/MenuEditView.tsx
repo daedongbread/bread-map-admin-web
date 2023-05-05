@@ -44,7 +44,7 @@ export const MenuEditView = ({ bakeryId }: Props) => {
         <ReportTabTitle title={BAKERY_REPORT_TAB[1].name} count={data?.totalCount || 0} />
         {data?.menuReports.map((menuReport, idx) => {
           return (
-            <div key={`menu-report-${idx}`}>
+            <div key={`menu-report-${menuReport.reportId}`}>
               <SelectableMenuCard menuReport={menuReport} onChangeMenuReportImages={onChangeMenuReportImages} onDeleteMenuReport={onDeleteMenuReport} />
               {idx < data?.menuReports.length - 1 && <Divider noMargin />}
             </div>
