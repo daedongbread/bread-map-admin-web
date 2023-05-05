@@ -86,11 +86,11 @@ export const SelectableReviewCard = ({ newReview, onChangeReviewImages, onDelete
       </div>
       <div className="btn_wrapper">
         <div className="btn_row">
-          <Button type={'white'} text={'리스트 삭제'} btnSize={'small'} onClickBtn={onDelete} />
+          <Button type={'white'} text={'리스트 삭제'} btnSize={'small'} onClickBtn={onHide} />
           <Button type={'orange'} text={'사진추가'} btnSize={'small'} disabled={isSavedAllImage} onClickBtn={onUpdate} />
         </div>
         <div>
-          <Button type={'orange'} text={'앱에서 이 리뷰 삭제하기'} btnSize={'medium'} onClickBtn={onHide} />
+          <Button type={'orange'} text={'앱에서 이 리뷰 삭제하기'} btnSize={'medium'} onClickBtn={onDelete} />
         </div>
       </div>
     </Container>

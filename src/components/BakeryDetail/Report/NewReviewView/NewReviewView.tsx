@@ -35,13 +35,13 @@ export const NewReviewView = ({ bakeryId }: Props) => {
   };
 
   const onDeleteReview = (reviewId: number) => {
-    if (window.confirm('리뷰를 완전히 삭제하시겠습니까?')) {
+    if (window.confirm('리뷰를 삭제하시겠습니까? 삭제시 앱에서 리뷰가 지워집니다. ')) {
       deleteBakeryNewReview.mutate({ bakeryId, reviewId });
     }
   };
 
   const onHideReview = (reviewId: number) => {
-    if (window.confirm('앱에서 리뷰를 삭제하시겠습니까?')) {
+    if (window.confirm('리뷰를 숨김처리 하시겠습니까? 리뷰 검토 및 사진 추가 후 진행해주세요.')) {
       updateBakeryNewReviewExposeStatus.mutate({ bakeryId, reviewId });
     }
   };
