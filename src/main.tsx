@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { ApiProvider, AuthProvider } from '@/context';
+import { ToastProvider } from '@/hooks/useToast';
 import { ThemeProvider } from '@emotion/react';
 import App from './App';
 import store from './store';
@@ -26,7 +27,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <GlobalStyle />
         <ApiProvider>
           <AuthProvider>
-            <App />
+            <ToastProvider>
+              <App />
+            </ToastProvider>
           </AuthProvider>
         </ApiProvider>
       </ThemeProvider>

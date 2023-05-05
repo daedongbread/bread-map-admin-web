@@ -1,5 +1,6 @@
-import type { AxiosResponse } from 'axios';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useEffect } from 'react';
+import type { NavigateFunction } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { LoginResponse, requestRefresh } from '@/apis/auth/login';
 import { fetcher } from '@/apis/axios/fetcher';
@@ -7,17 +8,19 @@ import { ERROR_CODE, PATH } from '@/constants';
 import { useAuth } from '@/hooks/auth';
 import { Storage, userStorage } from '@/utils';
 
+interface RetryAxiosRequestConfig extends AxiosRequestConfig {
+  retry?: boolean;
+}
+
 const refresh = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
   return requestRefresh({ accessToken, refreshToken });
 };
-
-let refreshingToken: Promise<LoginResponse> | null = null;
 
 export const useInterceptor = () => {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
 
-  const reqInterceptor = fetcher.interceptors.request.use(
+  const requestInterceptor = fetcher.interceptors.request.use(
     config => {
       const token = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
       if (token && token.accessToken) {
@@ -31,57 +34,102 @@ export const useInterceptor = () => {
     }
   );
 
-  const resInterceptor = fetcher.interceptors.response.use(
+  const responseInterceptor = fetcher.interceptors.response.use(
     (response: AxiosResponse) => {
-      return {
-        ...response.data,
-      };
+      return { ...response.data };
     },
     async error => {
-      const config = error.config;
-
-      if (error.response.data?.code === ERROR_CODE.CLIENT_FAILED) {
-        console.error('client 에러..', error.response);
-        return;
+      if (!error.response.data) {
+        return Promise.reject(error);
       }
+      const {
+        config: originalRequestConfig,
+        response: {
+          data: { code: errorCode, message: errorMessage },
+        },
+      } = error;
 
-      if (error.response.data?.code === ERROR_CODE.EXPIRED_TOKEN && !config._retry) {
-        config._retry = true;
-        try {
-          const token = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
-          if (token) {
-            const { accessToken, refreshToken } = token;
-            refreshingToken = refreshingToken ? refreshingToken : refresh({ accessToken, refreshToken });
-            const newAccessToken = await refreshingToken;
-
-            if (newAccessToken) {
-              const { accessToken, refreshToken, accessTokenExpiredDate } = newAccessToken;
-              setAuth({ accessToken, refreshToken, expiredAt: new Date().getTime() + accessTokenExpiredDate });
-              return fetcher(config);
-            }
+      switch (errorCode) {
+        case ERROR_CODE.CLIENT_FAILED: {
+          handleClientError(error);
+          break;
+        }
+        case ERROR_CODE.EXPIRED_TOKEN: {
+          const response = await handleExpiredToken(originalRequestConfig, navigate);
+          if (response) {
+            return response;
           }
-        } catch (err) {
-          // window.confirm('장시간 사용하지않아 다시 로그인이 필요합니다.');
-          // navigate(PATH.Login, { replace: true });
-          return Promise.reject(error);
+          break;
         }
-      } else {
-        if (config._retry) {
+        default: {
           console.log('axios response err:', error.response);
-          window.confirm('알수없는 에러입니다. 대동빵팀에게 문의해주세요.');
+          handleUnknownError(errorCode, errorMessage, originalRequestConfig);
         }
-        userStorage.removeItem(Storage.Token);
-        navigate(PATH.Login, { replace: true });
       }
-
       return Promise.reject(error);
     }
   );
 
+  const refreshTokenAndUpdateAuth = (accessToken: string, refreshToken: string): Promise<LoginResponse | null> => {
+    return refresh({ accessToken, refreshToken })
+      .then((response: LoginResponse) => {
+        if (!response) {
+          console.error('Response is null');
+          return null;
+        }
+        return response;
+      })
+      .catch(err => {
+        console.error(err);
+        return null;
+      });
+  };
+
   useEffect(() => {
     return () => {
-      fetcher.interceptors.request.eject(reqInterceptor);
-      fetcher.interceptors.response.eject(resInterceptor);
+      fetcher.interceptors.request.eject(requestInterceptor);
+      fetcher.interceptors.response.eject(responseInterceptor);
     };
-  }, [reqInterceptor, resInterceptor]);
+  }, [requestInterceptor, responseInterceptor]);
+
+  const handleClientError = (error: AxiosError) => {
+    console.error('client 에러..', error.response);
+  };
+
+  const handleExpiredToken = async (originalRequestConfig: RetryAxiosRequestConfig, navigate: NavigateFunction) => {
+    if (originalRequestConfig.retry) {
+      return;
+    }
+    originalRequestConfig.retry = true;
+    const storageToken = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
+    if (!storageToken) {
+      return;
+    }
+
+    const refreshResponse = await refreshTokenAndUpdateAuth(storageToken.accessToken, storageToken.refreshToken);
+    if (!refreshResponse) {
+      window.confirm('장시간 사용하지 않아 다시 로그인이 필요합니다.');
+      navigate(PATH.Login, { replace: true });
+      return;
+    }
+
+    const { accessToken, refreshToken, accessTokenExpiredDate } = refreshResponse;
+    setAuth({
+      accessToken,
+      refreshToken,
+      expiredAt: new Date().getTime() + accessTokenExpiredDate,
+    });
+
+    if (accessToken) {
+      return fetcher(originalRequestConfig);
+    }
+  };
+
+  const handleUnknownError = (errorCode: number, errorMessage: string, originalRequestConfig: RetryAxiosRequestConfig) => {
+    if (originalRequestConfig.retry) {
+      return;
+    }
+    const errorEvent = new CustomEvent('axiosError', { detail: `오류가 발생하였습니다. 대동빵팀에게 문의해주세요. (오류 메시지: ${errorMessage})` });
+    window.dispatchEvent(errorEvent);
+  };
 };
