@@ -313,7 +313,7 @@ const onCreateForm = (payload: FormData) => {
 - View(화면), ViewComponent(화면 내부 컴포넌트)가 있을 때, 함수들을 내려주고 사용할 때 추가 로직을 어디에 쓸지 헷갈릴 수 있습니다.
 
 ```typescript
-// MenuEditView.tsx
+// MenuReportView.tsx
 
   const onChangeMenuReportImages = (reportId: number, imageIdList: number[]) => {
     updateMenuReportImages.mutate({ bakeryId, reportId, imageIdList });
@@ -327,7 +327,7 @@ const onCreateForm = (payload: FormData) => {
 ```
 
 ```typescript
-// MenuEditView 내부 컴포넌트 (SelectableMenuCard)
+// MenuReportView 내부 컴포넌트 (SelectableMenuCard)
 
   const handleUpdate = () => {
     if (selectedImageIds.length === 0) {

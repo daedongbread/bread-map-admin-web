@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useBakery } from '@/apis';
-import { InfoEditRequestCard } from '@/components/BakeryDetail/Report/InformationEditView/InfoEditRequestCard';
+import { InfoEditRequestCard } from '@/components/BakeryDetail/Report/InformationReportView/InfoEditRequestCard';
 import { ReportContentArea } from '@/components/BakeryDetail/Report/ReportContentArea';
 import { ReportTabTitle } from '@/components/BakeryDetail/Report/ReportTabTitle';
 import { Pagination } from '@/components/Shared';
@@ -12,7 +12,7 @@ type Props = {
   bakeryId: number;
 };
 
-export const InformationEditView = ({ bakeryId }: Props) => {
+export const InformationReportView = ({ bakeryId }: Props) => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const { bakeryInfoUpdateRequestsQuery, completeBakeryInfoUpdateRequest, deleteBakeryInfoUpdateRequest } = useBakery({ bakeryId });
   const { data, isLoading, isFetching } = bakeryInfoUpdateRequestsQuery({ bakeryId: bakeryId, page: currPage });

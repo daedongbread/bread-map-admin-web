@@ -22,3 +22,4 @@ export * from './Pet';
 export * from './Delivery';
 export * from './Shipping';
 export * from './Booking';
+export * from './Star';

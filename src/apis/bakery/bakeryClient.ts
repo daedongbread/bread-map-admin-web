@@ -6,6 +6,7 @@ import {
   DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
+  DeleteBakeryNewReviewPayload,
   GetBakeriesPayload,
   GetBakeriesResponse,
   GetBakeryImageMenuBarPayload,
@@ -16,8 +17,12 @@ import {
   GetBakeryInfoUpdateRequestsResponse,
   GetBakeryMenuReportPayload,
   GetBakeryMenuReportsResponse,
+  GetBakeryNewReviewsPayload,
+  GetBakeryNewReviewsResponse,
   GetBakeryReportNewStatusEntity,
   UpdateBakeryMenuReportImagesPayload,
+  UpdateBakeryNewReviewExposeStatusPayload,
+  UpdateBakeryNewReviewImagesPayload,
   UploadImagePayload,
   UploadImageResponse,
 } from '@/apis';
@@ -81,7 +86,7 @@ export class BakeryClient implements BakeryApiClient {
   }
 
   async updateBakeryMenuReportImages({ bakeryId, reportId, imageIdList }: UpdateBakeryMenuReportImagesPayload) {
-    await fetcher.patch(`/bakeries/${bakeryId}/product-add-reports/${reportId}`, { imageIdList });
+    await fetcher.patch(`/bakeries/${bakeryId}/product-add-reports/${reportId}/images`, { imageIdList });
   }
 
   async deleteBakeryMenuReport({ bakeryId, reportId }: DeleteBakeryMenuReportPayload) {
@@ -103,6 +108,24 @@ export class BakeryClient implements BakeryApiClient {
 
   async deleteBakeryInfoUpdateRequest({ bakeryId, reportId }: DeleteBakeryInfoUpdateRequestPayload) {
     await fetcher.delete(`/bakeries/${bakeryId}/update-reports/${reportId}`);
+  }
+
+  async getBakeryNewReviewList({ bakeryId, page }: GetBakeryNewReviewsPayload) {
+    const resp = await fetcher.get<GetBakeryNewReviewsResponse>(`/bakeries/${bakeryId}/new-reviews`, { params: { page } });
+    return {
+      bakeryNewReviews: resp.data.contents,
+      totalCount: resp.data.totalElements,
+      totalPages: resp.data.totalPages,
+    };
+  }
+  async updateBakeryNewReviewExposeStatus({ bakeryId, reviewId }: UpdateBakeryNewReviewExposeStatusPayload) {
+    await fetcher.patch(`/bakeries/${bakeryId}/new-reviews/${reviewId}`);
+  }
+  async deleteBakeryNewReview({ bakeryId, reviewId }: DeleteBakeryNewReviewPayload) {
+    await fetcher.delete(`/bakeries/${bakeryId}/new-reviews/${reviewId}`);
+  }
+  async updateBakeryNewReviewImages({ bakeryId, reviewId, imageIdList }: UpdateBakeryNewReviewImagesPayload) {
+    await fetcher.patch(`/bakeries/${bakeryId}/new-reviews/${reviewId}/images`, { imageIdList });
   }
 
   async getBakeryImageMenuBar({ bakeryId }: GetBakeryImageMenuBarPayload) {

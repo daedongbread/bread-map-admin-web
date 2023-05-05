@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useBakery } from '@/apis';
-import { SelectableMenuCard } from '@/components/BakeryDetail/Report/MenuEditView/SelectableMenuCard';
+import { SelectableMenuCard } from '@/components/BakeryDetail/Report/MenuReportView/SelectableMenuCard';
 import { ReportContentArea } from '@/components/BakeryDetail/Report/ReportContentArea';
 import { ReportTabTitle } from '@/components/BakeryDetail/Report/ReportTabTitle';
 import { Pagination } from '@/components/Shared';
@@ -12,7 +12,7 @@ type Props = {
   bakeryId: number;
 };
 
-export const MenuEditView = ({ bakeryId }: Props) => {
+export const MenuReportView = ({ bakeryId }: Props) => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const { bakeryMenuReportsQuery, updateMenuReportImages, deleteMenuReport } = useBakery({ bakeryId });
   const { data, isLoading, isFetching } = bakeryMenuReportsQuery({
@@ -44,7 +44,7 @@ export const MenuEditView = ({ bakeryId }: Props) => {
         <ReportTabTitle title={BAKERY_REPORT_TAB[1].name} count={data?.totalCount || 0} />
         {data?.menuReports.map((menuReport, idx) => {
           return (
-            <div key={`menu-report-${idx}`}>
+            <div key={`menu-report-${menuReport.reportId}`}>
               <SelectableMenuCard menuReport={menuReport} onChangeMenuReportImages={onChangeMenuReportImages} onDeleteMenuReport={onDeleteMenuReport} />
               {idx < data?.menuReports.length - 1 && <Divider noMargin />}
             </div>

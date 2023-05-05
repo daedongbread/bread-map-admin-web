@@ -4,6 +4,14 @@ export type BakeryStatus = 'POSTING' | 'UNPOSTING';
 
 export type BakerySns = 'websiteURL' | 'instagramURL' | 'facebookURL' | 'blogURL';
 
+type BaseResponse = {
+  numberOfElements: number;
+  pageNumber: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+};
+
 /**
  * 빵집 관리
  * 1. 빵집 조회 (GetBakeriesPayload, BakeriesItemEntity, GetBakeriesResponse)
@@ -28,13 +36,8 @@ export type BakeriesItemEntity = {
   status: BakeryStatus;
 };
 
-export type GetBakeriesResponse = {
+export type GetBakeriesResponse = BaseResponse & {
   contents: BakeriesItemEntity[];
-  numberOfElements: number;
-  pageNumber: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
 };
 
 export type CreateUpdateBakeryPayload = {
@@ -102,13 +105,8 @@ export type BakeryImageEntity = {
   isNew: boolean;
 };
 
-export type GetBakeryImageResponse = {
+export type GetBakeryImageResponse = BaseResponse & {
   contents: BakeryImageEntity[];
-  numberOfElements: number;
-  pageNumber: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
 };
 
 export type UploadImagePayload = {
@@ -146,11 +144,13 @@ export type GetBakeryMenuReportPayload = {
   page: number;
 };
 
-export type BakeryMenuReportImageEntity = {
+type BaseImageEntity = {
   imageId: number;
   image: string;
   isRegistered: boolean;
 };
+
+export type BakeryMenuReportImageEntity = BaseImageEntity;
 
 export type BakeryMenuReportItemEntity = {
   reportId: number;
@@ -161,13 +161,8 @@ export type BakeryMenuReportItemEntity = {
   imageList: BakeryMenuReportImageEntity[];
 };
 
-export type GetBakeryMenuReportsResponse = {
+export type GetBakeryMenuReportsResponse = BaseResponse & {
   contents: BakeryMenuReportItemEntity[];
-  pageNumber: number;
-  numberOfElements: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
 };
 
 export type UpdateBakeryMenuReportImagesPayload = {
@@ -202,13 +197,8 @@ export type BakeryInfoUpdateRequestEntity = {
   isChange: boolean;
 };
 
-export type GetBakeryInfoUpdateRequestsResponse = {
+export type GetBakeryInfoUpdateRequestsResponse = BaseResponse & {
   contents: BakeryInfoUpdateRequestEntity[];
-  pageNumber: number;
-  numberOfElements: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
 };
 
 export type CompleteBakeryInfoUpdateRequestPayload = {
@@ -219,6 +209,55 @@ export type CompleteBakeryInfoUpdateRequestPayload = {
 export type DeleteBakeryInfoUpdateRequestPayload = {
   bakeryId: number;
   reportId: number;
+};
+
+/**
+ * 빵집 신규 리뷰
+ * 1. 빵집 신규 리뷰 리스트 조회 (GetBakeryNewReviewsPayload, BakeryNewReviewEntity, GetBakeryNewReviewsResponse)
+ * 2. 빵집 신규 리뷰 숨김 (UpdateBakeryNewReviewExposeStatusPayload)
+ * 3. 빵집 신규 리뷰 삭제 (DeleteBakeryNewReviewPayload)
+ * 4. 빵집 신규 리뷰 이미지 등록 (UpdateBakeryNewReviewImagesPayload)
+ */
+
+type ReviewRating = {
+  productName: string;
+  rating: number;
+};
+
+type ReviewImageEntity = BaseImageEntity;
+
+export type BakeryNewReviewEntity = {
+  reviewId: number;
+  createdAt: string;
+  nickName: string;
+  productRatingList: ReviewRating[];
+  content: string;
+  imageList: ReviewImageEntity[];
+};
+
+export type GetBakeryNewReviewsResponse = BaseResponse & {
+  contents: BakeryNewReviewEntity[];
+};
+
+export type GetBakeryNewReviewsPayload = {
+  bakeryId: number;
+  page: number;
+};
+
+export type UpdateBakeryNewReviewExposeStatusPayload = {
+  bakeryId: number;
+  reviewId: number;
+};
+
+export type DeleteBakeryNewReviewPayload = {
+  bakeryId: number;
+  reviewId: number;
+};
+
+export type UpdateBakeryNewReviewImagesPayload = {
+  bakeryId: number;
+  reviewId: number;
+  imageIdList: number[];
 };
 
 export interface BakeryApiClient {
@@ -252,6 +291,14 @@ export interface BakeryApiClient {
   }>;
   completeBakeryInfoUpdateRequest: ({ bakeryId, reportId }: CompleteBakeryInfoUpdateRequestPayload) => void;
   deleteBakeryInfoUpdateRequest: ({ bakeryId, reportId }: DeleteBakeryInfoUpdateRequestPayload) => void;
+  getBakeryNewReviewList: ({ bakeryId, page }: GetBakeryNewReviewsPayload) => Promise<{
+    bakeryNewReviews: BakeryNewReviewEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
+  updateBakeryNewReviewExposeStatus: ({ bakeryId, reviewId }: UpdateBakeryNewReviewExposeStatusPayload) => void;
+  deleteBakeryNewReview: ({ bakeryId, reviewId }: DeleteBakeryNewReviewPayload) => void;
+  updateBakeryNewReviewImages: ({ bakeryId, reviewId }: UpdateBakeryNewReviewImagesPayload) => void;
   getBakeryImageMenuBar: ({ bakeryId }: GetBakeryImageMenuBarPayload) => Promise<{
     bakeryReportImageNum: number;
     productAddReportImageNum: number;

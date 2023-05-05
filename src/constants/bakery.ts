@@ -75,11 +75,12 @@ export const BAKERY_FACILITY_VALUE: Record<string, BakeryFacilityValue> = {
   Booking: 'BOOKING',
 };
 
-// 빵집 상세 > 빵집 제보 탭 (등록된 빵집인 경우에만 사용)
+// 빵집 상세 > 빵집 제보 탭 (등록된 빵집인 경우에만 tab 사용, 서버에 보내는 값은 아님)
 export const BAKERY_REPORT_TAB_VALUE: Record<string, BakeryReportTabValue> = {
-  Images: 'adminImage',
-  Products: 'productAddReport',
-  Information: 'bakeryUpdateReport',
+  Images: 'adminImages',
+  Products: 'productAddReports',
+  Information: 'bakeryUpdateReports',
+  Reviews: 'newReviews',
 };
 
 export const BAKERY_REPORT_TAB: TabItem[] = [
@@ -96,8 +97,14 @@ export const BAKERY_REPORT_TAB: TabItem[] = [
     isUpdated: false,
   },
   {
-    name: '정보수정',
+    name: '정보 수정',
     value: BAKERY_REPORT_TAB_VALUE.Information,
+    isActive: false,
+    isUpdated: false,
+  },
+  {
+    name: '신규 리뷰',
+    value: BAKERY_REPORT_TAB_VALUE.Reviews,
     isActive: false,
     isUpdated: false,
   },
@@ -132,7 +139,7 @@ export const BAKERY_IMG_TAB: TabItem[] = [
 ];
 
 export type BakeryFilterValue = 'bakery-report-image' | 'product-add-report' | 'bakery-update-report' | 'new-review';
-export type BakeryReportTabValue = 'adminImage' | 'productAddReport' | 'bakeryUpdateReport';
+export type BakeryReportTabValue = 'adminImages' | 'productAddReports' | 'bakeryUpdateReports' | 'newReviews';
 export type BakeryImgTabValue = 'bakery-report-image' | 'product-add-report-image' | 'review-image';
 export type BakeryFacilityValue = 'PARKING' | 'WIFI' | 'DELIVERY' | 'PET' | 'SHIPPING' | 'BOOKING';
 
