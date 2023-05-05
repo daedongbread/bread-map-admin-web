@@ -7,7 +7,7 @@ import styled from '@emotion/styled';
 type Props = {
   label: string;
   fullAddress: Pick<BakeryForm, 'address' | 'latitude' | 'longitude'>;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
+  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
 };
 
 export const AddressArea = ({ label, fullAddress, onChangeForm }: Props) => {
@@ -19,17 +19,13 @@ export const AddressArea = ({ label, fullAddress, onChangeForm }: Props) => {
           placeholder={'도로명 주소를 적어주세요.'}
           type={'plain'}
           value={fullAddress.address}
-          onChangeInput={e => onChangeForm({ name: 'address', value: e.target.value as never })}
+          onChangeInput={e => onChangeForm({ name: 'address', value: e.target.value })}
         />
         <RowHalf>
           {CORD_INPUTS.map(input => (
             <div key={`addr-${input.name}`}>
               <label>{input.label}</label>
-              <Input
-                type={'plain'}
-                value={String(fullAddress[input.name])}
-                onChangeInput={e => onChangeForm({ name: input.name, value: e.target.value as never })}
-              />
+              <Input type={'plain'} value={String(fullAddress[input.name])} onChangeInput={e => onChangeForm({ name: input.name, value: e.target.value })} />
             </div>
           ))}
         </RowHalf>

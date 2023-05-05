@@ -32,7 +32,7 @@ export const BakeryForm = () => {
   const { form, formLinks, openedSnsLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
   const { name, image, address, latitude, longitude, hours, phoneNumber, productList } = form;
 
-  const onChangeForm = useCallback((payload: { name: BakeryFormChangeKey; value: never }) => {
+  const onChangeForm = useCallback((payload: { name: BakeryFormChangeKey; value: string }) => {
     dispatch(changeForm(payload));
   }, []);
 

@@ -10,7 +10,7 @@ type Props = {
   label: string;
   previewImg: string | null;
   onChangeBakeryImg: () => void;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
+  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
 };
 
 export const BakeryImgField = ({ label, previewImg, onChangeBakeryImg, onChangeForm }: Props) => {
@@ -26,7 +26,7 @@ export const BakeryImgField = ({ label, previewImg, onChangeBakeryImg, onChangeF
     if (!e.target.files) return;
     const file = e.target.files[0];
 
-    onChangeForm({ name: 'image', value: URL.createObjectURL(file) as never });
+    onChangeForm({ name: 'image', value: URL.createObjectURL(file) });
   };
 
   return (

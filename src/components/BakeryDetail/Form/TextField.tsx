@@ -9,7 +9,7 @@ type Props = {
   placeholder?: string;
   name: BakeryFormChangeKey;
   value: string;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
+  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
 };
 
 export const TextField = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {
@@ -23,7 +23,7 @@ export const TextField = ({ label, textarea = false, placeholder, name, value, o
           placeholder={placeholder || ''}
           textarea={textarea}
           value={value}
-          onChangeInput={e => onChangeForm({ name, value: e.target.value as never })}
+          onChangeInput={e => onChangeForm({ name, value: e.target.value })}
         />
       </RowContents>
     </Row>
