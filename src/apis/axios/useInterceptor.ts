@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useEffect } from 'react';
 import type { NavigateFunction } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -51,7 +51,7 @@ export const useInterceptor = () => {
 
       switch (errorCode) {
         case ERROR_CODE.CLIENT_FAILED: {
-          handleClientError(error);
+          handleClientError(errorMessage);
           break;
         }
         case ERROR_CODE.EXPIRED_TOKEN: {
@@ -92,8 +92,9 @@ export const useInterceptor = () => {
     };
   }, [requestInterceptor, responseInterceptor]);
 
-  const handleClientError = (error: AxiosError) => {
-    console.error('client 에러..', error.response);
+  const handleClientError = (errorMessage: string) => {
+    const errorEvent = new CustomEvent('axiosError', { detail: `오류가 발생하였습니다. 대동빵팀에게 문의해주세요. (오류 메시지: ${errorMessage})` });
+    window.dispatchEvent(errorEvent);
   };
 
   const handleExpiredToken = async (originalRequestConfig: RetryAxiosRequestConfig, navigate: NavigateFunction) => {
