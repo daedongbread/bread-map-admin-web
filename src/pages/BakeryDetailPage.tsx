@@ -9,6 +9,7 @@ import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigge
 import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
 import useSelectBox from '@/hooks/useSelectBox';
 import useTab from '@/hooks/useTab';
+import { useToast } from '@/hooks/useToast';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { BakeryForm as BakeryFormType, changeBakeryImg, changeBakeryStatus, initializeForm, ProductItem, setForm, setLinks } from '@/store/slices/bakery';
 import { urlToFile } from '@/utils';
@@ -33,6 +34,7 @@ export const BakeryDetailPage = () => {
 
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
   const { tabs: reportTabs, selectTab: selectReportTab, setUpdateStatusTab: setUpdateStatusReportTab } = useTab({ tabData: BAKERY_REPORT_TAB });
+  const { addToast } = useToast();
 
   useEffect(() => {
     if (bakery) {
@@ -134,11 +136,8 @@ export const BakeryDetailPage = () => {
       { payload },
       {
         onSuccess: () => {
-          navigate(-1); // TODO: 완료됨 UI 필요
-        },
-        onError: err => {
-          // TODO: error 안탐. 확인필요
-          console.log('create err..', err);
+          addToast('빵집 등록을 완료했습니다.', 'error', 3000);
+          // navigate(-1); // TODO: 빵집 상세로 넘기기
         },
       }
     );
@@ -149,7 +148,7 @@ export const BakeryDetailPage = () => {
       { bakeryId: Number(bakeryId), payload },
       {
         onSuccess: () => {
-          navigate(-1); // TODO: 완료됨 UI 필요
+          addToast('빵집 수정을 완료했습니다.', 'error', 3000);
         },
       }
     );

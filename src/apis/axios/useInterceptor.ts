@@ -47,6 +47,9 @@ export const useInterceptor = () => {
       } = error;
 
       switch (errorCode) {
+        case ERROR_CODE.NOT_FOUND_ADMIN:
+        case ERROR_CODE.NOT_MATCH_ADMIN:
+          break;
         case ERROR_CODE.CLIENT_FAILED: {
           toast(`오류가 발생하였습니다. 대동빵팀에게 문의해주세요. (오류 메시지: ${errorMessage})`);
           break;
