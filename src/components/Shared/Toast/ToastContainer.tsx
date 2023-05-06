@@ -11,7 +11,7 @@ export const ToastContainer = ({ children }: ToastContainerProps) => {
 
 const Container = styled.div`
   position: fixed;
-  top: 1rem;
+  top: 4rem;
   left: 50%;
   z-index: 9999;
   display: flex;

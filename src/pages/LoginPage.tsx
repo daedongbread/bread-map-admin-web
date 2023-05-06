@@ -7,6 +7,7 @@ import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
 import { ERROR_CODE, PATH } from '@/constants';
 import useForm from '@/hooks/useForm';
+import { useToast } from '@/hooks/useToast';
 import useToggle from '@/hooks/useToggle';
 import { loginStorage, StorageKeys } from '@/utils';
 import styled from '@emotion/styled';
@@ -21,6 +22,7 @@ export const LoginPage = () => {
 
   const { activate: isRemembered, onActive: onActiveRemember, onInactive: onInactiveRemember, onToggleActive: onToggleRemember } = useToggle();
   const { form, onChangeForm, onSetForm } = useForm<LoginForm>(initialForm);
+  const { addToast } = useToast();
 
   useEffect(() => {
     const { form, isRemembered } = loginStorage.getMultipleItems([StorageKeys.Form, StorageKeys.IsRemembered]);
@@ -36,9 +38,10 @@ export const LoginPage = () => {
     if (error) {
       switch (error.response?.data.code) {
         case ERROR_CODE.NOT_FOUND_ADMIN:
-          return window.alert('아이디와 비밀번호를 확인해주세요.');
+        case ERROR_CODE.NOT_MATCH_ADMIN:
+          return addToast('아이디와 비밀번호를 확인해주세요.', 'error', 3000);
         default:
-          return window.alert('로그인 에러입니다. 다시 시도해주세요.');
+          return addToast('로그인 에러입니다. 다시 시도해주세요.', 'error', 3000);
       }
     }
   }, [error]);
