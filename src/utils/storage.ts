@@ -1,8 +1,6 @@
 import { EncryptStorage } from 'encrypt-storage';
 
-const Storage = {
-  // AccessToken: 'accessToken',
-  // RefreshToken: 'refreshToken',
+const StorageKeys = {
   Token: 'token', // accessToken, refreshToken, expiredAt
   Form: 'form',
   IsRemembered: 'isRemembered',
@@ -16,4 +14,6 @@ const userStorage = new EncryptStorage('secret-key-value', {
   prefix: '@user',
 });
 
-export { loginStorage, userStorage, Storage };
+const truncateUserStorageTokens = () => userStorage.removeItem(StorageKeys.Token);
+
+export { loginStorage, userStorage, StorageKeys, truncateUserStorageTokens };

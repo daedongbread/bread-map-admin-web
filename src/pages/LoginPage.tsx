@@ -8,7 +8,7 @@ import { Button } from '@/components/Shared';
 import { ERROR_CODE, PATH } from '@/constants';
 import useForm from '@/hooks/useForm';
 import useToggle from '@/hooks/useToggle';
-import { loginStorage, Storage } from '@/utils';
+import { loginStorage, StorageKeys } from '@/utils';
 import styled from '@emotion/styled';
 
 export type LoginForm = typeof initialForm;
@@ -23,7 +23,7 @@ export const LoginPage = () => {
   const { form, onChangeForm, onSetForm } = useForm<LoginForm>(initialForm);
 
   useEffect(() => {
-    const { form, isRemembered } = loginStorage.getMultipleItems([Storage.Form, Storage.IsRemembered]);
+    const { form, isRemembered } = loginStorage.getMultipleItems([StorageKeys.Form, StorageKeys.IsRemembered]);
     if (form && isRemembered) {
       onActiveRemember();
       onSetForm(form);

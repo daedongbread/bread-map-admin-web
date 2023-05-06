@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
 import { useAuth } from '@/hooks/auth';
-import { Storage, userStorage } from '@/utils';
+import { StorageKeys, userStorage } from '@/utils';
 import { requestLogin } from './login';
 
 export const useLogin = () => {
@@ -18,7 +18,7 @@ export const useLogin = () => {
   });
 
   const logout = () => {
-    userStorage.removeItem(Storage.Token);
+    userStorage.removeItem(StorageKeys.Token);
     setAuth({ accessToken: null, refreshToken: null, expiredAt: null });
   };
 
