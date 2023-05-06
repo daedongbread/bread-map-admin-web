@@ -1,5 +1,5 @@
 import { fetcher } from '@/apis/axios';
-import { loginStorage, Storage, userStorage } from '@/utils';
+import { loginStorage, StorageKeys, userStorage } from '@/utils';
 
 export type LoginResponse = {
   accessToken: string;
@@ -17,8 +17,14 @@ type RefreshRequest = {
   refreshToken: string;
 };
 
-const saveUserToken = ({ accessToken, refreshToken, expiredAt }: Omit<LoginResponse, 'accessTokenExpiredDate'> & { expiredAt: number }) => {
-  userStorage.setItem(Storage.Token, {
+const saveUserToken = ({
+  accessToken,
+  refreshToken,
+  expiredAt,
+}: Omit<LoginResponse, 'accessTokenExpiredDate'> & {
+  expiredAt: number;
+}) => {
+  userStorage.setItem(StorageKeys.Token, {
     accessToken,
     refreshToken,
     expiredAt,
@@ -28,22 +34,22 @@ const saveUserToken = ({ accessToken, refreshToken, expiredAt }: Omit<LoginRespo
 const rememberUser = ({ email, password }: { email: string; password: string }) => {
   loginStorage.setMultipleItems([
     [
-      Storage.Form,
+      StorageKeys.Form,
       {
         email,
         password,
       },
     ],
-    [Storage.IsRemembered, true],
+    [StorageKeys.IsRemembered, true],
   ]);
 };
 
 const removeUser = () => {
-  const form = loginStorage.getItem(Storage.Form);
+  const form = loginStorage.getItem(StorageKeys.Form);
   if (form) {
-    loginStorage.removeItem(Storage.Form);
+    loginStorage.removeItem(StorageKeys.Form);
   }
-  loginStorage.setItem(Storage.IsRemembered, false);
+  loginStorage.setItem(StorageKeys.IsRemembered, false);
 };
 
 const requestLogin = async ({ email, password }: LoginPayload) => {

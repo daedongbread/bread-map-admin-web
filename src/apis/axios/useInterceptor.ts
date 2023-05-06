@@ -1,12 +1,10 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useEffect } from 'react';
-import type { NavigateFunction } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { LoginResponse, requestRefresh } from '@/apis/auth/login';
 import { fetcher } from '@/apis/axios/fetcher';
 import { ERROR_CODE, PATH } from '@/constants';
 import { useAuth } from '@/hooks/auth';
-import { Storage, userStorage } from '@/utils';
+import { StorageKeys, truncateUserStorageTokens, userStorage } from '@/utils';
 
 interface RetryAxiosRequestConfig extends AxiosRequestConfig {
   retry?: boolean;
@@ -18,11 +16,10 @@ const refresh = ({ accessToken, refreshToken }: { accessToken: string; refreshTo
 
 export const useInterceptor = () => {
   const { setAuth } = useAuth();
-  const navigate = useNavigate();
 
   const requestInterceptor = fetcher.interceptors.request.use(
     config => {
-      const token = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
+      const token = userStorage.getItem<{ [key: string]: string }>(StorageKeys.Token);
       if (token && token.accessToken) {
         config.headers.Authorization = `Bearer ${token.accessToken}`;
       }
@@ -51,11 +48,15 @@ export const useInterceptor = () => {
 
       switch (errorCode) {
         case ERROR_CODE.CLIENT_FAILED: {
-          handleClientError(errorMessage);
+          toast(`오류가 발생하였습니다. 대동빵팀에게 문의해주세요. (오류 메시지: ${errorMessage})`);
+          break;
+        }
+        case ERROR_CODE.INVALID_TOKEN: {
+          replaceLoginAndTruncateTokens();
           break;
         }
         case ERROR_CODE.EXPIRED_TOKEN: {
-          const response = await handleExpiredToken(originalRequestConfig, navigate);
+          const response = await handleExpiredToken(originalRequestConfig);
           if (response) {
             return response;
           }
@@ -92,25 +93,20 @@ export const useInterceptor = () => {
     };
   }, [requestInterceptor, responseInterceptor]);
 
-  const handleClientError = (errorMessage: string) => {
-    const errorEvent = new CustomEvent('axiosError', { detail: `오류가 발생하였습니다. 대동빵팀에게 문의해주세요. (오류 메시지: ${errorMessage})` });
-    window.dispatchEvent(errorEvent);
-  };
-
-  const handleExpiredToken = async (originalRequestConfig: RetryAxiosRequestConfig, navigate: NavigateFunction) => {
+  const handleExpiredToken = async (originalRequestConfig: RetryAxiosRequestConfig) => {
     if (originalRequestConfig.retry) {
       return;
     }
     originalRequestConfig.retry = true;
-    const storageToken = userStorage.getItem<{ [key: string]: string }>(Storage.Token);
+    const storageToken = userStorage.getItem<{ [key: string]: string }>(StorageKeys.Token);
     if (!storageToken) {
       return;
     }
 
     const refreshResponse = await refreshTokenAndUpdateAuth(storageToken.accessToken, storageToken.refreshToken);
     if (!refreshResponse) {
-      window.confirm('장시간 사용하지 않아 다시 로그인이 필요합니다.');
-      navigate(PATH.Login, { replace: true });
+      toast(`장시간 사용하지 않아 다시 로그인이 필요합니다. (url: ${originalRequestConfig.url})`);
+      replaceLoginAndTruncateTokens();
       return;
     }
 
@@ -130,7 +126,16 @@ export const useInterceptor = () => {
     if (originalRequestConfig.retry) {
       return;
     }
-    const errorEvent = new CustomEvent('axiosError', { detail: `오류가 발생하였습니다. 대동빵팀에게 문의해주세요. (오류 메시지: ${errorMessage})` });
+    toast(`오류가 발생하였습니다. 대동빵팀에게 문의해주세요. (오류 메시지: ${errorMessage})`);
+  };
+
+  const toast = (message: string) => {
+    const errorEvent = new CustomEvent('axiosError', { detail: message });
     window.dispatchEvent(errorEvent);
+  };
+
+  const replaceLoginAndTruncateTokens = () => {
+    truncateUserStorageTokens();
+    window.location.replace(PATH.Login);
   };
 };

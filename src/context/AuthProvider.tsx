@@ -1,6 +1,6 @@
 import React, { createContext, Dispatch, SetStateAction, useEffect } from 'react';
 import { saveUserToken } from '@/apis/auth/login';
-import { Storage, userStorage } from '@/utils';
+import { StorageKeys, userStorage } from '@/utils';
 
 export type Auth = {
   accessToken: string | null;
@@ -12,7 +12,11 @@ const AuthContext = createContext<{ auth: Auth; setAuth: Dispatch<SetStateAction
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [auth, setAuth] = React.useState<Auth>({ accessToken: null, refreshToken: null, expiredAt: null });
-  const token = userStorage.getItem<{ accessToken: string; refreshToken: string; expiredAt: number }>(Storage.Token);
+  const token = userStorage.getItem<{
+    accessToken: string;
+    refreshToken: string;
+    expiredAt: number;
+  }>(StorageKeys.Token);
 
   useEffect(() => {
     if (token) {
