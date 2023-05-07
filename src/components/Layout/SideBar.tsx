@@ -2,12 +2,20 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLogin } from '@/apis';
 import { MenuCountEntity } from '@/apis/menu/types';
-import { Pencil, Logout, Meal, Dislike, Profile } from '@/components/Shared/Icons';
+import { Dislike, Logout, Meal, Pencil, Profile } from '@/components/Shared/Icons';
 import { PATH, Path } from '@/constants';
 import styled from '@emotion/styled';
 import { MenuItem } from './MenuItem';
+import deabbang from '/images/deabbang.png';
+import textLogo from '/images/text-logo-black.png';
 
-export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
+type Props = {
+  menuCount?: MenuCountEntity;
+  isSideBarOpen: boolean;
+  toggleSideBar: () => void;
+};
+
+export const SideBar = ({ menuCount, isSideBarOpen, toggleSideBar }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useLogin();
@@ -48,27 +56,32 @@ export const SideBar = ({ menuCount }: { menuCount?: MenuCountEntity }) => {
     }
   };
 
+  const menuItems = MENUS.map(menu => (
+    <MenuLink key={menu.path} to={menu.path}>
+      <MenuItem icon={menu.icon} name={menu.name} noti={getMenuCount(menu.path)} active={isCurrent(menu.path)} iconOnly={!isSideBarOpen} />
+    </MenuLink>
+  ));
+
+  const settingItems = SETTING_MENUS.map(menu => (
+    <button key={menu.name} onClick={getSettingMenuFn(menu.name)}>
+      <MenuItem icon={menu.icon} name={menu.name} iconOnly={!isSideBarOpen} />
+    </button>
+  ));
+
   return (
     <Container>
-      <Header>
+      <Header isOpen={isSideBarOpen}>
         <Link to={`${PATH.Bakeries}/all`}>
-          <h1>대동빵지도</h1>
+          <BreadLogo>
+            <img src={deabbang} />
+          </BreadLogo>
+          <TextLogo isOpen={isSideBarOpen}>
+            <img src={textLogo} />
+          </TextLogo>
         </Link>
       </Header>
-      <ul>
-        {MENUS.map(menu => (
-          <MenuLink key={menu.path} to={menu.path}>
-            <MenuItem icon={menu.icon} name={menu.name} noti={getMenuCount(menu.path)} active={isCurrent(menu.path)} />
-          </MenuLink>
-        ))}
-      </ul>
-      <ul>
-        {SETTING_MENUS.map(menu => (
-          <button key={menu.name} onClick={getSettingMenuFn(menu.name)}>
-            <MenuItem icon={menu.icon} name={menu.name} />
-          </button>
-        ))}
-      </ul>
+      <ul>{menuItems}</ul>
+      <ul>{settingItems}</ul>
     </Container>
   );
 };
@@ -101,11 +114,7 @@ const MENUS = [
 ];
 
 const SETTING_MENUS = [
-  // {
-  //   name: '계정',
-  //   path: '',
-  //   icon: <User />,
-  // },
+  // { name: '계정', path: '', icon: <User /> },
   {
     name: '로그아웃',
     path: null,
@@ -114,9 +123,13 @@ const SETTING_MENUS = [
   },
 ];
 
+type SideBarOpenProps = {
+  isOpen: boolean;
+};
+
 const Container = styled.div`
-  width: inherit;
-  height: 100%;
+  height: 100vh;
+
   display: flex;
   flex-direction: column;
 
@@ -124,16 +137,22 @@ const Container = styled.div`
     &:first-of-type {
       flex: 1;
     }
+
     &:last-of-type {
       margin-bottom: 3rem;
     }
   }
 `;
 
-const Header = styled.div`
-  padding: 3rem 2.4rem;
+const Header = styled.div<SideBarOpenProps>`
+  display: flex;
+  height: 85px;
+  padding: 3rem 1rem;
 
   a {
+    display: flex;
+    width: 100%;
+    align-items: center;
     text-decoration: none;
     color: ${({ theme }) => theme.color.gray900};
   }
@@ -141,9 +160,54 @@ const Header = styled.div`
   h1 {
     font-size: 2rem;
     font-weight: bold;
+
+    margin-left: ${({ isOpen }) => (isOpen ? '1.2rem' : '0')};
+    width: ${({ isOpen }) => (isOpen ? '100%' : '0')};
+    opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
+    visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+    transition-property: opacity, visibility;
+    transition-duration: ${({ isOpen }) => (isOpen ? '0.3s' : '0s')};
+    transition-timing-function: ease;
+    transition-delay: ${({ isOpen }) => (isOpen ? '0.1s' : '0s')};
   }
 `;
 
 const MenuLink = styled(Link)`
   text-decoration: none;
+  height: 80px;
+`;
+
+const BreadLogo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.color.primary500};
+  border-radius: 8px;
+
+  width: 3.6rem;
+  min-width: 3.6rem;
+  height: 3.6rem;
+  padding: 1rem;
+
+  > img {
+    width: 180%;
+  }
+`;
+
+const TextLogo = styled.div<SideBarOpenProps>`
+  display: flex;
+  align-items: center;
+
+  margin-left: ${({ isOpen }) => (isOpen ? '1.2rem' : '0')};
+  width: ${({ isOpen }) => (isOpen ? '9rem' : '0')};
+  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
+  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  transition-property: opacity, visibility;
+  transition-duration: ${({ isOpen }) => (isOpen ? '0.3s' : '0s')};
+  transition-timing-function: ease;
+  transition-delay: ${({ isOpen }) => (isOpen ? '0.1s' : '0s')};
+
+  > img {
+    width: 100%;
+  }
 `;
