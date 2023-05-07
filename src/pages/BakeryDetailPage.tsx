@@ -38,7 +38,15 @@ export const BakeryDetailPage = () => {
 
   useEffect(() => {
     if (bakery) {
-      dispatch(setForm({ form: { ...bakery, latitude: String(bakery.latitude), longitude: String(bakery.longitude) } }));
+      dispatch(
+        setForm({
+          form: {
+            ...bakery,
+            latitude: String(bakery.latitude),
+            longitude: String(bakery.longitude),
+          },
+        })
+      );
       updateLinksAtForm();
       onSelectOption(BAKERY_STATUS_OPTIONS.find(option => option.value === bakery.status) || null);
       if (bakery.image) {

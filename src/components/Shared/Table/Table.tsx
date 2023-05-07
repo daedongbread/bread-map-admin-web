@@ -57,12 +57,14 @@ export const Table = ({ headers, rows, event }: TableProps) => {
 
 const TableContainer = styled.div`
   border: ${({ theme }) => `1px solid ${theme.color.gray100}`};
-  width: ${({ theme }) => `calc(100vw - ${theme.size.sidebarWidth} - 12rem)`};
+  // width: ${({ theme }) => `calc(100vw - ${theme.size.sidebarWidth} - 12rem)`};
+  width: 100%;
   white-space: nowrap;
 
   overflow-x: scroll;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
+
   &::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
   }
@@ -84,6 +86,7 @@ const CustomTable = styled.table<{ hover: boolean }>`
   tbody {
     tr {
       cursor: ${({ hover }) => hover && 'pointer'};
+
       &:hover td {
         background-color: ${({ hover, theme }) => hover && theme.color.gray100};
       }
@@ -92,6 +95,7 @@ const CustomTable = styled.table<{ hover: boolean }>`
         &:hover td {
           background-color: ${({ hover, theme }) => hover && theme.color.gray100};
         }
+
         td {
           background-color: ${({ theme }) => theme.color.gray50};
           border-top: ${({ theme }) => `1px solid ${theme.color.gray200}`};
