@@ -8,6 +8,7 @@ type LabelLayout = 'inline' | 'block';
 type Props = {
   type?: 'input' | 'textarea';
   label?: string;
+  placeholder?: string;
   labelLayout?: LabelLayout;
   content: string;
   isPrice?: boolean;
@@ -19,6 +20,7 @@ type Props = {
 export const ReadOnlyInputField = ({
   type = 'input',
   label,
+  placeholder,
   labelLayout = 'inline',
   content,
   isPrice = false,
@@ -34,7 +36,7 @@ export const ReadOnlyInputField = ({
     <Container layout={labelLayout} copyable={copyable} copied={isCopied} multiLine={multiLine} labelMinWidth={labelMinWidth}>
       {label && <label>{label}</label>}
       <div onClick={copyToClipboard}>
-        <Input textarea={type === 'textarea'} type={'gray'} disabled value={inputContent} multiLine={multiLine} />
+        <Input placeholder={placeholder} textarea={type === 'textarea'} type={'gray'} disabled value={inputContent} multiLine={multiLine} />
         <span className="copy_btn">{isCopied ? 'copied' : 'copy'}</span>
       </div>
     </Container>
@@ -62,6 +64,10 @@ const Container = styled.div<{ layout: LabelLayout; copyable: boolean; copied: b
 
     > input {
       cursor: inherit;
+
+      &::placeholder {
+        color: ${({ theme }) => theme.color.gray500};
+      }
     }
 
     :hover {

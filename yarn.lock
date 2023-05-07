@@ -4792,6 +4792,7 @@ __metadata:
     jest-environment-jsdom: ^29.4.0
     prettier: ^2.8.1
     react: ^18.2.0
+    react-daum-postcode: ^3.1.1
     react-dom: ^18.2.0
     react-query: ^3.39.2
     react-redux: ^8.0.5
@@ -11005,6 +11006,15 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
   checksum: e432b7cb0df57e8f0bcdc3b012d2e93fcbcb6092c9e0f85654788d5ebfc4442536d8cc35b2418061ba3c4afb8b7788cc101c606d86a1732407921de7a9244c8d
+  languageName: node
+  linkType: hard
+
+"react-daum-postcode@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "react-daum-postcode@npm:3.1.1"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: a7097f7b57d4d4f7e5e96215c041986b6f2e1daa3fd413e7dae9877c726fe0991e3f4fbff44091e77ac461cf7bd8204db99534702cd7d8f1e52c002d144d1ae8
   languageName: node
   linkType: hard
 

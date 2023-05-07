@@ -6,6 +6,7 @@ import {
   DeleteBakeryInfoUpdateRequestPayload,
   DeleteBakeryMenuReportPayload,
   DeleteBakeryNewReviewPayload,
+  GetBakeryAddressPayload,
   GetBakeryImageMenuBarPayload,
   GetBakeryImagePayload,
   GetBakeryInfoUpdateRequestsPayload,
@@ -50,6 +51,12 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
   const bakeryReportNewStatusQuery = useQuery(['bakeryReportNewStatus'], () => bakery.getBakeryReportNewStatus({ bakeryId }), {
     enabled: !isNaN(bakeryId),
   });
+
+  const bakeryAddressQuery = ({ address }: GetBakeryAddressPayload) => {
+    return useQuery(['bakeryAddress', { address }], () => bakery.searchAddress({ address }), {
+      enabled: !!address,
+    });
+  };
 
   const bakeryImagesQuery = ({ bakeryId, imageType, page }: GetBakeryImagePayload) => {
     return useQuery(
@@ -163,6 +170,7 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
     addBakery,
     editBakery,
     bakeryReportNewStatusQuery,
+    bakeryAddressQuery,
     bakeryImagesQuery,
     uploadImage,
     deleteImage,

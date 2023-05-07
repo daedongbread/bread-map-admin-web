@@ -1,48 +1,87 @@
-import React from 'react';
-import { Input, InputProps } from '@/components/Shared/Input';
-import { useAppSelector } from '@/store/hooks';
-import { BakeryFormChangeKey } from '@/store/slices/bakery';
-import { Row, RowHalf } from '@/styles';
+import React, { useEffect, useState } from 'react';
+import { useBakery } from '@/apis';
+import { ReadOnlyInputField } from '@/components/Shared/Input';
+import { PostcodeSearch } from '@/components/Shared/PostCode';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { changeForm } from '@/store/slices/bakery';
+import { Row } from '@/styles';
 import styled from '@emotion/styled';
 
 type Props = {
   label: string;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
 };
 
-export const AddressArea = ({ label, onChangeForm }: Props) => {
+export const AddressArea = ({ label }: Props) => {
+  const dispatch = useAppDispatch();
+  const { bakeryAddressQuery } = useBakery({ bakeryId: 1 });
   const { form } = useAppSelector(selector => selector.bakery);
   const { address } = form;
+
+  const [searchedAddr, setSearchedAddr] = useState('');
+  const { data } = bakeryAddressQuery({ address: searchedAddr });
+
+  const onChangeAddr = (addr: string) => {
+    setSearchedAddr(addr);
+  };
+
+  useEffect(() => {
+    if (data) {
+      dispatch(changeForm({ name: 'address', value: searchedAddr }));
+      dispatch(changeForm({ name: 'latitude', value: String(data.latitude) }));
+      dispatch(changeForm({ name: 'longitude', value: String(data.longitude) }));
+    }
+  }, [data]);
 
   return (
     <Row alignTop>
       <label>{label}</label>
       <Address>
-        <Input
-          placeholder={'도로명 주소를 적어주세요.'}
-          type={'plain'}
-          value={address}
-          onChangeInput={e => onChangeForm({ name: 'address', value: e.target.value })}
-        />
-        <RowHalf>
-          {CORD_INPUTS.map(input => (
-            <div key={`addr-${input.name}`}>
-              <label>{input.label}</label>
-              <Input type={'plain'} value={String(form[input.name])} onChangeInput={e => onChangeForm({ name: input.name, value: e.target.value })} />
-            </div>
-          ))}
-        </RowHalf>
+        <div className="search">
+          <ReadOnlyInputField placeholder={'주소를 검색해주세요.'} content={searchedAddr ? searchedAddr : address} />
+          <PostcodeSearch onSearch={onChangeAddr} />
+        </div>
+        <Cords>
+          <div className="item">
+            <label>위도</label>
+            <ReadOnlyInputField placeholder={'자동으로 입력됩니다.'} content={(data?.latitude && String(data?.latitude)) || String(form.latitude) || ''} />
+          </div>
+          <div className="item">
+            <label>경도</label>
+            <ReadOnlyInputField placeholder={'자동으로 입력됩니다.'} content={(data?.longitude && String(data?.longitude)) || String(form.longitude) || ''} />
+          </div>
+        </Cords>
       </Address>
     </Row>
   );
 };
 
-const CORD_INPUTS: ({ label: string; name: 'latitude' | 'longitude' } & Pick<InputProps, 'placeholder' | 'type'>)[] = [
-  { label: '위도', name: 'latitude', placeholder: '', type: 'plain' },
-  { label: '경도', name: 'longitude', placeholder: '', type: 'plain' },
-];
-
 const Address = styled.div`
   flex: 1;
   font-size: 1.4rem;
+
+  .search {
+    display: flex;
+    gap: 10px;
+    > div {
+      flex: 100%;
+      input {
+        padding: 15px;
+      }
+    }
+
+    > button {
+      width: 100px;
+    }
+  }
+`;
+
+const Cords = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 `;
