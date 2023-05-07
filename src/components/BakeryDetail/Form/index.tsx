@@ -22,7 +22,7 @@ export const BakeryForm = () => {
     <Forms>
       <TextField label={'빵집명'} name={'name'} value={name} onChangeForm={onChangeForm} />
       <BakeryImgField label={'대표이미지'} onChangeForm={onChangeForm} />
-      <AddressArea label={'주소'} onChangeForm={onChangeForm} />
+      <AddressArea label={'주소'} />
       <TextField textarea label={'시간'} name={'hours'} value={hours || ''} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} onChangeForm={onChangeForm} />
       <SnsLinkArea label={'홈페이지'} />
       <TextField label={'전화번호'} name={'phoneNumber'} value={phoneNumber || ''} placeholder={'000-000-0000'} onChangeForm={onChangeForm} />

@@ -9,6 +9,8 @@ import {
   DeleteBakeryNewReviewPayload,
   GetBakeriesPayload,
   GetBakeriesResponse,
+  GetBakeryAddressPayload,
+  GetBakeryAddressResponse,
   GetBakeryImageMenuBarPayload,
   GetBakeryImageMenuBarResponse,
   GetBakeryImagePayload,
@@ -40,6 +42,11 @@ export class BakeryClient implements BakeryApiClient {
 
   async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {
     await fetcher.patch(`bakeries/${bakeryId}`, payload);
+  }
+
+  async searchAddress({ address }: GetBakeryAddressPayload) {
+    const resp = await fetcher.get<GetBakeryAddressResponse>('/bakeries/location', { params: { address } });
+    return resp.data;
   }
 
   async getList({ page, name, filterBy }: GetBakeriesPayload) {

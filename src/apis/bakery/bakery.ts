@@ -7,6 +7,7 @@ import {
   DeleteBakeryMenuReportPayload,
   DeleteBakeryNewReviewPayload,
   GetBakeriesPayload,
+  GetBakeryAddressPayload,
   GetBakeryImageMenuBarPayload,
   GetBakeryImagePayload,
   GetBakeryInfoUpdateRequestsPayload,
@@ -31,6 +32,10 @@ export class Bakery {
 
   async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {
     await this.client.updateItem({ bakeryId, payload });
+  }
+
+  async searchAddress({ address }: GetBakeryAddressPayload) {
+    return await this.client.searchAddress({ address });
   }
 
   async getList({ page, name, filterBy }: GetBakeriesPayload) {

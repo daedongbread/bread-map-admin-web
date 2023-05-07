@@ -17,6 +17,7 @@ type BaseResponse = {
  * 1. 빵집 조회 (GetBakeriesPayload, BakeriesItemEntity, GetBakeriesResponse)
  * 2. 빵집 상세 조회 (BakeryDetailBaseEntity, BakeryDetailEntity, BakeryMenuEntity)
  * 3. 빵집 제보 데이터 -- 대표/메뉴/리뷰이미지, 메뉴제보, 정보수정 -- 신규 등록 여부 조회 (GetBakeryReportNewStatusEntity)
+ * 4. 빵집 위도 경도 조회 (GetBakeryAddressPayload, GetBakeryAddressResponse)
  */
 export type GetBakeriesPayload = {
   name: string | null;
@@ -72,10 +73,15 @@ export type BakeryDetailEntity = BakeryDetailBaseEntity & {
 };
 
 export type GetBakeryReportNewStatusEntity = {
+  // TODO: Response 같은데?
   adminImageIsNew: boolean;
   productAddReportIsNew: boolean;
   bakeryUpdateReportIsNew: boolean;
 };
+
+export type GetBakeryAddressPayload = { address: string };
+
+export type GetBakeryAddressResponse = Pick<BakeryDetailBaseEntity, 'latitude' | 'longitude'>;
 
 /**
  * 빵집 대표/메뉴 이미지
@@ -264,6 +270,7 @@ export interface BakeryApiClient {
   getItem: ({ bakeryId }: { bakeryId: number }) => Promise<BakeryDetailEntity>;
   createItem: ({ payload }: CreateUpdateBakeryPayload) => void;
   updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;
+  searchAddress: ({ address }: GetBakeryAddressPayload) => Promise<GetBakeryAddressResponse>;
   getList: ({ page, name, filterBy }: GetBakeriesPayload) => Promise<{
     bakeries: BakeriesItemEntity[];
     totalCount: number;
