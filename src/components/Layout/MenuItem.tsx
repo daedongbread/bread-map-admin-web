@@ -3,24 +3,26 @@ import styled from '@emotion/styled';
 
 type MenuItemProps = {
   icon: ReactNode;
-  name: string;
+  name?: string;
   active?: boolean;
   noti?: number;
+  iconOnly: boolean;
 };
 
-export const MenuItem = ({ icon, name, active = false, noti = 0 }: MenuItemProps) => {
+export const MenuItem = ({ icon, name, active = false, noti = 0, iconOnly = false }: MenuItemProps) => {
   return (
     <ItemContainer active={active}>
-      <div>
-        {icon}
+      <IconContainer>{icon}</IconContainer>
+      <ItemDetailContainer isIconMode={iconOnly}>
         <span>{name}</span>
         {noti > 0 && <Notification>{noti}</Notification>}
-      </div>
+      </ItemDetailContainer>
     </ItemContainer>
   );
 };
 
 const ItemContainer = styled.li<{ active: boolean }>`
+  display: flex;
   padding: 1.6rem 2.7rem 1.6rem 2.2rem;
   position: relative;
 
@@ -36,7 +38,7 @@ const ItemContainer = styled.li<{ active: boolean }>`
   }
 
   > div {
-    width: 100%;
+    height: 21px;
     display: flex;
     align-items: center;
     color: ${({ theme }) => theme.color.gray900};
@@ -49,10 +51,29 @@ const ItemContainer = styled.li<{ active: boolean }>`
   }
 
   span {
-    margin-left: 2rem;
+    margin-left: 1rem;
     flex: 1;
     color: ${({ active, theme }) => (active ? theme.color.primary500 : theme.color.gray900)};
   }
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  width: 3rem;
+`;
+
+const ItemDetailContainer = styled.div<{ isIconMode: boolean }>`
+  display: flex;
+  align-items: center;
+
+  width: ${({ isIconMode }) => (isIconMode ? '0' : '100%')};
+  opacity: ${({ isIconMode }) => (isIconMode ? '0' : '1')};
+  visibility: ${({ isIconMode }) => (isIconMode ? 'hidden' : 'visible')};
+  transition-property: opacity, visibility;
+  transition-duration: ${({ isIconMode }) => (isIconMode ? '0s' : '0.3s')};
+  transition-timing-function: ease;
+  transition-delay: ${({ isIconMode }) => (isIconMode ? '0s' : '0.1s')};
 `;
 
 const Notification = styled.div`

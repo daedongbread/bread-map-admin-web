@@ -9,6 +9,7 @@ export const mqSize = {
 export const size = {
   fontMd: '1.5rem',
   sidebarWidth: '27rem',
+  minimumSidebarWidth: '6rem',
 };
 
 export const color = {
