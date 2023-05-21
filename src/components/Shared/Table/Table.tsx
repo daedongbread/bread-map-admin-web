@@ -24,11 +24,18 @@ const getPath = (row: TableCell, path: string) => {
 export const Table = ({ headers, rows, event }: TableProps) => {
   const navigate = useNavigate();
 
-  const movePage = (row: TableCell) => {
-    const basePath = event?.move?.basePath;
-    if (!basePath) return;
-    const movePath = getPath(row, basePath);
-    navigate(movePath);
+  const handleClickRow = (row: TableCell) => {
+    // 상세페이지로 이동
+    if (event?.move && event.move.basePath) {
+      const basePath = event.move.basePath;
+      const movePath = getPath(row, basePath);
+      navigate(movePath);
+    } else if (event?.click) {
+      // 빵집제보 - 닉네임이 존재하는 경우, 닉네임을 이용
+      if (row) {
+        event.click.fn(row);
+      }
+    }
   };
 
   return (
@@ -43,7 +50,7 @@ export const Table = ({ headers, rows, event }: TableProps) => {
         </thead>
         <tbody>
           {rows.map((row, idx) => (
-            <Tr data-testid="row" key={`row-${idx}`} onClick={() => movePage(row)}>
+            <Tr data-testid="row" key={`row-${idx}`} onClick={() => handleClickRow(row)}>
               {Object.keys(row).map((key, idx) => (
                 <td key={`td-${key}-${idx}`}>{row[key]}</td>
               ))}

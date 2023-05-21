@@ -3,6 +3,7 @@ import { color } from '@/styles';
 
 export const BAKERY_REPORT_TABLE_HEADERS: TableHeader[] = [
   { key: 'reportId', name: '제보 번호' },
+  { key: 'userId', name: '제보자 ID' },
   { key: 'nickName', name: '제보자' },
   { key: 'bakeryName', name: '빵집 이름' },
   { key: 'location', name: '빵집 위치' },
@@ -23,4 +24,4 @@ export const BAKERY_REPORT_STATUS_OPTIONS: SelectOption[] = [
   { name: '미반영', value: BAKERY_REPORT_STATUS.NotReflect, color: color.red },
 ];
 
-export type BakeryReportStatus = typeof BAKERY_REPORT_STATUS[keyof typeof BAKERY_REPORT_STATUS];
+export type BakeryReportStatus = (typeof BAKERY_REPORT_STATUS)[keyof typeof BAKERY_REPORT_STATUS];

@@ -5,8 +5,11 @@ import { useBakery } from '@/apis/bakery/useBakery';
 import { BakeryForm } from '@/components/BakeryDetail/Form';
 import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { ReportView } from '@/components/BakeryDetail/Report';
+import { ReportModal } from '@/components/BakeryDetail/ReportModal';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
+import { ModalPortal } from '@/components/Shared/Modal';
 import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
+import useModal from '@/hooks/useModal';
 import useSelectBox from '@/hooks/useSelectBox';
 import useTab from '@/hooks/useTab';
 import { useToast } from '@/hooks/useToast';
@@ -35,6 +38,7 @@ export const BakeryDetailPage = () => {
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
   const { tabs: reportTabs, selectTab: selectReportTab, setUpdateStatusTab: setUpdateStatusReportTab } = useTab({ tabData: BAKERY_REPORT_TAB });
   const { addToast } = useToast();
+  const { modalOn, openModal, closeModal } = useModal();
 
   useEffect(() => {
     if (bakery) {
@@ -167,34 +171,46 @@ export const BakeryDetailPage = () => {
   }, []);
 
   return (
-    <Container>
-      <Header>
-        <Button type={'gray'} text={'목록 돌아가기'} btnSize={'small'} onClickBtn={onClickBack} />
-        <SelectBox width={120} isOpen={isOpen} onToggleSelectBox={onToggleSelectBox} triggerComponent={<StatusSelectTrigger selectedOption={selectedOption} />}>
-          {BAKERY_STATUS_OPTIONS.map((option, idx) => (
-            <StatusSelectOption key={idx} active={option.name === selectedOption?.name} option={option} onSelectOption={onSelectBakerysSatusOption} />
-          ))}
-        </SelectBox>
-      </Header>
-      <ScrollViewContainer>
-        <ScrollSection>
-          <BakeryForm />
-        </ScrollSection>
-        {bakeryId && (
+    <>
+      <Container>
+        <Header>
+          <Button type={'gray'} text={'목록 돌아가기'} btnSize={'small'} onClickBtn={onClickBack} />
+          <SelectBox
+            width={120}
+            isOpen={isOpen}
+            onToggleSelectBox={onToggleSelectBox}
+            triggerComponent={<StatusSelectTrigger selectedOption={selectedOption} />}
+          >
+            {BAKERY_STATUS_OPTIONS.map((option, idx) => (
+              <StatusSelectOption key={idx} active={option.name === selectedOption?.name} option={option} onSelectOption={onSelectBakerysSatusOption} />
+            ))}
+          </SelectBox>
+        </Header>
+        <ScrollViewContainer>
           <ScrollSection>
-            <div>
-              <ReportView bakeryId={Number(bakeryId)} tabs={reportTabs} handleSelectReportTab={selectReportTab} />
-            </div>
+            <BakeryForm openModal={openModal} closeModal={closeModal} />
           </ScrollSection>
-        )}
-      </ScrollViewContainer>
-      <BtnSection>
-        <div className="btn_wrapper">
-          <Button type={'reverseOrange'} text={'임시저장'} fontSize={'medium'} btnSize={'medium'} />
-          <Button type={'orange'} text={'저장하기'} fontSize={'medium'} btnSize={'medium'} onClickBtn={onSaveForm} />
-        </div>
-      </BtnSection>
-    </Container>
+          {bakeryId && (
+            <ScrollSection>
+              <div>
+                <ReportView bakeryId={Number(bakeryId)} tabs={reportTabs} handleSelectReportTab={selectReportTab} />
+              </div>
+            </ScrollSection>
+          )}
+        </ScrollViewContainer>
+        <BtnSection>
+          <div className="btn_wrapper">
+            <Button type={'reverseOrange'} text={'임시저장'} fontSize={'medium'} btnSize={'medium'} />
+            <Button type={'orange'} text={'저장하기'} fontSize={'medium'} btnSize={'medium'} onClickBtn={onSaveForm} />
+          </div>
+        </BtnSection>
+      </Container>
+      {modalOn && (
+        <ModalPortal title={'제보 목록'} closeModal={closeModal}>
+          <ReportModal closeModal={closeModal} />
+        </ModalPortal>
+      )}
+    </>
   );
 };
 

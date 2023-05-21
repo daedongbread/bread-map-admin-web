@@ -6,6 +6,7 @@ export type BakeryReportsItemEntity = BakeryReportDetailEntity & {
 };
 
 export type BakeryReportDetailEntity = {
+  userId: number;
   nickName: string;
   bakeryName: string;
   location: string;
