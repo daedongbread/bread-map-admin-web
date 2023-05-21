@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useBakery } from '@/apis';
-import { ReadOnlyInputField } from '@/components/Shared/Input';
+import { Input, ReadOnlyInputField } from '@/components/Shared/Input';
 import { PostcodeSearch } from '@/components/Shared/PostCode';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { changeForm } from '@/store/slices/bakery';
@@ -12,6 +12,7 @@ type Props = {
 };
 
 export const AddressArea = ({ label }: Props) => {
+  // TODO: 상세주소
   const dispatch = useAppDispatch();
   const { bakeryAddressQuery } = useBakery({ bakeryId: 1 });
   const { form } = useAppSelector(selector => selector.bakery);
@@ -40,6 +41,9 @@ export const AddressArea = ({ label }: Props) => {
           <ReadOnlyInputField placeholder={'주소를 검색해주세요.'} content={searchedAddr ? searchedAddr : address} />
           <PostcodeSearch onSearch={onChangeAddr} />
         </div>
+        {/*<div className="detail-addr">*/}
+        {/*  <Input type={'plain'} value={''} placeholder={'상세 주소를 입력해주세요.'} />*/}
+        {/*</div>*/}
         <Cords>
           <div className="item">
             <label>위도</label>
@@ -72,6 +76,10 @@ const Address = styled.div`
     > button {
       width: 100px;
     }
+  }
+
+  .detail-addr {
+    margin-top: 10px;
   }
 `;
 

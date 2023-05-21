@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeryReportsItemEntity, useBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
-import { Header, Loading, Pagination, StatusCell, TableCell, TableLoading } from '@/components/Shared';
+import { Header, Loading, Pagination, TableLoading } from '@/components/Shared';
 import { BAKERY_REPORT_STATUS_OPTIONS, BAKERY_REPORT_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
-import { formatTextToOptionObj } from '@/utils';
+import { formatTextToOptionObj, getBakeryReportTableData } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeryReportsPage = () => {
@@ -76,21 +76,6 @@ export const BakeryReportsPage = () => {
       </Container>
     </>
   );
-};
-
-const getBakeryReportTableData = (contents: BakeryReportsItemEntity[]) => {
-  let rows: TableCell[] = [];
-  if (contents.length > 0) {
-    rows = contents.map(item => {
-      const status = formatTextToOptionObj({ constants: BAKERY_REPORT_STATUS_OPTIONS, targetText: item.status });
-      return {
-        ...item,
-        status: <StatusCell color={status.color} text={status.text} />,
-      };
-    });
-  }
-
-  return { headers: BAKERY_REPORT_TABLE_HEADERS, rows };
 };
 
 const Container = styled.div`

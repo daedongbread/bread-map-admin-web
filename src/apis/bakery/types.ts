@@ -54,6 +54,8 @@ export type BakeryMenuEntity = {
 
 export type BakeryDetailBaseEntity = {
   name: string;
+  pioneerId: number | null;
+  pioneerNickName: string | null;
   image: string | null;
   address: string;
   latitude: number;

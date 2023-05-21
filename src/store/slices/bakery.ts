@@ -30,6 +30,8 @@ const initialProductItem = {
 
 const initialBakeryForm: BakeryForm = {
   name: '',
+  pioneerId: null,
+  pioneerNickName: '',
   image: null,
   address: '',
   latitude: '',
@@ -90,7 +92,11 @@ const bakerySlice = createSlice({
   reducers: {
     changeForm(state, action: PayloadAction<{ name: string; value: string }>) {
       const { name, value } = action.payload;
-      state.form[name as BakeryFormChangeKey] = value;
+
+      state.form = {
+        ...state.form,
+        [name]: value,
+      };
     },
     initializeForm(state) {
       state.form = initialBakeryForm;
