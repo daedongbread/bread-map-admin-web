@@ -15,18 +15,23 @@ export const extractContentsWithType = (bakeryReport: BakeryReportsItemEntity): 
   return contents;
 };
 
-export const getBakeryReportTableData = (contents: BakeryReportsItemEntity[]) => {
+export const getBakeryReportTableData = (contents: BakeryReportsItemEntity[], exceptKey?: string[]) => {
   let rows: TableCell[] = [];
   if (contents.length > 0) {
     rows = contents.map(item => {
       const status = formatTextToOptionObj({ constants: BAKERY_REPORT_STATUS_OPTIONS, targetText: item.status });
-      const { userId, ...exceptUserIdItem } = item;
       return {
         ...item,
         status: <StatusCell color={status.color} text={status.text} />,
       };
     });
   }
+  let headers = BAKERY_REPORT_TABLE_HEADERS;
+  if (exceptKey) {
+    exceptKey.forEach(key => {
+      headers = headers.filter(h => h.key !== key);
+    });
+  }
 
-  return { headers: BAKERY_REPORT_TABLE_HEADERS, rows };
+  return { headers, rows };
 };

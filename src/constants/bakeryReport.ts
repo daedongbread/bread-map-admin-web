@@ -3,7 +3,6 @@ import { color } from '@/styles';
 
 export const BAKERY_REPORT_TABLE_HEADERS: TableHeader[] = [
   { key: 'reportId', name: '제보 번호' },
-  { key: 'userId', name: '제보자 ID' },
   { key: 'nickName', name: '제보자' },
   { key: 'bakeryName', name: '빵집 이름' },
   { key: 'location', name: '빵집 위치' },

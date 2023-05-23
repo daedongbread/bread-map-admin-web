@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Close } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
@@ -13,7 +13,7 @@ export const ModalPortal = ({ title, children, closeModal }: Props) => {
   const domRef = useRef<HTMLElement | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
     if (document) {
       const dom = document.getElementById('modal');
@@ -68,6 +68,7 @@ const ContentContainer = styled.div`
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 3rem;
+  border-radius: 20px;
 `;
 
 const ContentHeader = styled.div`
