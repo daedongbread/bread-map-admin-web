@@ -7,7 +7,10 @@ export type TableCell = Record<string, React.ReactNode | string | number>;
 export type TableClickEvent = (() => void) | ((row: TableCell) => void);
 
 export type TableProps = {
-  headers: TableCell[];
+  headers: {
+    key: string;
+    name: string;
+  }[];
   rows: TableCell[];
   event?: {
     hover?: {

@@ -24,7 +24,7 @@ export const ReportModal = ({ closeModal }: Props) => {
 
   const { bakeryReportsQuery } = useBakeryReports();
   const { data, isLoading, isFetching } = bakeryReportsQuery({ page: currPage });
-  const bakeryReportData = getBakeryReportTableData(data?.bakeryReports || []);
+  const bakeryReportData = getBakeryReportTableData(data?.bakeryReports || [], ['content']);
 
   const bakeryReportsRow = data?.bakeryReports?.map(report => ({
     ...report,
@@ -41,19 +41,6 @@ export const ReportModal = ({ closeModal }: Props) => {
     data && changeTotalPageCount(data);
   }, [data]);
 
-  const setPageAndNavigateWithArgs = (callback: (page: number) => void) => (page: number) => {
-    // const path = getPagePath(page);
-    // navigate(path);
-
-    callback(page);
-  };
-
-  const setPageAndNavigateWithoutArgs = (callback: () => number) => () => {
-    // const page = callback();
-    // const path = getPagePath(page);
-    // navigate(path);
-  };
-
   const havePrevData = !!bakeryReportsRow?.length;
   const loading = isLoading || isFetching;
 
@@ -64,7 +51,6 @@ export const ReportModal = ({ closeModal }: Props) => {
     click: {
       on: true,
       fn: (row: TableCell) => {
-        // TODO:
         onClickReportItem(row);
         closeModal();
       },
@@ -73,22 +59,22 @@ export const ReportModal = ({ closeModal }: Props) => {
 
   return (
     <div>
-      <Loading havePrevData={havePrevData} isLoading={loading} loadingComponent={<TableLoading headers={BAKERY_REPORT_TABLE_HEADERS} />}>
+      <Loading
+        havePrevData={havePrevData}
+        isLoading={loading}
+        loadingComponent={<TableLoading headers={BAKERY_REPORT_TABLE_HEADERS.filter(h => h.key !== 'content')} />}
+      >
         <Table headers={bakeryReportData.headers} rows={bakeryReportData.rows} event={event} />
       </Loading>
       <Pagination
         pages={pages}
         currPage={currPage}
-        onClickPage={setPageAndNavigateWithArgs(onGetPage)}
-        onClickNext={setPageAndNavigateWithoutArgs(onGetNextPage)}
-        onClickPrev={setPageAndNavigateWithoutArgs(onGetPrevPage)}
-        onClickEnd={setPageAndNavigateWithoutArgs(onGetEndPage)}
-        onClickStart={setPageAndNavigateWithoutArgs(onGetStartPage)}
+        onClickPage={onGetPage}
+        onClickNext={onGetNextPage}
+        onClickPrev={onGetPrevPage}
+        onClickEnd={onGetEndPage}
+        onClickStart={onGetStartPage}
       />
     </div>
   );
 };
-//
-// export const BakeryReportsTable = ({ headers, rows }: TableProps) => {
-//   return <Table headers={headers} rows={rows} event={event} />;
-// };

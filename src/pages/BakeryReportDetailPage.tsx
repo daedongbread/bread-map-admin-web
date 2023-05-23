@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
 import { useBakeryReport } from '@/apis';
 import { Report } from '@/components/BakeryReportDetail';
 import { Button, SelectBox, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
@@ -36,7 +35,17 @@ export const BakeryReportDetailPage = () => {
   };
 
   const onClickAddBakery = () => {
-    navigate(`${PATH.Bakeries}/new`);
+    let params: Record<string, string | number> | null = null;
+    if (bakeryReport) {
+      const { bakeryName, nickName, userId } = bakeryReport;
+      params = {
+        name: bakeryName,
+        pioneerNickName: nickName,
+        pioneerId: userId,
+      };
+    }
+
+    navigate(`${PATH.Bakeries}/new`, { state: params });
   };
 
   const onSaveForm = () => {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { BakerySns } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
 import { BakeryForm } from '@/components/BakeryDetail/Form';
@@ -14,7 +14,16 @@ import useSelectBox from '@/hooks/useSelectBox';
 import useTab from '@/hooks/useTab';
 import { useToast } from '@/hooks/useToast';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { BakeryForm as BakeryFormType, changeBakeryImg, changeBakeryStatus, initializeForm, ProductItem, setForm, setLinks } from '@/store/slices/bakery';
+import {
+  BakeryForm as BakeryFormType,
+  changeBakeryImg,
+  changeBakeryStatus,
+  changeForm,
+  initializeForm,
+  ProductItem,
+  setForm,
+  setLinks,
+} from '@/store/slices/bakery';
 import { urlToFile } from '@/utils';
 import { validateForm } from '@/utils/bakery';
 import styled from '@emotion/styled';
@@ -22,6 +31,7 @@ import styled from '@emotion/styled';
 export const BakeryDetailPage = () => {
   const { bakeryId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useAppDispatch();
 
   const {
@@ -60,6 +70,14 @@ export const BakeryDetailPage = () => {
       dispatch(initializeForm());
     }
   }, [bakery]);
+
+  useEffect(() => {
+    if (location.state) {
+      Object.keys(location.state).forEach(key => {
+        dispatch(changeForm({ name: key, value: location.state[key] }));
+      });
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (!bakeryReportNewStatus) {
