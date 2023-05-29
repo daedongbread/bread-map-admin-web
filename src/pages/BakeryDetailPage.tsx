@@ -165,9 +165,11 @@ export const BakeryDetailPage = () => {
     addBakery.mutate(
       { payload },
       {
-        onSuccess: () => {
+        onSuccess: data => {
           addToast('빵집 등록을 완료했습니다.', 'error', 3000);
-          // navigate(-1); // TODO: 빵집 상세로 넘기기
+          setTimeout(() => {
+            navigate(`/bakeries/${data.bakeryId}`);
+          }, 1300);
         },
       }
     );

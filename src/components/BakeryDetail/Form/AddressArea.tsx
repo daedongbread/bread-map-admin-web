@@ -9,14 +9,15 @@ import styled from '@emotion/styled';
 
 type Props = {
   label: string;
+  onChangeForm: (payload: { name: string; value: string }) => void;
 };
 
-export const AddressArea = ({ label }: Props) => {
+export const AddressArea = ({ label, onChangeForm }: Props) => {
   // TODO: 상세주소
   const dispatch = useAppDispatch();
   const { bakeryAddressQuery } = useBakery({ bakeryId: 1 });
   const { form } = useAppSelector(selector => selector.bakery);
-  const { address } = form;
+  const { address, detailedAddress } = form;
 
   const [searchedAddr, setSearchedAddr] = useState('');
   const { data } = bakeryAddressQuery({ address: searchedAddr });
@@ -41,9 +42,14 @@ export const AddressArea = ({ label }: Props) => {
           <ReadOnlyInputField placeholder={'주소를 검색해주세요.'} content={searchedAddr ? searchedAddr : address} />
           <PostcodeSearch onSearch={onChangeAddr} />
         </div>
-        {/*<div className="detail-addr">*/}
-        {/*  <Input type={'plain'} value={''} placeholder={'상세 주소를 입력해주세요.'} />*/}
-        {/*</div>*/}
+        <div className="detail-addr">
+          <Input
+            type={'plain'}
+            value={detailedAddress || ''}
+            placeholder={'상세 주소를 입력해주세요.'}
+            onChangeInput={e => onChangeForm({ name: 'detailedAddress', value: e.target.value })}
+          />
+        </div>
         <Cords>
           <div className="item">
             <label>위도</label>

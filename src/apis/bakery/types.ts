@@ -18,11 +18,16 @@ type BaseResponse = {
  * 2. 빵집 상세 조회 (BakeryDetailBaseEntity, BakeryDetailEntity, BakeryMenuEntity)
  * 3. 빵집 제보 데이터 -- 대표/메뉴/리뷰이미지, 메뉴제보, 정보수정 -- 신규 등록 여부 조회 (GetBakeryReportNewStatusEntity)
  * 4. 빵집 위도 경도 조회 (GetBakeryAddressPayload, GetBakeryAddressResponse)
+ * 5. 빵집 생성 (CreateUpdateBakeryPayload, CreateBakeryResponse)
  */
 export type GetBakeriesPayload = {
   name: string | null;
   page: number;
   filterBy: string;
+};
+
+export type GetBakeriesResponse = BaseResponse & {
+  contents: BakeriesItemEntity[];
 };
 
 export type BakeriesItemEntity = {
@@ -37,13 +42,14 @@ export type BakeriesItemEntity = {
   status: BakeryStatus;
 };
 
-export type GetBakeriesResponse = BaseResponse & {
-  contents: BakeriesItemEntity[];
-};
-
 export type CreateUpdateBakeryPayload = {
   payload: BakeryForm;
 };
+
+export type CreateBakeryResponse = {
+  bakeryId: number;
+};
+
 export type BakeryMenuEntity = {
   productId: number;
   productType: string;
@@ -58,6 +64,7 @@ export type BakeryDetailBaseEntity = {
   pioneerNickName: string | null;
   image: string | null;
   address: string;
+  detailedAddress: string;
   latitude: number;
   longitude: number;
   hours: string | null;
@@ -270,7 +277,7 @@ export type UpdateBakeryNewReviewImagesPayload = {
 
 export interface BakeryApiClient {
   getItem: ({ bakeryId }: { bakeryId: number }) => Promise<BakeryDetailEntity>;
-  createItem: ({ payload }: CreateUpdateBakeryPayload) => void;
+  createItem: ({ payload }: CreateUpdateBakeryPayload) => Promise<CreateBakeryResponse>;
   updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;
   searchAddress: ({ address }: GetBakeryAddressPayload) => Promise<GetBakeryAddressResponse>;
   getList: ({ page, name, filterBy }: GetBakeriesPayload) => Promise<{
