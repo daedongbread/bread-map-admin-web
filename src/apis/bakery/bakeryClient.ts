@@ -2,6 +2,7 @@ import {
   BakeryApiClient,
   BakeryDetailEntity,
   CompleteBakeryInfoUpdateRequestPayload,
+  CreateBakeryResponse,
   CreateUpdateBakeryPayload,
   DeleteBakeryImagePayload,
   DeleteBakeryInfoUpdateRequestPayload,
@@ -37,7 +38,8 @@ export class BakeryClient implements BakeryApiClient {
   }
 
   async createItem({ payload }: CreateUpdateBakeryPayload) {
-    await fetcher.post('bakeries', payload);
+    const resp = await fetcher.post<CreateBakeryResponse>('bakeries', payload);
+    return resp.data;
   }
 
   async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {
@@ -51,7 +53,8 @@ export class BakeryClient implements BakeryApiClient {
 
   async getList({ page, name, filterBy }: GetBakeriesPayload) {
     const resp = await fetcher.get<GetBakeriesResponse>(`/bakeries`, { params: { page, name, filterBy } });
-    return { bakeries: resp.data.contents, totalCount: resp.data.totalElements, totalPages: resp.data.totalPages };
+    const { contents, totalElements, totalPages } = resp.data;
+    return { bakeries: contents, totalCount: totalElements, totalPages };
   }
 
   async getBakeryReportNewStatus({ bakeryId }: { bakeryId: number }) {
@@ -61,10 +64,11 @@ export class BakeryClient implements BakeryApiClient {
 
   async getImageList({ bakeryId, imageType, page }: GetBakeryImagePayload) {
     const resp = await fetcher.get<GetBakeryImageResponse>(`/bakeries/${bakeryId}/images/${imageType}`, { params: { page } });
+    const { contents, totalElements, totalPages } = resp.data;
     return {
-      images: resp.data.contents,
-      totalCount: resp.data.totalElements,
-      totalPages: resp.data.totalPages,
+      images: contents,
+      totalCount: totalElements,
+      totalPages,
     };
   }
 
@@ -85,10 +89,11 @@ export class BakeryClient implements BakeryApiClient {
 
   async getBakeryMenuReportList({ bakeryId, page }: GetBakeryMenuReportPayload) {
     const resp = await fetcher.get<GetBakeryMenuReportsResponse>(`/bakeries/${bakeryId}/product-add-reports`, { params: { page } });
+    const { contents, totalElements, totalPages } = resp.data;
     return {
-      menuReports: resp.data.contents,
-      totalCount: resp.data.totalElements,
-      totalPages: resp.data.totalPages,
+      menuReports: contents,
+      totalCount: totalElements,
+      totalPages,
     };
   }
 
@@ -102,10 +107,11 @@ export class BakeryClient implements BakeryApiClient {
 
   async getBakeryInfoUpdateRequests({ bakeryId, page }: GetBakeryInfoUpdateRequestsPayload) {
     const resp = await fetcher.get<GetBakeryInfoUpdateRequestsResponse>(`/bakeries/${bakeryId}/update-reports`, { params: { page } });
+    const { contents, totalElements, totalPages } = resp.data;
     return {
-      bakeryInfoUpdateRequests: resp.data.contents,
-      totalCount: resp.data.totalElements,
-      totalPages: resp.data.totalPages,
+      bakeryInfoUpdateRequests: contents,
+      totalCount: totalElements,
+      totalPages,
     };
   }
 
@@ -119,10 +125,11 @@ export class BakeryClient implements BakeryApiClient {
 
   async getBakeryNewReviewList({ bakeryId, page }: GetBakeryNewReviewsPayload) {
     const resp = await fetcher.get<GetBakeryNewReviewsResponse>(`/bakeries/${bakeryId}/new-reviews`, { params: { page } });
+    const { contents, totalElements, totalPages } = resp.data;
     return {
-      bakeryNewReviews: resp.data.contents,
-      totalCount: resp.data.totalElements,
-      totalPages: resp.data.totalPages,
+      bakeryNewReviews: contents,
+      totalCount: totalElements,
+      totalPages,
     };
   }
   async updateBakeryNewReviewExposeStatus({ bakeryId, reviewId }: UpdateBakeryNewReviewExposeStatusPayload) {
@@ -137,10 +144,6 @@ export class BakeryClient implements BakeryApiClient {
 
   async getBakeryImageMenuBar({ bakeryId }: GetBakeryImageMenuBarPayload) {
     const resp = await fetcher.get<GetBakeryImageMenuBarResponse>(`/bakeries/${bakeryId}/image-bar`);
-    return {
-      bakeryReportImageNum: resp.data.bakeryReportImageNum,
-      productAddReportImageNum: resp.data.productAddReportImageNum,
-      reviewImageNum: resp.data.reviewImageNum,
-    };
+    return resp.data;
   }
 }

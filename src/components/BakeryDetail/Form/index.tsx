@@ -15,10 +15,10 @@ type Props = {
   closeModal: () => void;
 };
 
-export const BakeryForm = ({ openModal, closeModal }: Props) => {
+export const BakeryForm = ({ openModal }: Props) => {
   const dispatch = useAppDispatch();
   const { form } = useAppSelector(selector => selector.bakery);
-  const { name, pioneerId, pioneerNickName, hours, phoneNumber } = form; // TODO: 빵집 개척자 닉네임을 모르는 형태라, 어떻게할지 고민해야함.
+  const { name, pioneerNickName, hours, phoneNumber } = form; // TODO: 빵집 개척자 닉네임을 모르는 형태라, 어떻게할지 고민해야함.
 
   const onChangeForm = useCallback((payload: { name: string; value: string }) => {
     dispatch(changeForm(payload));
@@ -35,7 +35,7 @@ export const BakeryForm = ({ openModal, closeModal }: Props) => {
         onClickSearch={openModal}
       />
       <BakeryImgField label={'대표이미지'} onChangeForm={onChangeForm} />
-      <AddressArea label={'주소'} />
+      <AddressArea label={'주소'} onChangeForm={onChangeForm} />
       <TextField textarea label={'시간'} name={'hours'} value={hours || ''} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} onChangeForm={onChangeForm} />
       <SnsLinkArea label={'홈페이지'} />
       <TextField label={'전화번호'} name={'phoneNumber'} value={phoneNumber || ''} placeholder={'000-000-0000'} onChangeForm={onChangeForm} />

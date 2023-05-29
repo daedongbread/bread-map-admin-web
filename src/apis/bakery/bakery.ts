@@ -27,7 +27,7 @@ export class Bakery {
   }
 
   async createItem({ payload }: CreateUpdateBakeryPayload) {
-    await this.client.createItem({ payload });
+    return await this.client.createItem({ payload });
   }
 
   async updateItem({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) {

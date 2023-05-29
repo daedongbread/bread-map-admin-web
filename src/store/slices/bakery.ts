@@ -34,6 +34,7 @@ const initialBakeryForm: BakeryForm = {
   pioneerNickName: '',
   image: null,
   address: '',
+  detailedAddress: '',
   latitude: '',
   longitude: '',
   hours: '',
