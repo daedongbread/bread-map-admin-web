@@ -1,11 +1,11 @@
 import React from 'react';
 import { BakerySns } from '@/apis';
+import { SnsLinkItem } from '@/components/BakeryDetail/Form/SnsLinkItem';
 import { Button } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { addLink, changeLinkValue, removeLink, selectLinkOption, setLinks, toggleLinkOption } from '@/store/slices/bakery';
+import { addLink, changeLinkValue, closeAllLinkOption, removeLink, selectLinkOption, setLinks, toggleLinkOption } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
-import SnsLinkItem from './SnsLinkItem';
 
 export type Option = {
   name: string;
@@ -24,6 +24,10 @@ type Props = {
 export const SnsLinkArea = ({ label }: Props) => {
   const dispatch = useAppDispatch();
   const { formLinks: snsLinks, openedSnsLinkIdx } = useAppSelector(selector => selector.bakery);
+
+  const onCloseAllLinkOption = () => {
+    dispatch(closeAllLinkOption());
+  };
 
   const onToggleLinkOption = (currIdx: number) => {
     dispatch(toggleLinkOption({ currIdx }));
@@ -62,6 +66,7 @@ export const SnsLinkArea = ({ label }: Props) => {
                   link={link}
                   opened={openedSnsLinkIdx === idx}
                   options={LINK_OPTIONS}
+                  onCloseAllLinkOption={onCloseAllLinkOption}
                   onToggleLinkOption={onToggleLinkOption}
                   onSelectLinkOption={onSelectLinkOption}
                   onChangeLinkValue={onChangeLinkValue}

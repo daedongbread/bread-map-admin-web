@@ -42,10 +42,9 @@ export const BakeryDetailPage = () => {
     uploadImage,
   } = useBakery({ bakeryId: Number(bakeryId) });
 
-  // TODO: opened state를 리덕스에 저장하면 안될거같은데..? 왜있지?
-  const { form, formLinks, openedSnsLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
+  const { form } = useAppSelector(selector => selector.bakery);
 
-  const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
+  const { isOpen, selectedOption, onToggleSelectBox, onCloseSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
   const { tabs: reportTabs, selectTab: selectReportTab, setUpdateStatusTab: setUpdateStatusReportTab } = useTab({ tabData: BAKERY_REPORT_TAB });
   const { addToast } = useToast();
   const { modalOn, openModal, closeModal } = useModal();
@@ -198,6 +197,7 @@ export const BakeryDetailPage = () => {
           <SelectBox
             width={120}
             isOpen={isOpen}
+            onCloseSelectBox={onCloseSelectBox}
             onToggleSelectBox={onToggleSelectBox}
             triggerComponent={<StatusSelectTrigger selectedOption={selectedOption} />}
           >

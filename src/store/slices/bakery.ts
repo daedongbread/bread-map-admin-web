@@ -72,7 +72,7 @@ interface BakeryState {
   error: boolean;
   form: BakeryForm;
   formLinks: SnsLink[];
-  openedSnsLinkIdx: number | null;
+  openedSnsLinkIdx: number | null; // TODO: opened selectbox id로 하나만 가지고있으면 좋을듯?
   openedMenuTypeIdx: number | null;
   currentImageUploader: ImageUploaderInfo | null;
 }
@@ -115,14 +115,14 @@ const bakerySlice = createSlice({
       const { imgPreview } = action.payload;
       state.form.image = imgPreview;
     },
+    closeAllLinkOption(state) {
+      // state.openedSelectBoxId = null;
+      state.openedSnsLinkIdx = null;
+    },
     toggleLinkOption(state, action: PayloadAction<{ currIdx: number }>) {
       const { openedSnsLinkIdx } = state;
       const { currIdx } = action.payload;
-      if (currIdx === openedSnsLinkIdx) {
-        state.openedSnsLinkIdx = null;
-      } else {
-        state.openedSnsLinkIdx = currIdx;
-      }
+      state.openedSnsLinkIdx = currIdx === openedSnsLinkIdx ? null : currIdx;
     },
     selectLinkOption(state, action: PayloadAction<{ currIdx: number; optionValue: SelectOption['value']; linkValue: string }>) {
       // 중복 선택 안되도록 구현필요
@@ -163,14 +163,13 @@ const bakerySlice = createSlice({
       const list = state.form.facilityInfoList;
       list.includes(value) ? (state.form.facilityInfoList = list.filter(item => item !== value)) : state.form.facilityInfoList.push(value);
     },
+    closeMenuTypeOption(state) {
+      state.openedMenuTypeIdx = null;
+    },
     toggleMenuTypeOption(state, action: PayloadAction<{ currIdx: number }>) {
       const { openedMenuTypeIdx } = state;
       const { currIdx } = action.payload;
-      if (currIdx === openedMenuTypeIdx) {
-        state.openedMenuTypeIdx = null;
-      } else {
-        state.openedMenuTypeIdx = currIdx;
-      }
+      state.openedMenuTypeIdx = currIdx === openedMenuTypeIdx ? null : currIdx;
     },
     selectMenuTypeOption(state, action: PayloadAction<{ currIdx: number; optionValue: SelectOption['value'] }>) {
       // 동작이 되는가?
@@ -208,6 +207,7 @@ export const {
   setForm,
   changeBakeryStatus,
   changeBakeryImg,
+  closeAllLinkOption,
   toggleLinkOption,
   selectLinkOption,
   changeLinkValue,
@@ -215,6 +215,7 @@ export const {
   removeLink,
   addLink,
   toggleFacility,
+  closeMenuTypeOption,
   toggleMenuTypeOption,
   selectMenuTypeOption,
   changeMenuInput,
