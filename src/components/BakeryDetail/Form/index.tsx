@@ -18,7 +18,7 @@ type Props = {
 export const BakeryForm = ({ openModal }: Props) => {
   const dispatch = useAppDispatch();
   const { form } = useAppSelector(selector => selector.bakery);
-  const { name, pioneerNickName, hours, phoneNumber } = form; // TODO: 빵집 개척자 닉네임을 모르는 형태라, 어떻게할지 고민해야함.
+  const { name, pioneerNickName, hours, phoneNumber } = form;
 
   const onChangeForm = useCallback((payload: { name: string; value: string }) => {
     dispatch(changeForm(payload));

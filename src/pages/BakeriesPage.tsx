@@ -7,7 +7,7 @@ import { AlarmCell } from '@/components/Shared/Table/Cell/AlarmCell';
 import { BAKERY_ALARM_OPTIONS, BAKERY_STATUS_OPTIONS, BAKERY_TABLE_HEADERS, PATH } from '@/constants';
 import usePagination from '@/hooks/usePagination';
 import usePrevious from '@/hooks/usePrevious';
-import { formatTextToOAlarmArr, formatTextToOptionObj } from '@/utils';
+import { formatTextToOAlarmArr, formatTextToOptionObj, isNumber } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeriesPage = () => {
@@ -28,8 +28,9 @@ export const BakeriesPage = () => {
   const prevKeyword = usePrevious(searchParams.get('keyword'));
 
   const changeTotalPageCount = (data?: { bakeries: BakeriesItemEntity[]; totalCount: number; totalPages: number }) => {
-    if (data && data.totalPages) {
-      onChangeTotalPageCount(data.totalPages);
+    if (data && isNumber(data.totalPages)) {
+      const isEmptyResult = data.totalPages === 0;
+      onChangeTotalPageCount(isEmptyResult ? 1 : data.totalPages);
     }
   };
 

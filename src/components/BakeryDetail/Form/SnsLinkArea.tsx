@@ -3,7 +3,7 @@ import { BakerySns } from '@/apis';
 import { SnsLinkItem } from '@/components/BakeryDetail/Form/SnsLinkItem';
 import { Button } from '@/components/Shared';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { addLink, changeLinkValue, closeAllLinkOption, removeLink, selectLinkOption, setLinks, toggleLinkOption } from '@/store/slices/bakery';
+import { addLink, changeLinkValue, closeAllLinkOption, removeLink, selectLinkOption, toggleLinkOption } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
 
@@ -39,10 +39,6 @@ export const SnsLinkArea = ({ label }: Props) => {
 
   const onChangeLinkValue = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
     dispatch(changeLinkValue(payload));
-  };
-
-  const onSetLinks = (links: SnsLink[]) => {
-    dispatch(setLinks({ links }));
   };
 
   const onRemoveLink = (currIdx: number) => {

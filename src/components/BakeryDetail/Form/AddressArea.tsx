@@ -13,7 +13,6 @@ type Props = {
 };
 
 export const AddressArea = ({ label, onChangeForm }: Props) => {
-  // TODO: 상세주소
   const dispatch = useAppDispatch();
   const { bakeryAddressQuery } = useBakery({ bakeryId: 1 });
   const { form } = useAppSelector(selector => selector.bakery);
