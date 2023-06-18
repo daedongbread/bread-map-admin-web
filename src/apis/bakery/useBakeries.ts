@@ -15,5 +15,11 @@ export const useBakeries = () => {
     });
   };
 
-  return { bakeriesQuery };
+  const bakeriesAlarmCountQuery = () => {
+    return useQuery(['getBakeriesAlarmCount'], () => bakery.getAlarmCount(), {
+      staleTime: 60 * 3 * 1000,
+    });
+  };
+
+  return { bakeriesQuery, bakeriesAlarmCountQuery };
 };

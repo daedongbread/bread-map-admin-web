@@ -14,12 +14,17 @@ type BaseResponse = {
 
 /**
  * 빵집 관리
- * 1. 빵집 조회 (GetBakeriesPayload, BakeriesItemEntity, GetBakeriesResponse)
- * 2. 빵집 상세 조회 (BakeryDetailBaseEntity, BakeryDetailEntity, BakeryMenuEntity)
- * 3. 빵집 제보 데이터 -- 대표/메뉴/리뷰이미지, 메뉴제보, 정보수정 -- 신규 등록 여부 조회 (GetBakeryReportNewStatusEntity)
- * 4. 빵집 위도 경도 조회 (GetBakeryAddressPayload, GetBakeryAddressResponse)
- * 5. 빵집 생성 (CreateUpdateBakeryPayload, CreateBakeryResponse)
+ * 1. 빵집 미확인 알람 조회 (BakeryAlarmCountEntity)
+ * 2. 빵집 조회 (GetBakeriesPayload, BakeriesItemEntity, GetBakeriesResponse)
+ * 3. 빵집 상세 조회 (BakeryDetailBaseEntity, BakeryDetailEntity, BakeryMenuEntity)
+ * 4. 빵집 제보 데이터 -- 대표/메뉴/리뷰이미지, 메뉴제보, 정보수정 -- 신규 등록 여부 조회 (GetBakeryReportNewStatusEntity)
+ * 5. 빵집 위도 경도 조회 (GetBakeryAddressPayload, GetBakeryAddressResponse)
+ * 6. 빵집 생성 (CreateUpdateBakeryPayload, CreateBakeryResponse)
  */
+export type BakeryAlarmCountEntity = {
+  newAlarmNum: number;
+};
+
 export type GetBakeriesPayload = {
   name: string | null;
   page: number;
@@ -276,6 +281,7 @@ export type UpdateBakeryNewReviewImagesPayload = {
 };
 
 export interface BakeryApiClient {
+  getAlarmCount: () => Promise<BakeryAlarmCountEntity>;
   getItem: ({ bakeryId }: { bakeryId: number }) => Promise<BakeryDetailEntity>;
   createItem: ({ payload }: CreateUpdateBakeryPayload) => Promise<CreateBakeryResponse>;
   updateItem: ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => void;

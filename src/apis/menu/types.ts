@@ -1,5 +1,5 @@
 export type MenuCountEntity = {
-  bakeryReportCount: number;
+  bakeryAddReportCount: number;
   bakeryCount: number;
   reviewReportCount: number;
 };

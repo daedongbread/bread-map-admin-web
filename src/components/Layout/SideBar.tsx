@@ -48,7 +48,7 @@ export const SideBar = ({ menuCount, isSideBarOpen, toggleSideBar }: Props) => {
   const getMenuCount = (path: Path) => {
     switch (path) {
       case PATH.BakeryReports:
-        return menuCount?.bakeryReportCount || 0;
+        return menuCount?.bakeryAddReportCount || 0;
       case `${PATH.Bakeries}/all`:
         return menuCount?.bakeryCount || 0;
       case PATH.UserReports:

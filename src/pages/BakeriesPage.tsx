@@ -18,12 +18,13 @@ export const BakeriesPage = () => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
   const [total, setTotal] = useState(0);
 
-  const { bakeriesQuery } = useBakeries();
+  const { bakeriesQuery, bakeriesAlarmCountQuery } = useBakeries();
   const { data, isLoading, isFetching } = bakeriesQuery({
     name: searchParams.get('keyword') || '',
     page: currPage,
     filterBy: searchParams.get('filter') || '',
   });
+  const { data: alarmCount } = bakeriesAlarmCountQuery();
 
   const prevKeyword = usePrevious(searchParams.get('keyword'));
 
@@ -109,6 +110,7 @@ export const BakeriesPage = () => {
           </SearchBarWrapper>
           <BakeryInfoAndFilter
             totalCount={total}
+            alarmCount={alarmCount?.newAlarmNum}
             filter={<BakeryFilter currFilterValue={currFilterValue} onChangeFilter={onChangeFilter} />}
             searchBtn={<Button text={'조회'} type={'orange'} btnSize={'small'} onClickBtn={onSearch} />}
           />

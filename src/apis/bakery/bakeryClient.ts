@@ -1,4 +1,5 @@
 import {
+  BakeryAlarmCountEntity,
   BakeryApiClient,
   BakeryDetailEntity,
   CompleteBakeryInfoUpdateRequestPayload,
@@ -32,6 +33,11 @@ import {
 import { fetcher } from '@/apis/axios';
 
 export class BakeryClient implements BakeryApiClient {
+  async getAlarmCount() {
+    const resp = await fetcher.get<BakeryAlarmCountEntity>(`bakeries/alarm-bar`);
+    return resp.data;
+  }
+
   async getItem({ bakeryId }: { bakeryId: number }) {
     const resp = await fetcher.get<BakeryDetailEntity>(`bakeries/${bakeryId}`);
     return resp.data;
