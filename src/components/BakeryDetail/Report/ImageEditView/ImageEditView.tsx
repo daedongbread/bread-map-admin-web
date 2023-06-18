@@ -126,7 +126,7 @@ export const ImageEditView = ({ bakeryId }: Props) => {
           />
         ))}
       </div>
-      <ReportContentArea isEmpty={data?.images?.length === 0} emptyAreaName={getEmptyName()}>
+      <ReportContentArea isEmpty={isLoading || isFetching || data?.images?.length === 0} emptyAreaName={getEmptyName()}>
         <Gallery images={data?.images ?? []} selectedImage={selectedImage} onChangeImage={onChangeImage} handleDeleteBakeryImage={handleDeleteBakeryImage} />
         <Pagination
           pages={pages}

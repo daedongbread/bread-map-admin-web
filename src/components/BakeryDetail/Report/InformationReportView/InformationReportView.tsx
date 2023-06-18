@@ -34,7 +34,7 @@ export const InformationReportView = ({ bakeryId }: Props) => {
   };
 
   return (
-    <ReportContentArea isEmpty={data?.bakeryInfoUpdateRequests?.length === 0} emptyAreaName={'정보 수정 제보'}>
+    <ReportContentArea isEmpty={isLoading || isFetching || data?.bakeryInfoUpdateRequests?.length === 0} emptyAreaName={'정보 수정 제보'}>
       <>
         <ReportTabTitle title={BAKERY_REPORT_TAB[2].name} count={data?.totalCount || 0} />
         {data?.bakeryInfoUpdateRequests.map((bakeryInfoUpdateRequestEntity, idx) => {
