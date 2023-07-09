@@ -15,11 +15,15 @@ const useSelectBox = (defaultOption?: SelectOption) => {
     setIsOpen(prev => !prev);
   };
 
+  const onCloseSelectBox = () => {
+    setIsOpen(false);
+  };
+
   const onSelectOption = (option: SelectOption | null) => {
     setSelectedOption(option);
   };
 
-  return { isOpen, selectedOption, onToggleSelectBox, onSelectOption };
+  return { isOpen, selectedOption, onToggleSelectBox, onCloseSelectBox, onSelectOption };
   // 두개이상의 selectBox 사용시 selectedOption, onSelectOption만 사용
   // 해당 함수들은 UI 업데이트를 위한 함수들이고, 여러개를 이용하는 경우 상태는 외부에서 따로 관리 필요
 };

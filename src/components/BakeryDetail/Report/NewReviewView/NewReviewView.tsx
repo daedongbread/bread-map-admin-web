@@ -47,7 +47,7 @@ export const NewReviewView = ({ bakeryId }: Props) => {
   };
 
   return (
-    <ReportContentArea isEmpty={data?.bakeryNewReviews?.length === 0} emptyAreaName={'신규 리뷰'}>
+    <ReportContentArea isEmpty={isLoading || isFetching || data?.bakeryNewReviews?.length === 0} emptyAreaName={'신규 리뷰'}>
       <>
         <ReportTabTitle title={BAKERY_REPORT_TAB[3].name} count={data?.totalCount || 0} />
         {data?.bakeryNewReviews.map((newReview, idx) => {

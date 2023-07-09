@@ -29,6 +29,7 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
 
   const bakeryQuery = useQuery(['bakery', { bakeryId }], () => bakery.getItem({ bakeryId }), {
     enabled: !isNaN(bakeryId),
+    onSuccess: () => queryClient.invalidateQueries(['getBakeriesAlarmCount']),
   });
 
   const addBakery = useMutation((payload: CreateUpdateBakeryPayload) => bakery.createItem(payload), {

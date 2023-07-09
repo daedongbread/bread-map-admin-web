@@ -39,7 +39,7 @@ export const MenuReportView = ({ bakeryId }: Props) => {
   };
 
   return (
-    <ReportContentArea isEmpty={data?.menuReports?.length === 0} emptyAreaName={'메뉴 제보'}>
+    <ReportContentArea isEmpty={isLoading || isFetching || data?.menuReports?.length === 0} emptyAreaName={'메뉴 제보'}>
       <>
         <ReportTabTitle title={BAKERY_REPORT_TAB[1].name} count={data?.totalCount || 0} />
         {data?.menuReports.map((menuReport, idx) => {

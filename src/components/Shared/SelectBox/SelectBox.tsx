@@ -1,18 +1,21 @@
 import React from 'react';
+import useOnClickOutside from '@/hooks/useClickOutside';
 import styled from '@emotion/styled';
 
 export type SelectBoxProps = {
   width?: number;
   isOpen: boolean;
+  onCloseSelectBox: () => void;
   onToggleSelectBox: () => void;
   triggerComponent: JSX.Element;
   children: React.ReactNode;
 };
 
 // useSelectBox랑 이용
-export const SelectBox = ({ width, isOpen, onToggleSelectBox, triggerComponent, children }: SelectBoxProps) => {
+export const SelectBox = ({ width, isOpen, onCloseSelectBox, onToggleSelectBox, triggerComponent, children }: SelectBoxProps) => {
+  const { containerRef } = useOnClickOutside(isOpen, onCloseSelectBox);
   return (
-    <ContainerWrapper onClick={onToggleSelectBox} width={width}>
+    <ContainerWrapper ref={containerRef} onClick={onToggleSelectBox} width={width}>
       <Container>
         {triggerComponent}
         <SelectOptions isOpen={isOpen}>{children}</SelectOptions>

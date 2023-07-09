@@ -3,22 +3,22 @@ import styled from '@emotion/styled';
 
 type Props = {
   totalCount: number;
+  alarmCount?: number;
   filter: ReactNode;
   searchBtn: ReactNode;
 };
 
-export const BakeryInfoAndFilter = ({ totalCount, filter, searchBtn }: Props) => {
+export const BakeryInfoAndFilter = ({ totalCount, alarmCount, filter, searchBtn }: Props) => {
   return (
     <Container>
       <Total>
         <div>총 등록 빵집</div>
-        <div>{totalCount.toLocaleString()}</div>
+        <div>{totalCount?.toLocaleString() || 0}</div>
       </Total>
       <FilterContainer>
         <div className="count">
           <div>미확인 알람</div>
-          <div>준비중</div>
-          {/*   TODO: 미확인 알람 갯수 어떻게 가져올지? */}
+          <div>{alarmCount?.toLocaleString() || 0}</div>
         </div>
         {filter}
         {searchBtn}

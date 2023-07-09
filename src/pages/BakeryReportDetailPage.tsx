@@ -18,7 +18,7 @@ export const BakeryReportDetailPage = () => {
     editBakeryReportStatus,
   } = useBakeryReport({ reportId: Number(reportId) });
 
-  const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox();
+  const { isOpen, selectedOption, onToggleSelectBox, onCloseSelectBox, onSelectOption } = useSelectBox();
 
   useEffect(() => {
     if (bakeryReport) {
@@ -78,6 +78,7 @@ export const BakeryReportDetailPage = () => {
               <SelectBox
                 width={120}
                 isOpen={isOpen}
+                onCloseSelectBox={onCloseSelectBox}
                 onToggleSelectBox={onToggleSelectBox}
                 triggerComponent={<StatusSelectTrigger selectedOption={selectedOption} />}
               >

@@ -9,13 +9,24 @@ type Props = {
   link: SnsLink;
   opened: boolean;
   options: Option[];
+  onCloseAllLinkOption: () => void;
   onToggleLinkOption: (currIdx: number) => void;
   onSelectLinkOption: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
   onChangeLinkValue: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
   onRemoveLink: (currIdx: number) => void;
 };
 
-const SnsLinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectLinkOption, onChangeLinkValue, onRemoveLink }: Props) => {
+export const SnsLinkItem = ({
+  idx,
+  link,
+  opened,
+  options,
+  onCloseAllLinkOption,
+  onToggleLinkOption,
+  onSelectLinkOption,
+  onChangeLinkValue,
+  onRemoveLink,
+}: Props) => {
   const { selectedOption, onSelectOption } = useSelectBox();
 
   const onSelectLink = (option: SelectOption | null) => {
@@ -32,11 +43,7 @@ const SnsLinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectL
 
   useEffect(() => {
     const option = options.find(option => option.value === link.key);
-    if (!option) {
-      onSelectOption(null);
-    } else {
-      onSelectOption(option);
-    }
+    onSelectOption(option ? option : null);
   }, [link]);
 
   return (
@@ -44,6 +51,7 @@ const SnsLinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectL
       <SelectBox
         width={130}
         isOpen={opened}
+        onCloseSelectBox={onCloseAllLinkOption}
         onToggleSelectBox={() => onToggleLinkOption(idx)}
         triggerComponent={<BasicSelectTrigger selectedOption={selectedOption} />}
       >
@@ -56,5 +64,3 @@ const SnsLinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectL
     </>
   );
 };
-
-export default SnsLinkItem;

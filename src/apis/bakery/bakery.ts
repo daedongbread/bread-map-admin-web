@@ -22,6 +22,10 @@ import {
 export class Bakery {
   constructor(public client: BakeryApiClient) {}
 
+  async getAlarmCount() {
+    return await this.client.getAlarmCount();
+  }
+
   async getItem({ bakeryId }: { bakeryId: number }) {
     return await this.client.getItem({ bakeryId });
   }

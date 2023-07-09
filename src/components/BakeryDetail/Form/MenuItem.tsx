@@ -15,6 +15,7 @@ type Props = {
   menu: Omit<BakeryMenuEntity, 'productId'> & { productId?: number };
   productTypes: Option[];
   isOpenMenuType: boolean;
+  onCloseMenuTypeOption: () => void;
   onToggleMenuTypeOption: (currIdx: number) => void;
   onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string }) => void;
   onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
@@ -27,6 +28,7 @@ const MenuItem = ({
   menu,
   productTypes,
   isOpenMenuType,
+  onCloseMenuTypeOption,
   onToggleMenuTypeOption,
   onSelectMenuTypeOption,
   onChangeMenuInput,
@@ -36,12 +38,17 @@ const MenuItem = ({
   const dispatch = useAppDispatch();
   const { bakeryId } = useParams();
   const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
-  const { selectedOption, onSelectOption } = useSelectBox(productTypes.find(type => type.value === menu.productType));
+  const { selectedOption, onSelectOption, onCloseSelectBox } = useSelectBox(productTypes.find(type => type.value === menu.productType));
 
   const onSelectMenuType = (option: SelectOption | null) => {
     if (!option) return;
     onSelectOption(option); // UI 업데이트
     onSelectMenuTypeOption({ currIdx: idx, optionValue: option?.value });
+  };
+
+  const onCloseMenuType = () => {
+    onCloseSelectBox();
+    onCloseMenuTypeOption();
   };
 
   // 생성시에는 이미지 로컬 등록, 수정시에는 Report 컴포넌트에서 수정되도록
@@ -91,6 +98,7 @@ const MenuItem = ({
           <label>종류</label>
           <SelectBox
             isOpen={isOpenMenuType}
+            onCloseSelectBox={onCloseMenuType}
             onToggleSelectBox={() => onToggleMenuTypeOption(idx)}
             triggerComponent={<BasicSelectTrigger selectedOption={selectedOption} />}
           >

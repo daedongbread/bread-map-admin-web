@@ -5,6 +5,7 @@ import {
   addMenu,
   changeCurrentImageUploader,
   changeMenuInput,
+  closeMenuTypeOption,
   ImageUploaderInfo,
   removeMenu,
   selectMenuTypeOption,
@@ -28,6 +29,9 @@ export const MenuArea = ({ label }: Props) => {
 
   const onToggleMenuTypeOption = (currIdx: number) => {
     dispatch(toggleMenuTypeOption({ currIdx }));
+  };
+  const onCloseMenuTypeOption = () => {
+    dispatch(closeMenuTypeOption());
   };
 
   const onSelectMenuTypeOption = ({ currIdx, optionValue }: { currIdx: number; optionValue: string }) => {
@@ -69,6 +73,7 @@ export const MenuArea = ({ label }: Props) => {
             menu={item}
             productTypes={MENU_TYPES}
             isOpenMenuType={openedMenuTypeIdx === idx}
+            onCloseMenuTypeOption={onCloseMenuTypeOption}
             onToggleMenuTypeOption={onToggleMenuTypeOption}
             onSelectMenuTypeOption={onSelectMenuTypeOption}
             onChangeMenuInput={onChangeMenuInput}
