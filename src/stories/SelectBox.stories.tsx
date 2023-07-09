@@ -21,11 +21,12 @@ export default {
 } as ComponentMeta<typeof SelectBox>;
 
 export const BasicSelectBox: ComponentStory<typeof SelectBox> = () => {
-  const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox();
+  const { isOpen, selectedOption, onCloseSelectBox, onToggleSelectBox, onSelectOption } = useSelectBox();
 
   const selectBoxArgs = {
     width: 300,
     isOpen,
+    onCloseSelectBox,
     onToggleSelectBox,
     triggerComponent: <BasicSelectTrigger selectedOption={selectedOption} />,
   };
@@ -40,11 +41,12 @@ export const BasicSelectBox: ComponentStory<typeof SelectBox> = () => {
 };
 
 export const StatusSelectBox: ComponentStory<typeof SelectBox> = () => {
-  const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox();
+  const { isOpen, selectedOption, onCloseSelectBox, onToggleSelectBox, onSelectOption } = useSelectBox();
 
   const selectBoxArgs = {
     width: 300,
     isOpen,
+    onCloseSelectBox,
     onToggleSelectBox,
     triggerComponent: <StatusSelectTrigger selectedOption={selectedOption} />,
   };
