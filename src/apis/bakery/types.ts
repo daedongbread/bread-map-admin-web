@@ -48,7 +48,7 @@ export type BakeriesItemEntity = {
 };
 
 export type CreateUpdateBakeryPayload = {
-  payload: BakeryForm;
+  payload: Omit<BakeryForm, 'pioneerId' | 'pioneerNickName'>;
 };
 
 export type CreateBakeryResponse = {
@@ -67,6 +67,7 @@ export type BakeryDetailBaseEntity = {
   name: string;
   pioneerId: number | null;
   pioneerNickName: string | null;
+  reportId: number | null;
   image: string | null;
   address: string;
   detailedAddress: string;

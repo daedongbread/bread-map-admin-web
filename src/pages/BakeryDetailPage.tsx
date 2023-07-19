@@ -142,13 +142,15 @@ export const BakeryDetailPage = () => {
     if (!validateForm(form)) {
       return;
     }
+    const { pioneerId, pioneerNickName, ...restForm } = form;
 
     if (bakeryId) {
-      onUpdateForm(form);
+      onUpdateForm({ ...restForm });
     } else {
       // 새로 생성하는 경우, 이미지를 새로 업로드한 경우는 이미지 업로드 과정 진행
       const { image, products } = await uploadAllImages();
-      onCreateForm({ ...form, image, productList: products });
+
+      onCreateForm({ ...restForm, image, productList: products });
     }
   };
 
@@ -160,7 +162,7 @@ export const BakeryDetailPage = () => {
     dispatch(changeBakeryStatus({ status: status.value }));
   };
 
-  const onCreateForm = (payload: BakeryFormType) => {
+  const onCreateForm = (payload: Omit<BakeryFormType, 'pioneerId' | 'pioneerNickName'>) => {
     addBakery.mutate(
       { payload },
       {
@@ -174,7 +176,7 @@ export const BakeryDetailPage = () => {
     );
   };
 
-  const onUpdateForm = (payload: BakeryFormType) => {
+  const onUpdateForm = (payload: Omit<BakeryFormType, 'pioneerId' | 'pioneerNickName'>) => {
     editBakery.mutate(
       { bakeryId: Number(bakeryId), payload },
       {
@@ -208,7 +210,7 @@ export const BakeryDetailPage = () => {
         </Header>
         <ScrollViewContainer>
           <ScrollSection>
-            <BakeryForm openModal={openModal} closeModal={closeModal} />
+            <BakeryForm isEdit={Boolean(bakery)} openModal={openModal} closeModal={closeModal} />
           </ScrollSection>
           {bakeryId && (
             <ScrollSection>

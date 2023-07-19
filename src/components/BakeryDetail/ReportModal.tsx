@@ -16,10 +16,11 @@ export const ReportModal = ({ closeModal }: Props) => {
   const { pages, currPage, onChangeTotalPageCount, onGetPage, onGetNextPage, onGetPrevPage, onGetEndPage, onGetStartPage } = usePagination();
 
   const onClickReportItem = (row: TableCell) => {
-    const { userId, nickName } = row;
+    const { userId, nickName, reportId } = row;
 
     dispatch(changeForm({ name: 'pioneerId', value: String(userId) as string }));
     dispatch(changeForm({ name: 'pioneerNickName', value: nickName as string }));
+    dispatch(changeForm({ name: 'reportId', value: reportId as string }));
   };
 
   const { bakeryReportsQuery } = useBakeryReports();

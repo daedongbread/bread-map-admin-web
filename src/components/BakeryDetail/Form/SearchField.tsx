@@ -10,18 +10,32 @@ type Props = {
   placeholder?: string;
   name: string;
   value: string;
+  disabled?: boolean;
   onClickSearch: () => void;
 };
 
-export const SearchField = ({ label, textarea = false, placeholder, name, value, onClickSearch }: Props) => {
+export const SearchField = ({ label, textarea = false, placeholder, name, value, disabled, onClickSearch }: Props) => {
+  const handleChangeInput = () => {
+    // TODO: 삭제
+  };
   return (
     <Row>
       <label>{label}</label>
       <RowContents>
-        <Input disabled={true} name={name} type={'plain'} placeholder={placeholder || ''} textarea={textarea} value={value} />
-        <div className="icon" onClick={onClickSearch}>
-          <Search />
-        </div>
+        <Input
+          disabled={disabled}
+          name={name}
+          type={'plain'}
+          placeholder={placeholder || ''}
+          textarea={textarea}
+          value={value}
+          onChangeInput={handleChangeInput}
+        />
+        {!disabled && (
+          <div className="icon" onClick={onClickSearch}>
+            <Search />
+          </div>
+        )}
       </RowContents>
     </Row>
   );

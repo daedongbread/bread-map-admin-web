@@ -32,6 +32,7 @@ const initialBakeryForm: BakeryForm = {
   name: '',
   pioneerId: null,
   pioneerNickName: '',
+  reportId: null,
   image: null,
   address: '',
   detailedAddress: '',

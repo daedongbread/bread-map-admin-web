@@ -11,11 +11,12 @@ import { changeForm } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
 
 type Props = {
+  isEdit: boolean;
   openModal: () => void;
   closeModal: () => void;
 };
 
-export const BakeryForm = ({ openModal }: Props) => {
+export const BakeryForm = ({ isEdit, openModal }: Props) => {
   const dispatch = useAppDispatch();
   const { form } = useAppSelector(selector => selector.bakery);
   const { name, pioneerNickName, hours, phoneNumber } = form;
@@ -31,6 +32,7 @@ export const BakeryForm = ({ openModal }: Props) => {
         label={'빵집개척자'}
         name={'pioneerNickName'}
         value={pioneerNickName || ''}
+        disabled={isEdit && Boolean(pioneerNickName)}
         placeholder={'빵집개척자를 선택해주세요'}
         onClickSearch={openModal}
       />
