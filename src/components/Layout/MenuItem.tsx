@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import styled from '@emotion/styled';
 
 type MenuItemProps = {
+  isSubItem?: boolean;
   icon: ReactNode;
   name?: string;
   active?: boolean;
@@ -9,9 +10,9 @@ type MenuItemProps = {
   iconOnly: boolean;
 };
 
-export const MenuItem = ({ icon, name, active = false, noti = 0, iconOnly = false }: MenuItemProps) => {
+export const MenuItem = ({ isSubItem = false, icon, name, active = false, noti = 0, iconOnly = false }: MenuItemProps) => {
   return (
-    <ItemContainer active={active}>
+    <ItemContainer isSubItem={isSubItem} active={active}>
       <IconContainer>{icon}</IconContainer>
       <ItemDetailContainer isIconMode={iconOnly}>
         <span>{name}</span>
@@ -21,9 +22,9 @@ export const MenuItem = ({ icon, name, active = false, noti = 0, iconOnly = fals
   );
 };
 
-const ItemContainer = styled.li<{ active: boolean }>`
+const ItemContainer = styled.li<{ isSubItem: boolean; active: boolean }>`
   display: flex;
-  padding: 1.6rem 2.7rem 1.6rem 2.2rem;
+  padding: ${({ isSubItem }) => (isSubItem ? '0.8rem 2.7rem 0.8rem 2.2rem' : '1.6rem 2.7rem 1.6rem 2.2rem')}; // 1.6rem 2.7rem 1.6rem 2.2rem;
   position: relative;
 
   &:before {
@@ -41,11 +42,9 @@ const ItemContainer = styled.li<{ active: boolean }>`
     height: 21px;
     display: flex;
     align-items: center;
-    color: ${({ theme }) => theme.color.gray900};
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: ${({ isSubItem }) => (isSubItem ? '1.2rem' : '1.4rem')};
   }
-
   path {
     stroke: ${({ active, theme }) => (active ? `${theme.color.primary500}` : `${theme.color.gray900}`)};
   }

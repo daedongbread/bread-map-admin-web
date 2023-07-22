@@ -1,3 +1,4 @@
+const HOME_SCREEN = '/home-screen';
 export const PATH = {
   Home: '/',
   Login: '/login',
@@ -5,6 +6,13 @@ export const PATH = {
   BakeryReports: '/bakery-reports',
   Users: '/users',
   UserReports: '/user-reports',
+  HomeScreen: {
+    Main: HOME_SCREEN,
+    Carousel: `${HOME_SCREEN}/carousel`,
+    Ranking: `${HOME_SCREEN}/ranking`,
+    Contents: `${HOME_SCREEN}/contents`,
+    AdminCommunity: `${HOME_SCREEN}/admin-community`,
+  },
 };
 
-export type Path = typeof PATH[keyof typeof PATH];
+export type Path = (typeof PATH)[keyof typeof PATH];

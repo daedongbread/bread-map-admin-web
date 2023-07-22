@@ -20,8 +20,11 @@ export const SideBar = ({ menuCount, isSideBarOpen, toggleSideBar }: Props) => {
   const location = useLocation();
   const { logout } = useLogin();
 
-  const isCurrent = (path: Path) => {
+  const isCurrent = ({ path, isChild = false }: { path: string; isChild?: boolean }) => {
     const url = location.pathname;
+    if (isChild) {
+      return url.includes(path);
+    }
     const midMatchRegex = /(\/[a-zA-Z-]+)(?:\/)?/;
     const currUrlMid = url.match(midMatchRegex);
     const pathMid = path.match(midMatchRegex);
@@ -56,9 +59,35 @@ export const SideBar = ({ menuCount, isSideBarOpen, toggleSideBar }: Props) => {
     }
   };
 
+  const haveSubMenu = (menu: Menu) => {
+    return menu.children && menu.children.length > 0;
+  };
+
   const menuItems = MENUS.map(menu => (
     <MenuLink key={menu.path} to={menu.path}>
-      <MenuItem icon={menu.icon} name={menu.name} noti={getMenuCount(menu.path)} active={isCurrent(menu.path)} iconOnly={!isSideBarOpen} />
+      <MenuItem
+        icon={menu.icon}
+        name={menu.name}
+        noti={getMenuCount(menu.path)}
+        active={!haveSubMenu(menu) && isCurrent({ path: menu.path })}
+        iconOnly={!isSideBarOpen}
+      />
+      {menu.children && (
+        <ul>
+          {menu.children.map(child => (
+            <MenuLink key={child.path} to={child.path}>
+              <MenuItem
+                isSubItem
+                icon={child.icon}
+                name={child.name}
+                noti={0}
+                active={isCurrent({ path: child.path, isChild: true })}
+                iconOnly={!isSideBarOpen}
+              />
+            </MenuLink>
+          ))}
+        </ul>
+      )}
     </MenuLink>
   ));
 
@@ -86,7 +115,15 @@ export const SideBar = ({ menuCount, isSideBarOpen, toggleSideBar }: Props) => {
   );
 };
 
-const MENUS = [
+type Menu = {
+  name: string;
+  path: string;
+  icon: React.ReactNode;
+  noti?: number;
+  children?: Menu[];
+};
+
+const MENUS: Menu[] = [
   {
     name: '신규 빵집제보',
     path: PATH.BakeryReports,
@@ -104,6 +141,34 @@ const MENUS = [
     path: PATH.UserReports,
     icon: <Dislike />,
     noti: 0,
+  },
+  {
+    name: '홈 화면 관리',
+    path: PATH.HomeScreen.Main,
+    icon: <Dislike />,
+    noti: 0,
+    children: [
+      {
+        name: '케러셀 관리',
+        path: PATH.HomeScreen.Carousel,
+        icon: <div></div>,
+      },
+      {
+        name: '랭킹 관리',
+        path: PATH.HomeScreen.Ranking,
+        icon: <div></div>,
+      },
+      {
+        name: '콘텐츠 관리',
+        path: PATH.HomeScreen.Contents,
+        icon: <div></div>,
+      },
+      {
+        name: '관리자용 커뮤니티',
+        path: PATH.HomeScreen.AdminCommunity,
+        icon: <div></div>,
+      },
+    ],
   },
   {
     name: '사용자관리',
@@ -139,7 +204,7 @@ const Container = styled.div`
     }
 
     &:last-of-type {
-      margin-bottom: 3rem;
+      margin-bottom: 1.5rem;
     }
   }
 `;
