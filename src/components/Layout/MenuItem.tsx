@@ -22,7 +22,7 @@ export const MenuItem = ({ isSubItem = false, icon, name, active = false, noti =
   );
 };
 
-const ItemContainer = styled.li<{ isSubItem: boolean; active: boolean }>`
+const ItemContainer = styled.div<{ isSubItem: boolean; active: boolean }>`
   display: flex;
   padding: ${({ isSubItem }) => (isSubItem ? '0.8rem 2.7rem 0.8rem 2.2rem' : '1.6rem 2.7rem 1.6rem 2.2rem')}; // 1.6rem 2.7rem 1.6rem 2.2rem;
   position: relative;

@@ -1,3 +1,10 @@
+import { DatePickerButton } from '@/components/Shared/DatePicker';
+
 export const ContentsPage = () => {
-  return <div>ContentsPage</div>;
+  return (
+    <div>
+      ContentsPage
+      <DatePickerButton />
+    </div>
+  );
 };

@@ -4,6 +4,8 @@ import { Toast, ToastContainer } from '@/components/Shared/Toast';
 import { useToast } from '@/hooks/useToast';
 import { router } from '@/routes';
 
+import 'react-datepicker/dist/react-datepicker.css';
+
 const App = () => {
   const { toasts, addToast, removeToast } = useToast();
 
