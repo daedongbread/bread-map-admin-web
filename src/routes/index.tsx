@@ -14,6 +14,7 @@ import {
   RankingPage,
   ContentsPage,
   AdminCommunityPage,
+  ContentDetailPage,
 } from '@/pages';
 import { loginPageLoader } from '@/routes/loader';
 
@@ -46,6 +47,7 @@ export const router = createBrowserRouter(
           <Route path={PATH.HomeScreen.Carousel} element={<CarouselPage />} />
           <Route path={PATH.HomeScreen.Ranking} element={<RankingPage />} />
           <Route path={PATH.HomeScreen.Contents} element={<ContentsPage />} />
+          <Route path={`${PATH.HomeScreen.Contents}/:contentId`} element={<ContentDetailPage />} />
           <Route path={PATH.HomeScreen.AdminCommunity} element={<AdminCommunityPage />} />
           <Route
             path={PATH.Users}
