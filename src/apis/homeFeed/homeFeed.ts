@@ -19,7 +19,7 @@ import {
   UploadImagePayload,
 } from '@/apis';
 
-export class HomeContent {
+export class HomeFeed {
   constructor(public client: BakeryApiClient) {}
 
   async getAlarmCount() {

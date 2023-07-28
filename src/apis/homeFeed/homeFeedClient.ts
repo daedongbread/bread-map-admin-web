@@ -32,7 +32,7 @@ import {
 } from '@/apis';
 import { fetcher } from '@/apis/axios';
 
-export class HomeContentClient implements BakeryApiClient {
+export class HomeFeedClient implements BakeryApiClient {
   async getAlarmCount() {
     const resp = await fetcher.get<BakeryAlarmCountEntity>(`bakeries/alarm-bar`);
     return resp.data;

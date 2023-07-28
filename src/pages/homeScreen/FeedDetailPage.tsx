@@ -6,6 +6,7 @@ import { BakeryForm } from '@/components/BakeryDetail/Form';
 import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { ReportView } from '@/components/BakeryDetail/Report';
 import { ReportModal } from '@/components/BakeryDetail/ReportModal';
+import { FeedForm } from '@/components/HomeFeedDetail';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { ModalPortal } from '@/components/Shared/Modal';
 import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
@@ -27,9 +28,8 @@ import {
 import { urlToFile } from '@/utils';
 import { validateForm } from '@/utils/bakery';
 import styled from '@emotion/styled';
-import { ContentForm } from '@/components/HomeContentDetail';
 
-export const ContentDetailPage = () => {
+export const FeedDetailPage = () => {
   const { bakeryId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -212,7 +212,7 @@ export const ContentDetailPage = () => {
         </Header>
 
         <ScrollSection>
-          <ContentForm isEdit={Boolean(bakery)} openModal={openModal} closeModal={closeModal} />
+          <FeedForm isEdit={Boolean(bakery)} openModal={openModal} closeModal={closeModal} />
         </ScrollSection>
 
         <BtnSection>

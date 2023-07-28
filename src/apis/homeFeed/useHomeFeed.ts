@@ -19,7 +19,7 @@ import {
 } from '@/apis';
 import { useBakeryApi } from '@/context/bakery';
 
-export const useHomeContent = ({ bakeryId }: { bakeryId: number }) => {
+export const useHomeFeed = ({ bakeryId }: { bakeryId: number }) => {
   const { bakery } = useBakeryApi();
   const queryClient = useQueryClient();
 

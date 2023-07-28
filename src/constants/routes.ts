@@ -10,7 +10,7 @@ export const PATH = {
     Main: HOME_SCREEN,
     Carousel: `${HOME_SCREEN}/carousel`,
     Ranking: `${HOME_SCREEN}/ranking`,
-    Contents: `${HOME_SCREEN}/contents`,
+    Feeds: `${HOME_SCREEN}/feeds`,
     AdminCommunity: `${HOME_SCREEN}/admin-community`,
   },
 };

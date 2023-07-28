@@ -1,6 +1,6 @@
 import { DatePickerButton } from '@/components/Shared/DatePicker';
 
-export const ContentsPage = () => {
+export const FeedsPage = () => {
   return (
     <div>
       ContentsPage
