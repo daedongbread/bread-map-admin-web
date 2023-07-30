@@ -5,18 +5,19 @@ import { ControlInterceptor } from '@/components/Auth/ControlInterceptor';
 import { Error, Header } from '@/components/Shared';
 import { PATH } from '@/constants/routes';
 import {
+  AdminCommunityPage,
   BakeriesPage,
   BakeryDetailPage,
   BakeryReportDetailPage,
   BakeryReportsPage,
-  LoginPage,
   CarouselPage,
-  RankingPage,
-  FeedsPage,
-  AdminCommunityPage,
   FeedDetailPage,
+  FeedsPage,
+  LoginPage,
+  RankingPage,
 } from '@/pages';
 import { loginPageLoader } from '@/routes/loader';
+import { AdminCommunityDetailPage } from '@/pages/homeScreen/AdminCommunityDetailPage';
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,7 +49,9 @@ export const router = createBrowserRouter(
           <Route path={PATH.HomeScreen.Ranking} element={<RankingPage />} />
           <Route path={PATH.HomeScreen.Feeds} element={<FeedsPage />} />
           <Route path={`${PATH.HomeScreen.Feeds}/:feedId`} element={<FeedDetailPage />} />
-          <Route path={PATH.HomeScreen.AdminCommunity} element={<AdminCommunityPage />} />
+          <Route path={`${PATH.HomeScreen.AdminCommunity}/all`} element={<AdminCommunityPage />} />
+          <Route path={`${PATH.HomeScreen.AdminCommunity}/new`} element={<AdminCommunityDetailPage />} />
+          <Route path={`${PATH.HomeScreen.AdminCommunity}/:communityId`} element={<AdminCommunityDetailPage />} />
           <Route
             path={PATH.Users}
             element={

@@ -138,7 +138,7 @@ const MENUS: Menu[] = [
       },
       {
         name: '관리자용 커뮤니티',
-        path: PATH.HomeScreen.AdminCommunity,
+        path: `${PATH.HomeScreen.AdminCommunity}/all`,
         icon: <div></div>,
       },
     ],

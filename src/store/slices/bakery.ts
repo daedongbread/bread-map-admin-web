@@ -1,8 +1,8 @@
 import { BakeryDetailBaseEntity, BakerySns, BakeryStatus } from '@/apis';
 import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { SelectOption } from '@/components/Shared';
-import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export type BakeryForm = Omit<BakeryDetailBaseEntity, 'latitude' | 'longitude'> & {
   latitude: string;

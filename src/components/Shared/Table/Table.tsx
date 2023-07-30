@@ -13,6 +13,9 @@ const getPath = (row: TableCell, path: string) => {
     case PATH.BakeryReports:
       id = row.reportId as number;
       break;
+    case PATH.HomeScreen.AdminCommunity:
+      id = row.managerId as number;
+      break;
     default:
       id = 0;
       break;
