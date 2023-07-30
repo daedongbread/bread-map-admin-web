@@ -23,6 +23,8 @@ export const useBakery = ({ bakeryId }: { bakeryId: number }) => {
   const { bakery } = useBakeryApi();
   const queryClient = useQueryClient();
 
+  // enabled: !isNaN(page) : page가 숫자가 아닐 경우 쿼리를 호출하지 않는다.
+
   if (!bakery) {
     throw new Error('bakeryApi를 확인해주세요.');
   }

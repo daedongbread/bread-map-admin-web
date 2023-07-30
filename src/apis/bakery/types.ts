@@ -1,16 +1,9 @@
+import { BaseResponse } from '@/apis/types';
 import { BakeryForm } from '@/store/slices/bakery';
 
 export type BakeryStatus = 'POSTING' | 'UNPOSTING';
 
 export type BakerySns = 'websiteURL' | 'instagramURL' | 'facebookURL' | 'blogURL';
-
-type BaseResponse = {
-  numberOfElements: number;
-  pageNumber: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-};
 
 /**
  * 빵집 관리
