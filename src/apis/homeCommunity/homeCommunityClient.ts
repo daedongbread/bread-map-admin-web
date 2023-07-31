@@ -6,6 +6,7 @@ import {
   HomeCommunityApiClient,
   HomeCommunityEntity,
 } from '@/apis/homeCommunity/types';
+import { UploadImagePayload, UploadImageResponse } from '@/apis';
 
 export class HomeCommunityClient implements HomeCommunityApiClient {
   async getList(params: GetHomeCommunitiesPayload) {
@@ -25,5 +26,16 @@ export class HomeCommunityClient implements HomeCommunityApiClient {
 
   async update(payload: HomeCommunityEntity) {
     await fetcher.patch(`/posts/${payload.managerId}`, payload);
+  }
+
+  async uploadImage({ payload }: UploadImagePayload) {
+    const resp = await fetcher.post<UploadImageResponse>('images', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return {
+      imagePath: resp.data.imagePath,
+    };
   }
 }

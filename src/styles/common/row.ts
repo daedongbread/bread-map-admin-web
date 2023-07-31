@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 
-export const Row = styled.div<{ alignTop?: boolean }>`
+export const Row = styled.div<{ alignTop?: boolean; spaceBetween?: boolean }>`
   display: flex;
   align-items: ${({ alignTop }) => (alignTop ? 'flex-start' : 'center')};
+  justify-content: ${({ spaceBetween }) => (spaceBetween ? 'space-between' : 'flex-start')};
 
   > label {
     width: 12rem;

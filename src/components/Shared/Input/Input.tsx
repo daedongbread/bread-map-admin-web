@@ -18,6 +18,7 @@ export type InputProps = {
   name?: string;
   value: string;
   multiLine?: boolean;
+  multiLineRowCount?: number;
 };
 
 export const Input = ({
@@ -32,6 +33,7 @@ export const Input = ({
   name,
   value,
   multiLine = false,
+  multiLineRowCount = 3,
 }: InputProps) => {
   const [textareaRowCnt, setTextareaRowCnt] = useState(1);
   const textareaPrevLineCnt = useRef(1);
@@ -63,7 +65,7 @@ export const Input = ({
   if (textarea) {
     return (
       <CustomTextarea
-        rows={multiLine ? TEXTAREA_MULTILINE_ROW_CNT : textareaRowCnt}
+        rows={multiLine ? multiLineRowCount : textareaRowCnt}
         name={name}
         value={value}
         disabled={disabled}
@@ -99,8 +101,6 @@ export const Input = ({
     );
   }
 };
-
-const TEXTAREA_MULTILINE_ROW_CNT = 3;
 
 type InputStyles = {
   bgColor: string;

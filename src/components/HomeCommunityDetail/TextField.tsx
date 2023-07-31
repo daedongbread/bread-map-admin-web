@@ -9,11 +9,12 @@ type Props = {
   name: string;
   value: string;
   onChangeForm: (payload: { name: string; value: string }) => void;
+  alignTop?: boolean;
 };
 
-export const TextField = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {
+export const TextField = ({ label, textarea = false, placeholder, name, value, onChangeForm, alignTop = false }: Props) => {
   return (
-    <Row>
+    <Row alignTop={alignTop}>
       <label>{label}</label>
       <RowContents>
         <Input
@@ -22,6 +23,8 @@ export const TextField = ({ label, textarea = false, placeholder, name, value, o
           placeholder={placeholder || ''}
           textarea={textarea}
           value={value}
+          multiLine={textarea}
+          multiLineRowCount={15}
           onChangeInput={e => onChangeForm({ name, value: e.target.value })}
         />
       </RowContents>

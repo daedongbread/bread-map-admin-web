@@ -1,3 +1,5 @@
+import { UploadImagePayload } from '@/apis';
+
 export type GetHomeCommunitiesPayload = {
   page: number;
 };
@@ -21,7 +23,7 @@ export type HomeCommunityEntity = {
   isCarousel: boolean;
   isPosted: boolean;
   bannerImage: string;
-  images: string[] | null;
+  images: string[];
   createdAt?: string;
 };
 
@@ -47,4 +49,5 @@ export interface HomeCommunityApiClient {
   get: ({ communityId }: { communityId: number }) => Promise<HomeCommunityEntity>;
   create: (payload: AddHomeCommunityEntity) => void;
   update: (payload: HomeCommunityEntity) => void;
+  uploadImage: ({ payload }: UploadImagePayload) => Promise<{ imagePath: string }>;
 }

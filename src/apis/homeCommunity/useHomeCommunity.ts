@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { AddHomeCommunityEntity, GetHomeCommunitiesPayload, HomeCommunityEntity } from '@/apis';
+import { AddHomeCommunityEntity, GetHomeCommunitiesPayload, HomeCommunityEntity, UploadImagePayload } from '@/apis';
 import { useHomeCommunityApi } from '@/context/homeCommunity';
 
 export const useHomeCommunity = ({ communityId }: { communityId: number }) => {
@@ -33,10 +33,13 @@ export const useHomeCommunity = ({ communityId }: { communityId: number }) => {
     },
   });
 
+  const uploadImage = useMutation((payload: UploadImagePayload) => homeCommunity.uploadImage(payload));
+
   return {
     getHomeCommunityEvents,
     getHomeCommunityEvent,
     createHomeCommunityEvent,
     updateHomeCommunityEvent,
+    uploadImage,
   };
 };

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HomeCommunityEntity, useHomeCommunity } from '@/apis';
-import { TextField } from '@/components/BakeryDetail/Form/TextField';
 import { MultiImageField } from '@/components/HomeCommunityDetail/MultiImageField';
 import { SingleImageField } from '@/components/HomeCommunityDetail/SingleImageField';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
@@ -11,7 +10,9 @@ import useSelectBox from '@/hooks/useSelectBox';
 import { useToast } from '@/hooks/useToast';
 import { COMMUNITY_POSTED_STATUS_OPTIONS } from '@/pages';
 import { Row, RowContents } from '@/styles';
+import { urlToFile } from '@/utils';
 import styled from '@emotion/styled';
+import { TextField } from '@/components/HomeCommunityDetail/TextField';
 
 type Props = {
   communityId: number;
@@ -28,6 +29,7 @@ export const CommunityForm = ({ communityId }: Props) => {
     getHomeCommunityEvent: { data: communityData },
     createHomeCommunityEvent,
     updateHomeCommunityEvent,
+    uploadImage,
   } = useHomeCommunity({ communityId });
   const [formData, setFormData] = useState<HomeCommunityEntity>({
     isPosted: false,
@@ -36,7 +38,7 @@ export const CommunityForm = ({ communityId }: Props) => {
     title: '',
     content: '',
     bannerImage: 'test',
-    images: null,
+    images: [],
   });
   const { isOpen, selectedOption, onToggleSelectBox, onCloseSelectBox, onSelectOption } = useSelectBox(COMMUNITY_POSTED_STATUS_OPTIONS[0]);
   const onSelectBakerysSatusOption = (status: SelectOption | null) => {
@@ -68,9 +70,21 @@ export const CommunityForm = ({ communityId }: Props) => {
     }));
   }
 
-  function handleCreate() {
+  async function handleCreate() {
+    if (!formData.bannerImage) {
+      addToast('배너 이미지가 입력되어야 합니다.', 'error', 3000);
+      return;
+    }
+
+    const tempFormData = new FormData();
+    const file = await urlToFile(formData.bannerImage, 'bread.jpg');
+    tempFormData.append('image', file);
+    const result = await uploadImage.mutateAsync({ payload: tempFormData });
+
+    const images = await formDataImageToUploadUrls();
+
     createHomeCommunityEvent.mutate(
-      { ...formData },
+      { ...formData, bannerImage: result.imagePath, images },
       {
         onSuccess: data => {
           addToast('커뮤니티 이벤트 등록을 완료했습니다.', 'error', 3000);
@@ -79,9 +93,44 @@ export const CommunityForm = ({ communityId }: Props) => {
     );
   }
 
-  function handleUpdate() {
+  async function formDataImageToUploadUrls(): Promise<string[]> {
+    if (!formData.images.length) {
+      return [];
+    }
+    const result = [];
+    for (const value of formData.images) {
+      console.log(value);
+      if (value.includes('blob')) {
+        const url = await fileToImageUrl(value);
+        result.push(url);
+      } else {
+        result.push(value);
+      }
+    }
+    return result;
+  }
+
+  async function fileToImageUrl(value: string) {
+    const tempFormData = new FormData();
+    const file = await urlToFile(formData.bannerImage, 'bread.jpg');
+    tempFormData.append('image', file);
+    const result = await uploadImage.mutateAsync({ payload: tempFormData });
+    return result.imagePath;
+  }
+
+  async function handleUpdate() {
+    let bannerImage = formData.bannerImage;
+    if (communityData?.bannerImage != bannerImage) {
+      const tempFormData = new FormData();
+      const file = await urlToFile(formData.bannerImage, 'bread.jpg');
+      tempFormData.append('image', file);
+      const result = await uploadImage.mutateAsync({ payload: tempFormData });
+      bannerImage = result.imagePath;
+    }
+    const images = await formDataImageToUploadUrls();
+
     updateHomeCommunityEvent.mutate(
-      { ...formData },
+      { ...formData, bannerImage, images },
       {
         onSuccess: () => {
           addToast('커뮤니티 이벤트 수정을 완료했습니다.', 'error', 3000);
@@ -134,18 +183,40 @@ export const CommunityForm = ({ communityId }: Props) => {
           <label htmlFor={'isCarousel'}>{'캐러셀 노출'}</label>
         </CheckContainer>
       </div>
-      {/*<TextField label={'작성 아이디'} name={'topic'} value={'value'} onChangeForm={() => {}} />*/}
       <TextField label={'제목'} name={'title'} value={formData.title} onChangeForm={e => handleChange(e.name, e.value)} />
       <TextField
         textarea
+        alignTop
         label={'본문'}
         name={'content'}
         value={formData.content}
         placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'}
         onChangeForm={e => handleChange(e.name, e.value)}
       />
-      <SingleImageField label={'배너 이미지'} imageUrl={formData.bannerImage} onChangeForm={() => {}} />
-      <MultiImageField label={'이미지'} imageUrl={''} onChangeForm={() => {}} />
+      <SingleImageField
+        label={'배너 이미지'}
+        imageUrl={formData.bannerImage}
+        onChangeForm={e => {
+          console.log(e);
+          setFormData({ ...formData, bannerImage: e.value });
+        }}
+      />
+      <MultiImageField
+        label={'이미지'}
+        imageUrls={formData.images}
+        onChangeForm={e => {
+          if (formData.images.length > 9) {
+            return;
+          }
+          setFormData({ ...formData, images: [...formData.images, e.value] });
+        }}
+        onRemoveForm={e => {
+          if (!formData.images[e.key]) {
+            return;
+          }
+          setFormData({ ...formData, images: [...formData.images.filter((_, index) => index !== e.key)] });
+        }}
+      />
       <Row>
         <BtnWrapper>
           <Button type={'lightOrange'} text={'저장하기'} btnSize={'medium'} onClickBtn={communityId > 0 ? handleUpdate : handleCreate} />
@@ -247,6 +318,6 @@ const Header = styled.div`
   display: flex;
 
   &:first-of-type {
-    gap: 50rem;
+    gap: 49rem;
   }
 `;

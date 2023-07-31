@@ -1,78 +1,33 @@
-import React, { ChangeEvent } from 'react';
-import { Preview } from '@/components/Shared';
-import useFileInput from '@/hooks/useFileInput';
-import { BakeryFormChangeKey, ImageUploaderInfo } from '@/store/slices/bakery';
+import React from 'react';
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
+import { ImageField } from '@/components/HomeCommunityDetail/ImageField';
 
 type Props = {
   label: string;
-  imageUrl: string;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
+  imageUrls: string[];
+  onChangeForm: (payload: { key: number; value: string }) => void;
+  onRemoveForm: (payload: { key: number }) => void;
 };
 
-export const MultiImageField = ({ label, imageUrl, onChangeForm }: Props) => {
-  const { inputRef, onClickTriggerFile } = useFileInput();
-
-  const onChangeImage = () => {
-    const image: ImageUploaderInfo = {
-      url: '',
-      type: 'image',
-      name: '대표 이미지',
-    };
-  };
-
-  // 생성시에는 이미지 로컬 등록, 수정시에는 Report 컴포넌트에서 수정되도록
-  const handleClickBtn = () => {
-    imageUrl ? onChangeImage() : onClickTriggerFile();
-  };
-
-  const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const file = e.target.files[0];
-
-    onChangeForm({ name: 'image', value: URL.createObjectURL(file) });
-  };
-
+export const MultiImageField = ({ label, imageUrls, onChangeForm, onRemoveForm }: Props) => {
   return (
     <Row alignTop>
       <label>{label}</label>
       <RepresentativeImg>
-        <Row>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
+        <Row spaceBetween>
+          <ImageField imageUrl={imageUrls[0] || ''} onChangeForm={e => onChangeForm({ key: 0, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 0 })} />
+          <ImageField imageUrl={imageUrls[1] || ''} onChangeForm={e => onChangeForm({ key: 1, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 1 })} />
+          <ImageField imageUrl={imageUrls[2] || ''} onChangeForm={e => onChangeForm({ key: 2, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 2 })} />
+          <ImageField imageUrl={imageUrls[3] || ''} onChangeForm={e => onChangeForm({ key: 3, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 3 })} />
+          <ImageField imageUrl={imageUrls[4] || ''} onChangeForm={e => onChangeForm({ key: 4, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 4 })} />
         </Row>
-        <Row>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <div onClick={handleClickBtn}>
-            <Preview src={imageUrl || ''} widthRem={12} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
-          </div>
-          <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
+        <Row spaceBetween>
+          <ImageField imageUrl={imageUrls[5] || ''} onChangeForm={e => onChangeForm({ key: 5, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 5 })} />
+          <ImageField imageUrl={imageUrls[6] || ''} onChangeForm={e => onChangeForm({ key: 6, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 6 })} />
+          <ImageField imageUrl={imageUrls[7] || ''} onChangeForm={e => onChangeForm({ key: 7, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 7 })} />
+          <ImageField imageUrl={imageUrls[8] || ''} onChangeForm={e => onChangeForm({ key: 8, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 8 })} />
+          <ImageField imageUrl={imageUrls[9] || ''} onChangeForm={e => onChangeForm({ key: 9, value: e.value })} onRemoveForm={e => onRemoveForm({ key: 9 })} />
         </Row>
       </RepresentativeImg>
     </Row>
