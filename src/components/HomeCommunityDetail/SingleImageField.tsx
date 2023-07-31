@@ -9,9 +9,10 @@ type Props = {
   label: string;
   imageUrl: string;
   onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
+  onRemoveForm: (payload: { name: BakeryFormChangeKey }) => void;
 };
 
-export const SingleImageField = ({ label, imageUrl, onChangeForm }: Props) => {
+export const SingleImageField = ({ label, imageUrl, onChangeForm, onRemoveForm }: Props) => {
   const { inputRef, onClickTriggerFile } = useFileInput();
 
   const handleClickBtn = () => {
@@ -29,10 +30,20 @@ export const SingleImageField = ({ label, imageUrl, onChangeForm }: Props) => {
     <Row alignTop>
       <label>{label}</label>
       <RepresentativeImg>
-        <div onClick={handleClickBtn}>
-          <Preview src={imageUrl || ''} widthRem={38} heightRem={20} emptyText={'클릭 후 이미지 업로드'} />
-        </div>
-        <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
+        <ImageFieldContainer>
+          <CloseButton
+            onClick={e => {
+              e.preventDefault();
+              onRemoveForm({ name: 'image' });
+            }}
+          >
+            X
+          </CloseButton>
+          <div onClick={handleClickBtn}>
+            <Preview src={imageUrl || ''} widthRem={38} heightRem={20} emptyText={'클릭 후 이미지 업로드'} />
+          </div>
+          <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
+        </ImageFieldContainer>
       </RepresentativeImg>
     </Row>
   );
@@ -44,4 +55,26 @@ const RepresentativeImg = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   flex: 1;
+`;
+
+const ImageFieldContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  background: white;
+  color: ${({ theme }) => `${theme.color.primary500}`};
+  border: ${({ theme }) => `2px solid ${theme.color.primary500}`};
+  border-radius: 50%; /* 버튼 모양을 원형으로 만듭니다 */
+  padding: 5px;
+  cursor: pointer;
+  width: 20px; /* 원형의 경우 너비와 높이를 명시적으로 설정해야 합니다 */
+  height: 20px; /* 원형의 경우 너비와 높이를 명시적으로 설정해야 합니다 */
+  display: flex; /* 아래의 justify-content와 align-items를 이용해 X를 중앙에 위치시킵니다 */
+  justify-content: center;
+  align-items: center;
 `;

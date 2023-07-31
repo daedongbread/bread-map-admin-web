@@ -200,6 +200,9 @@ export const CommunityForm = ({ communityId }: Props) => {
           console.log(e);
           setFormData({ ...formData, bannerImage: e.value });
         }}
+        onRemoveForm={e => {
+          setFormData({ ...formData, bannerImage: '' });
+        }}
       />
       <MultiImageField
         label={'이미지'}

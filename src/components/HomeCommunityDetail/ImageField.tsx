@@ -26,7 +26,14 @@ export const ImageField = ({ imageUrl, onChangeForm, onRemoveForm }: Props) => {
 
   return (
     <ImageFieldContainer>
-      <CloseButton onClick={e => onRemoveForm({ name: 'image' })}>X</CloseButton>
+      <CloseButton
+        onClick={e => {
+          e.preventDefault();
+          onRemoveForm({ name: 'image' });
+        }}
+      >
+        X
+      </CloseButton>
       <div onClick={handleClickBtn}>
         <Preview src={imageUrl || ''} widthRem={11} heightRem={8} emptyText={'클릭 후 이미지 업로드'} />
         <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
