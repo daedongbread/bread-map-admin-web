@@ -18,22 +18,21 @@ export const useHomeCommunity = ({ communityId }: { communityId: number }) => {
 
   const getHomeCommunityEvent = useQuery(['homeCommunity', { communityId }], () => homeCommunity.get({ communityId }), {
     enabled: !isNaN(communityId) && communityId > 0,
-    onSuccess: () => console.log('TODO Invalidate cache'),
   });
 
   const createHomeCommunityEvent = useMutation((payload: AddHomeCommunityEntity) => homeCommunity.create(payload), {
-    onSuccess: () => {
-      console.log('TODO Invalidate cache');
-    },
+    onSuccess: () => queryClient.invalidateQueries('homeCommunities'),
   });
 
   const updateHomeCommunityEvent = useMutation((payload: HomeCommunityEntity) => homeCommunity.update(payload), {
-    onSuccess: () => {
-      console.log('TODO Invalidate cache');
-    },
+    onSuccess: () => Promise.all([queryClient.invalidateQueries('homeCommunities'), queryClient.invalidateQueries('homeCommunity')]),
   });
 
   const uploadImage = useMutation((payload: UploadImagePayload) => homeCommunity.uploadImage(payload));
+
+  const canFix = useQuery(['canFix', {}], () => homeCommunity.canFix(), {
+    enabled: true,
+  });
 
   return {
     getHomeCommunityEvents,
@@ -41,5 +40,6 @@ export const useHomeCommunity = ({ communityId }: { communityId: number }) => {
     createHomeCommunityEvent,
     updateHomeCommunityEvent,
     uploadImage,
+    canFix,
   };
 };

@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { HomeCommunityEntity, useHomeCommunity } from '@/apis';
 import { MultiImageField } from '@/components/HomeCommunityDetail/MultiImageField';
 import { SingleImageField } from '@/components/HomeCommunityDetail/SingleImageField';
+import { TextField } from '@/components/HomeCommunityDetail/TextField';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import CheckSqure from '@/components/Shared/Icons/CheckSqure.svg';
+import CheckSqureGray from '@/components/Shared/Icons/CheckSqureGray.svg';
 import CheckSqureOrange from '@/components/Shared/Icons/CheckSqureOrange.svg';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useToast } from '@/hooks/useToast';
@@ -12,7 +14,6 @@ import { COMMUNITY_POSTED_STATUS_OPTIONS } from '@/pages';
 import { Row, RowContents } from '@/styles';
 import { urlToFile } from '@/utils';
 import styled from '@emotion/styled';
-import { TextField } from '@/components/HomeCommunityDetail/TextField';
 
 type Props = {
   communityId: number;
@@ -30,6 +31,7 @@ export const CommunityForm = ({ communityId }: Props) => {
     createHomeCommunityEvent,
     updateHomeCommunityEvent,
     uploadImage,
+    canFix: { data: canFixData },
   } = useHomeCommunity({ communityId });
   const [formData, setFormData] = useState<HomeCommunityEntity>({
     isPosted: false,
@@ -37,7 +39,7 @@ export const CommunityForm = ({ communityId }: Props) => {
     isCarousel: false,
     title: '',
     content: '',
-    bannerImage: 'test',
+    bannerImage: '',
     images: [],
   });
   const { isOpen, selectedOption, onToggleSelectBox, onCloseSelectBox, onSelectOption } = useSelectBox(COMMUNITY_POSTED_STATUS_OPTIONS[0]);
@@ -164,7 +166,7 @@ export const CommunityForm = ({ communityId }: Props) => {
         </RowContents>
       </Row>
       <div style={{ display: 'flex' }}>
-        <CheckContainer>
+        <CheckContainer disabled={!canFixData} checkValue={formData.isFixed}>
           <input
             type="checkbox"
             id={'isFixed'}
@@ -173,7 +175,7 @@ export const CommunityForm = ({ communityId }: Props) => {
           />
           <label htmlFor={'isFixed'}>{'상단 고정'}</label>
         </CheckContainer>
-        <CheckContainer>
+        <CheckContainer disabled={false} checkValue={formData.isCarousel}>
           <input
             type="checkbox"
             id={'isCarousel'}
@@ -241,7 +243,7 @@ const BtnWrapper = styled.div`
   margin-right: 6.4rem;
 `;
 
-const CheckContainer = styled.div<{ alignTop?: boolean }>`
+const CheckContainer = styled.div<{ alignTop?: boolean; disabled: boolean; checkValue: boolean }>`
   position: relative;
   display: flex;
   align-items: ${({ alignTop }) => (alignTop ? 'flex-start' : 'center')};
@@ -272,7 +274,7 @@ const CheckContainer = styled.div<{ alignTop?: boolean }>`
     right: 22rem; // -2.5rem;
     top: 50%;
     transform: translateY(-50%);
-    background-image: url(${CheckSqure});
+    background-image: ${({ disabled, checkValue }) => (disabled && !checkValue ? `url(${CheckSqureGray})` : `url(${CheckSqure})`)};
     background-position: center;
     background-repeat: no-repeat;
     opacity: 1;
@@ -290,7 +292,7 @@ const CheckContainer = styled.div<{ alignTop?: boolean }>`
     left: 12rem; // -2.5rem;
     top: 50%;
     transform: translateY(-50%);
-    background-image: url(${CheckSqureOrange});
+    background-image: ${({ disabled, checkValue }) => (disabled && !checkValue ? `url(${CheckSqureGray})` : `url(${CheckSqureOrange})`)};
     background-position: center;
     background-repeat: no-repeat;
     opacity: 0;

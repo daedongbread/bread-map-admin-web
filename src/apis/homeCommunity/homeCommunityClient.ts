@@ -1,3 +1,4 @@
+import { UploadImagePayload, UploadImageResponse } from '@/apis';
 import { fetcher } from '@/apis/axios';
 import {
   AddHomeCommunityEntity,
@@ -6,7 +7,6 @@ import {
   HomeCommunityApiClient,
   HomeCommunityEntity,
 } from '@/apis/homeCommunity/types';
-import { UploadImagePayload, UploadImageResponse } from '@/apis';
 
 export class HomeCommunityClient implements HomeCommunityApiClient {
   async getList(params: GetHomeCommunitiesPayload) {
@@ -37,5 +37,10 @@ export class HomeCommunityClient implements HomeCommunityApiClient {
     return {
       imagePath: resp.data.imagePath,
     };
+  }
+
+  async canFix() {
+    const resp = await fetcher.get<boolean>('/posts/can-fix');
+    return resp.data;
   }
 }

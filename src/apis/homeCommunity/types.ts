@@ -24,7 +24,7 @@ export type HomeCommunityEntity = {
   isPosted: boolean;
   bannerImage: string;
   images: string[];
-  createdAt?: string;
+  createdAt: string;
 };
 
 export type AddHomeCommunityEntity = {
@@ -45,9 +45,14 @@ export type UpdateEventOrderItem = {
 };
 
 export interface HomeCommunityApiClient {
-  getList: (params: GetHomeCommunitiesPayload) => Promise<{ contents: HomeCommunityEntity[]; totalCount: number; totalPages: number }>;
+  getList: (params: GetHomeCommunitiesPayload) => Promise<{
+    contents: HomeCommunityEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
   get: ({ communityId }: { communityId: number }) => Promise<HomeCommunityEntity>;
   create: (payload: AddHomeCommunityEntity) => void;
   update: (payload: HomeCommunityEntity) => void;
   uploadImage: ({ payload }: UploadImagePayload) => Promise<{ imagePath: string }>;
+  canFix: () => Promise<boolean>;
 }

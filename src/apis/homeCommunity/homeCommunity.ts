@@ -1,5 +1,5 @@
-import { AddHomeCommunityEntity, GetHomeCommunitiesPayload, HomeCommunityApiClient, HomeCommunityEntity } from '@/apis/homeCommunity/types';
 import { UploadImagePayload } from '@/apis';
+import { AddHomeCommunityEntity, GetHomeCommunitiesPayload, HomeCommunityApiClient, HomeCommunityEntity } from '@/apis/homeCommunity/types';
 
 export class HomeCommunity {
   constructor(public client: HomeCommunityApiClient) {}
@@ -22,5 +22,9 @@ export class HomeCommunity {
 
   async uploadImage({ payload }: UploadImagePayload) {
     return await this.client.uploadImage({ payload });
+  }
+
+  async canFix() {
+    return await this.client.canFix();
   }
 }
