@@ -18,7 +18,7 @@ export type GetHomeFeedsPayload = {
 };
 
 export type GetHomeFeedsResponse = BaseResponse & {
-  data: CurationFeedsItemEntity[];
+  contents: CurationFeedsItemEntity[];
 };
 
 type CurationCommonEntity = {
@@ -33,7 +33,7 @@ type CurationCommonEntity = {
   activeTime: string;
 };
 
-type CurationBakeryEntity = {
+export type CurationBakeryEntity = {
   bakeryId: number;
   productId: number;
   reason: string;
@@ -41,15 +41,16 @@ type CurationBakeryEntity = {
 
 export type CurationFeedDetailEntity = {
   common: CurationCommonEntity;
-  curation: CurationBakeryEntity;
+  curation: CurationBakeryEntity[];
   landing: null; // 초기 landing 타입이 있었을때 만들어짐
 };
 
-type CurationFeedsItemEntity = {
+export type CurationFeedsItemEntity = {
   feedId: number;
   feedTitle: string;
   authorName: string;
-  activeTime: string;
+  createdAt: string;
+  categoryName: string;
   isActive: string;
 };
 
@@ -60,6 +61,6 @@ export type CreateUpdateCurationFeedPayload = {
 export interface HomeFeedApiClient {
   getItem: ({ feedId }: { feedId: number }) => Promise<CurationFeedDetailEntity>;
   createItem: ({ payload }: CreateUpdateCurationFeedPayload) => Promise<any>; // TODO: 응답 타입 정의
-  updateItem: ({ payload }: CreateUpdateCurationFeedPayload) => void;
+  updateItem: ({ feedId, payload }: { feedId: number } & CreateUpdateCurationFeedPayload) => void;
   getList: (params: GetHomeFeedsPayload) => Promise<{ feeds: CurationFeedsItemEntity[]; totalCount: number; totalPages: number }>;
 }

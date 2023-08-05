@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 export type SelectOption = {
   name: string;
-  value: string;
+  value: string | number;
   color?: string;
 };
 

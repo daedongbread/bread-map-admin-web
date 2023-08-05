@@ -1,8 +1,9 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { bakerySlice } from './slices';
+import { bakerySlice, homeFeedSlice } from './slices';
 
 const reducer = combineReducers({
   bakery: bakerySlice,
+  homeFeed: homeFeedSlice,
 });
 
 const store = configureStore({

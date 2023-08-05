@@ -1,103 +1,97 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { BakerySns } from '@/apis';
+import { CreateUpdateCurationFeedPayload, CurationBakeryEntity, CurationFeedDetailEntity, useHomeFeed } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
-import { BakeryForm } from '@/components/BakeryDetail/Form';
-import { SnsLink } from '@/components/BakeryDetail/Form/SnsLinkArea';
-import { ReportView } from '@/components/BakeryDetail/Report';
-import { ReportModal } from '@/components/BakeryDetail/ReportModal';
 import { FeedForm } from '@/components/HomeFeedDetail';
+import { BakeryMenuModal } from '@/components/HomeFeedDetail/BakeryMenuModal';
+import { BakeryModal } from '@/components/HomeFeedDetail/BakeryModal';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { ModalPortal } from '@/components/Shared/Modal';
-import { BAKERY_REPORT_TAB, BAKERY_STATUS_OPTIONS } from '@/constants';
 import useModal from '@/hooks/useModal';
 import useSelectBox from '@/hooks/useSelectBox';
-import useTab from '@/hooks/useTab';
 import { useToast } from '@/hooks/useToast';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import {
-  BakeryForm as BakeryFormType,
-  changeBakeryImg,
-  changeBakeryStatus,
-  changeForm,
-  initializeForm,
-  ProductItem,
-  setForm,
-  setLinks,
-} from '@/store/slices/bakery';
+import bakery from '@/store/slices/bakery';
+import { changeHomeFeedStatus, HomeFeedStatus, setForm, initializeForm } from '@/store/slices/homeFeed';
 import { urlToFile } from '@/utils';
-import { validateForm } from '@/utils/bakery';
+import { validateHomeFeedForm } from '@/utils/bakery';
+import { HOME_FEED_STATUS_OPTIONS } from '@/utils/homeFeed';
 import styled from '@emotion/styled';
 
 export const FeedDetailPage = () => {
-  const { bakeryId } = useParams();
+  const { feedId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
 
   const {
-    bakeryQuery: { data: bakery },
-    addBakery,
-    editBakery,
-    bakeryReportNewStatusQuery: { data: bakeryReportNewStatus },
-    uploadImage,
-  } = useBakery({ bakeryId: Number(bakeryId) });
+    homeFeedQuery: { data: homeFeed },
+    addHomeFeed,
+    editHomeFeed,
+  } = useHomeFeed({ feedId: Number(feedId) });
 
-  const { form } = useAppSelector(selector => selector.bakery);
+  const { uploadImage } = useBakery({ bakeryId: Number(3) }); // TODO: 이미지 업로드 API 분리
 
-  const { isOpen, selectedOption, onToggleSelectBox, onCloseSelectBox, onSelectOption } = useSelectBox(BAKERY_STATUS_OPTIONS[0]);
-  const { tabs: reportTabs, selectTab: selectReportTab, setUpdateStatusTab: setUpdateStatusReportTab } = useTab({ tabData: BAKERY_REPORT_TAB });
+  const { form } = useAppSelector(selector => selector.homeFeed);
+
+  type ModalInfo = {
+    type: 'bakery' | 'bread';
+    index: number;
+  };
+
+  const [modalInfo, setModalInfo] = useState<ModalInfo | null>(null);
+
+  const onOpenModalByType = useCallback(({ type, index }: { type: 'bakery' | 'bread'; index: number }) => {
+    setModalInfo({ type, index });
+    openModal();
+  }, []);
+
+  const getModalTitle = useCallback(
+    (type?: string) => {
+      switch (type) {
+        case 'bakery':
+          return '빵집 조회';
+        case 'bread':
+          return '빵메뉴 조회';
+        default:
+          return '';
+      }
+    },
+    [modalInfo]
+  );
+
+  const { isOpen, selectedOption, onToggleSelectBox, onCloseSelectBox, onSelectOption } = useSelectBox(HOME_FEED_STATUS_OPTIONS[0]);
   const { addToast } = useToast();
   const { modalOn, openModal, closeModal } = useModal();
 
   useEffect(() => {
-    if (bakery) {
+    if (homeFeed) {
       dispatch(
         setForm({
-          form: {
-            ...bakery,
-            latitude: String(bakery.latitude),
-            longitude: String(bakery.longitude),
-          },
+          form: homeFeed,
         })
       );
-      updateLinksAtForm();
-      onSelectOption(BAKERY_STATUS_OPTIONS.find(option => option.value === bakery.status) || null);
-      if (bakery.image) {
-        dispatch(changeBakeryImg({ imgPreview: bakery.image }));
+
+      console.log('HOME_FEED_STATUS_OPTIONS', HOME_FEED_STATUS_OPTIONS);
+      console.log('homeFeed.common.activeTime', homeFeed.common.activated);
+      onSelectOption(HOME_FEED_STATUS_OPTIONS.find(option => option.value === homeFeed.common.activated) || null);
+      if (homeFeed.common?.thumbnailUrl) {
+        // TODO: 이미지 갱신
+        // dispatch(changeBakeryImg({ imgPreview: bakery.image }));
       }
     } else {
       dispatch(initializeForm());
     }
-  }, [bakery]);
+  }, [homeFeed]);
 
-  useEffect(() => {
-    if (location.state) {
-      Object.keys(location.state).forEach(key => {
-        dispatch(changeForm({ name: key, value: location.state[key] }));
-      });
-    }
-  }, [location.state]);
-
-  useEffect(() => {
-    if (!bakeryReportNewStatus) {
-      return;
-    }
-
-    setUpdateStatusReportTab(bakeryReportNewStatus);
-  }, [bakeryReportNewStatus]);
-
-  const updateLinksAtForm = () => {
-    const links: SnsLink[] = [];
-    if (bakery) {
-      for (const [key, value] of Object.entries(bakery)) {
-        if (key.includes('URL')) {
-          links.push({ key: key as BakerySns, value: value as string });
-        }
-      }
-      dispatch(setLinks({ links }));
-    }
-  };
+  // ??
+  // useEffect(() => {
+  //   if (location.state) {
+  //     Object.keys(location.state).forEach(key => {
+  //       dispatch(changeForm({ name: key, value: location.state[key] }));
+  //     });
+  //   }
+  // }, [location.state]);
 
   const createAndGetImageUrl = async (previewUrl: string) => {
     // ImageEditView와 동일한 로직, TODO: 나중에 공통으로 빼기?
@@ -107,85 +101,106 @@ export const FeedDetailPage = () => {
     }
 
     const formData = new FormData();
-    const file = await urlToFile(imageUrl, 'bread.jpg');
+    const file = await urlToFile(imageUrl, 'bakery-menu.jpg');
     formData.append('image', file);
     const result = await uploadImage.mutateAsync({ payload: formData });
     return result.imagePath;
   };
 
   const uploadAllImages = async () => {
-    let image = '';
-    let products: ProductItem[] = [];
+    let thumbnailUrl = '';
 
-    if (form.image) {
-      const result = await createAndGetImageUrl(form.image);
-      result ? (image = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
+    if (form.thumbnailUrl) {
+      const result = await createAndGetImageUrl(form.thumbnailUrl);
+      console.log('이미지result', result);
+      result ? (thumbnailUrl = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
     }
 
-    if (form.productList.length > 0) {
-      products = await Promise.all(
-        form.productList.map(async bread => {
-          if (bread.image) {
-            const result = await createAndGetImageUrl(bread.image);
-            return { ...bread, image: result ? result : null }; // TODO: 이미지 실패시 어떻게 처리?
-          } else return bread;
-        })
-      );
-    }
-
-    return { image, products };
+    return { thumbnailUrl };
   };
 
   const onSaveForm = async () => {
-    if (!window.confirm('저장하시겠습니까?')) {
+    if (!window.confirm('큐레이션을 저장하시겠습니까?')) {
       return;
     }
-    if (!validateForm(form)) {
+    if (!validateHomeFeedForm(form)) {
       return;
     }
-    const { pioneerId, pioneerNickName, ...restForm } = form;
+    const { subTitle, introduction, conclusion, curations, activeTime, thumbnailUrl, likeCounts, activated } = form;
+    const payload: CurationFeedDetailEntity = {
+      common: {
+        subTitle,
+        introduction,
+        conclusion,
+        thumbnailUrl,
+        activated,
+        feedType: 'CURATION',
+        categoryId: 1,
+        activeTime: `${form.uploadDate}T${form.uploadTime}`,
+      },
+      curation: curations.map(c => ({ bakeryId: c.bakery.bakeryId, productId: c.bread.productId, reason: c.reason } as CurationBakeryEntity)),
+      landing: null,
+    };
 
-    if (bakeryId) {
-      onUpdateForm({ ...restForm });
+    console.log('등록...! feedId', feedId);
+    // feedId가 있으면(숫자)면 수정, 없으면 생성
+    if (feedId !== 'add') {
+      console.log('if문 탐', typeof Number(feedId));
+      // 이미지가 있었으나 새로 추가한경우 이미지 업로드 과정 진행
+      if (homeFeed?.common.thumbnailUrl && homeFeed?.common.thumbnailUrl !== form.thumbnailUrl) {
+        const { thumbnailUrl } = await uploadAllImages();
+        onUpdateForm({ payload: { ...payload, common: { ...payload.common, thumbnailUrl } } });
+      } else {
+        onUpdateForm({ payload });
+      }
+      // if (bakery.image && bakery.image !== form.image) {
+      //   const { image } = await uploadAllImages();
+      //   onUpdateForm({ payload: { ...payload, image } });
     } else {
+      console.log('else문 탐', typeof Number(feedId));
       // 새로 생성하는 경우, 이미지를 새로 업로드한 경우는 이미지 업로드 과정 진행
-      const { image, products } = await uploadAllImages();
-
-      onCreateForm({ ...restForm, image, productList: products });
+      if (form.thumbnailUrl) {
+        const { thumbnailUrl } = await uploadAllImages();
+        onCreateForm({ payload: { ...payload, common: { ...payload.common, thumbnailUrl } } });
+      } else {
+        onCreateForm({ payload });
+      }
     }
   };
 
-  const onSelectBakerysSatusOption = (status: SelectOption | null) => {
-    if (!status) {
-      return;
-    }
-    onSelectOption(status);
-    dispatch(changeBakeryStatus({ status: status.value }));
-  };
-
-  const onCreateForm = (payload: Omit<BakeryFormType, 'pioneerId' | 'pioneerNickName'>) => {
-    addBakery.mutate(
-      { payload },
+  const onCreateForm = (payload: CreateUpdateCurationFeedPayload) => {
+    addHomeFeed.mutate(
+      { ...payload },
       {
         onSuccess: data => {
-          addToast('빵집 등록을 완료했습니다.', 'error', 3000);
+          addToast('컨텐츠 등록을 완료했습니다.', 'error', 3000);
           setTimeout(() => {
-            navigate(`/bakeries/${data.bakeryId}`);
+            // TODO: 상세페이지로 이동
+            // navigate(`/bakeries/${data.bakeryId}`);
           }, 1300);
         },
       }
     );
   };
 
-  const onUpdateForm = (payload: Omit<BakeryFormType, 'pioneerId' | 'pioneerNickName'>) => {
-    editBakery.mutate(
-      { bakeryId: Number(bakeryId), payload },
+  const onUpdateForm = (payload: CreateUpdateCurationFeedPayload) => {
+    if (!feedId) return;
+    editHomeFeed.mutate(
+      { feedId: Number(feedId), ...payload },
       {
         onSuccess: () => {
-          addToast('빵집 수정을 완료했습니다.', 'error', 3000);
+          addToast('컨텐츠 수정을 완료했습니다.', 'error', 3000);
         },
       }
     );
+  };
+
+  const onSelectHomeFeedStatusOption = (status: SelectOption | null) => {
+    if (!status) {
+      return;
+    }
+    onSelectOption(status);
+    dispatch(changeHomeFeedStatus({ activated: status.value as HomeFeedStatus }));
   };
 
   const onClickBack = useCallback(() => {
@@ -204,15 +219,14 @@ export const FeedDetailPage = () => {
             onToggleSelectBox={onToggleSelectBox}
             triggerComponent={<StatusSelectTrigger selectedOption={selectedOption} />}
           >
-            {/* TODO: STATUS 명칭 수정 */}
-            {BAKERY_STATUS_OPTIONS.map((option, idx) => (
-              <StatusSelectOption key={idx} active={option.name === selectedOption?.name} option={option} onSelectOption={onSelectBakerysSatusOption} />
+            {HOME_FEED_STATUS_OPTIONS.map((option, idx) => (
+              <StatusSelectOption key={idx} active={option.name === selectedOption?.name} option={option} onSelectOption={onSelectHomeFeedStatusOption} />
             ))}
           </SelectBox>
         </Header>
 
         <ScrollSection>
-          <FeedForm isEdit={Boolean(bakery)} openModal={openModal} closeModal={closeModal} />
+          <FeedForm isEdit={Boolean(bakery)} openModal={openModal} closeModal={closeModal} onOpenModalByType={onOpenModalByType} />
         </ScrollSection>
 
         <BtnSection>
@@ -223,8 +237,9 @@ export const FeedDetailPage = () => {
         </BtnSection>
       </Container>
       {modalOn && (
-        <ModalPortal title={'제보 목록'} closeModal={closeModal}>
-          <ReportModal closeModal={closeModal} />
+        <ModalPortal title={getModalTitle(modalInfo?.type)} closeModal={closeModal}>
+          {modalInfo?.type === 'bakery' && <BakeryModal currIdx={modalInfo.index} closeModal={closeModal} />}
+          {modalInfo?.type === 'bread' && <BakeryMenuModal currIdx={modalInfo.index} closeModal={closeModal} />}
         </ModalPortal>
       )}
     </>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/Shared';
+import { BAKERY_MENU_TYPES } from '@/constants';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addMenu,
@@ -14,7 +15,6 @@ import {
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
 import MenuItem from './MenuItem';
-import { Option } from './SnsLinkArea';
 
 type Props = {
   label: string;
@@ -71,7 +71,7 @@ export const MenuArea = ({ label }: Props) => {
             key={`menu-${idx}`}
             idx={idx}
             menu={item}
-            productTypes={MENU_TYPES}
+            productTypes={BAKERY_MENU_TYPES}
             isOpenMenuType={openedMenuTypeIdx === idx}
             onCloseMenuTypeOption={onCloseMenuTypeOption}
             onToggleMenuTypeOption={onToggleMenuTypeOption}
@@ -88,12 +88,6 @@ export const MenuArea = ({ label }: Props) => {
     </Row>
   );
 };
-
-const MENU_TYPES: Option[] = [
-  { name: '빵', value: 'BREAD' },
-  { name: '음료', value: 'BEVERAGE' },
-  { name: '기타', value: 'ETC' },
-];
 
 const BtnWrapper = styled.div`
   border-top: ${({ theme }) => `1px solid ${theme.color.gray400}`};

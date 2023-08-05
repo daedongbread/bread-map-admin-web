@@ -18,13 +18,14 @@ export const urlToFile = async (url: string, fileName: string): Promise<File> =>
 
 export const formatTextToOptionObj = ({ constants, targetText }: { constants: SelectOption[]; targetText: string }) => {
   const option = constants.find(option => option.value === targetText);
-  if (!option || !option.color) {
-    return { color: '', text: '' };
+  if (!option) {
+    throw new Error('option이 존재하지 않습니다.');
   }
 
-  return { color: option.color, text: option.name };
+  return { color: option?.color || '', text: option.name, value: option.value };
 };
 
+// 빵집 관리 - 알람 영역
 export const formatTextToOAlarmArr = ({ constants, targetObj }: { constants: (SelectOption & { bgColor: string })[]; targetObj: Record<string, number> }) => {
   const alarmArr: { color: string; bgColor: string; text: string }[] = [];
 
@@ -41,6 +42,28 @@ export const formatTextToOAlarmArr = ({ constants, targetObj }: { constants: (Se
   });
 
   return alarmArr;
+};
+
+// 콘텐츠관리 (큐레이션 피드) - 카테고리 영역 (alarm 이랑 합치기)
+export const formatTextToFeedCategoryArr = ({
+  constants,
+  targetObj,
+}: {
+  constants: (SelectOption & { bgColor: string })[];
+  targetObj: Record<string, string>;
+}) => {
+  const categoryArr: { color: string; bgColor: string; text: string }[] = [];
+
+  Object.entries(targetObj).forEach(([key, value]) => {
+    const option = constants.find(option => option.name === value);
+    if (!option || !option.color) {
+      return { color: '', bgColor: '', text: '' };
+    }
+
+    categoryArr.push({ color: option.color, bgColor: option.bgColor, text: value });
+  });
+
+  return categoryArr;
 };
 
 const toDataURL = async (url: string) => {

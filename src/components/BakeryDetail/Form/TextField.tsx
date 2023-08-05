@@ -6,14 +6,16 @@ type Props = {
   label: string;
   textarea?: boolean;
   placeholder?: string;
+  rowNoMargin?: boolean;
   name: string;
   value: string;
+  multiline?: boolean;
   onChangeForm: (payload: { name: string; value: string }) => void;
 };
 
-export const TextField = ({ label, textarea = false, placeholder, name, value, onChangeForm }: Props) => {
+export const TextField = ({ label, textarea = false, placeholder, rowNoMargin, name, value, multiline, onChangeForm }: Props) => {
   return (
-    <Row>
+    <Row noMargin={rowNoMargin}>
       <label>{label}</label>
       <RowContents>
         <Input
@@ -22,6 +24,7 @@ export const TextField = ({ label, textarea = false, placeholder, name, value, o
           placeholder={placeholder || ''}
           textarea={textarea}
           value={value}
+          multiLine={multiline}
           onChangeInput={e => onChangeForm({ name, value: e.target.value })}
         />
       </RowContents>

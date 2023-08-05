@@ -1,4 +1,3 @@
-import { CreateBakeryResponse } from '@/apis';
 import { fetcher } from '@/apis/axios';
 import { CreateUpdateCurationFeedPayload, CurationFeedDetailEntity, GetHomeFeedsPayload, GetHomeFeedsResponse, HomeFeedApiClient } from '@/apis/homeFeed/types';
 
@@ -9,18 +8,18 @@ export class HomeFeedClient implements HomeFeedApiClient {
   }
 
   async createItem({ payload }: CreateUpdateCurationFeedPayload) {
-    const resp = await fetcher.post<CreateBakeryResponse>('feed', payload);
+    const resp = await fetcher.post('feed', payload);
     return resp.data;
   }
 
-  async updateItem({ payload }: CreateUpdateCurationFeedPayload) {
+  async updateItem({ feedId, payload }: { feedId: number } & CreateUpdateCurationFeedPayload) {
     // TODO: feedId를 인자로 받을지 고민
-    await fetcher.patch(`bakeries/${payload.common.feedId}`, payload);
+    await fetcher.patch(`feed/${feedId}`, payload);
   }
 
   async getList(params: GetHomeFeedsPayload) {
     const resp = await fetcher.get<GetHomeFeedsResponse>(`/feed/all`, { params });
-    const { data, totalElements, totalPages } = resp.data;
-    return { feeds: data, totalCount: totalElements, totalPages };
+    const { contents, totalElements, totalPages } = resp.data;
+    return { feeds: contents, totalCount: totalElements, totalPages };
   }
 }

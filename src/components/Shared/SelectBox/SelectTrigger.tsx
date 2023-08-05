@@ -15,6 +15,7 @@ export const BasicSelectTrigger = ({ selectedOption }: { selectedOption: SelectO
 };
 
 export const StatusSelectTrigger = ({ selectedOption }: { selectedOption: SelectOption | null }) => {
+  console.log('selectedOption...', selectedOption);
   return (
     <StatusTrigger color={(selectedOption && selectedOption.color) ?? ''}>
       <span>{selectedOption?.name || '선택'}</span>

@@ -38,6 +38,8 @@ export type BakeriesItemEntity = {
   createdAt: string;
   modifiedAt: string;
   status: BakeryStatus;
+  address: string;
+  detailedAddress: string | null;
 };
 
 export type CreateUpdateBakeryPayload = {
