@@ -24,7 +24,7 @@ export type HomeCommunityEntity = {
   isPosted: boolean;
   bannerImage: string;
   images: string[];
-  createdAt: string;
+  createdAt?: string;
 };
 
 export type AddHomeCommunityEntity = {

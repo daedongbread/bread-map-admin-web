@@ -104,7 +104,7 @@ export const getHomeCommunityTableData = (contents: HomeCommunityEntity[]) => {
         managerId: item.managerId,
         nickname: item.nickname,
         title: item.title,
-        createdAt: item.createdAt.split('T')[0],
+        createdAt: item.createdAt?.split('T')[0],
         isFixed: <StatusCell color={fixedStatus.color} text={fixedStatus.text} />,
         isPosted: <StatusCell color={postedStatus.color} text={postedStatus.text} />,
         isCarousel: <StatusCell color={carouselStatus.color} text={carouselStatus.text} />,
