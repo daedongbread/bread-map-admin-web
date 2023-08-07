@@ -26,7 +26,8 @@ type CurationCommonEntity = {
   subTitle: string;
   introduction: string;
   conclusion: string;
-  categoryId: number;
+  categoryName: string;
+  // categoryId: number;
   thumbnailUrl: string;
   activated: 'POSTING' | 'INACTIVATED';
   feedType: 'CURATION';
@@ -55,7 +56,7 @@ export type CurationFeedsItemEntity = {
 };
 
 export type CreateUpdateCurationFeedPayload = {
-  payload: CurationFeedDetailEntity;
+  payload: { common: Omit<CurationCommonEntity, 'categoryName'> & { categoryId: number }; curation: CurationBakeryEntity[]; landing: null };
 };
 
 export interface HomeFeedApiClient {

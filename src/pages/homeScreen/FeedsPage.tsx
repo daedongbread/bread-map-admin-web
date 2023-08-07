@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BakeriesItemEntity, CurationFeedsItemEntity, useBakeries, useHomeFeeds } from '@/apis';
+import { HomeFeedsTable } from '@/components/HomeFeeds';
 import { Button, FeedCategoryCell, Header, Loading, Pagination, SearchBar, StatusCell, TableCell, TableLoading } from '@/components/Shared';
 import { DatePickerButton } from '@/components/Shared/DatePicker'; //   <DatePickerButton />
 
 import { BAKERY_TABLE_HEADERS, PATH } from '@/constants';
+import { HOME_FEED_CATEGORY_OPTIONS, HOME_FEED_STATUS_OPTIONS, HOME_FEED_TABLE_HEADERS } from '@/constants/homeFeed';
 import usePagination from '@/hooks/usePagination';
-import usePrevious from '@/hooks/usePrevious';
 import { formatTextToFeedCategoryArr, formatTextToOAlarmArr, formatTextToOptionObj, isNumber } from '@/utils';
 import styled from '@emotion/styled';
-import { HOME_FEED_CATEGORY_OPTIONS, HOME_FEED_STATUS_OPTIONS, HOME_FEED_TABLE_HEADERS } from '@/constants/homeFeed';
-import { HomeFeedsTable } from '@/components/HomeFeeds';
 
 export const FeedsPage = () => {
   const [searchParams] = useSearchParams();

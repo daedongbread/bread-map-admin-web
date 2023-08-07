@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { TextField } from '@/components/BakeryDetail/Form/TextField';
 import { Button, ReadOnlyInputField } from '@/components/Shared';
-import styled from '@emotion/styled';
 import { useAppDispatch } from '@/store/hooks';
 import { changeCuration } from '@/store/slices/homeFeed';
+import styled from '@emotion/styled';
 
 type Props = {
   index: number;
@@ -57,7 +57,7 @@ export const CurationBakery = ({ index, bakery, bread, reason, onOpenModalByType
             label={'추천이유'}
             name="reason"
             multiline
-            value={reason}
+            value={reason || ''}
             placeholder={'이 빵이 가지고 있는 특별한 매력이나 특징에 대해서 설명해 주세요.'}
             onChangeForm={handleReasonChange}
           />

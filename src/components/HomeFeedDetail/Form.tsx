@@ -1,23 +1,35 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TextField } from '@/components/BakeryDetail/Form/TextField';
 import { CurationBakery } from '@/components/HomeFeedDetail/CurationBakery';
 import { CurationBannerImgField } from '@/components/HomeFeedDetail/CurationBannerImgField';
-import { Button, ReadOnlyInputField } from '@/components/Shared';
+import { BasicSelectOption, BasicSelectTrigger, Button, ReadOnlyInputField, SelectBox, SelectOption } from '@/components/Shared';
+import { HOME_FEED_CATEGORY_OPTIONS } from '@/constants/homeFeed';
+import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { changeForm, addCuration, Curation } from '@/store/slices/homeFeed';
+import { color } from '@/styles';
 import styled from '@emotion/styled';
 
 type Props = {
   isEdit: boolean;
+  categoryId: number;
   openModal: () => void;
   closeModal: () => void;
   onOpenModalByType: ({ type, index }: { type: 'bakery' | 'bread'; index: number }) => void;
 };
 
-export const FeedForm = ({ isEdit, openModal, closeModal, onOpenModalByType }: Props) => {
+export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModalByType }: Props) => {
+  const { isOpen, selectedOption, onSelectOption, onToggleSelectBox, onCloseSelectBox } = useSelectBox(HOME_FEED_CATEGORY_OPTIONS[0]);
+
   const dispatch = useAppDispatch();
   const { form } = useAppSelector(selector => selector.homeFeed);
   const { category, subTitle, introduction, conclusion, curations, activeTime, thumbnailUrl, likeCounts, uploadDate, uploadTime, reason } = form;
+
+  useEffect(() => {
+    // form이 아닌, feedData를 받아서 categoryName 을 가져와서 처리해야함
+    console.log('category', categoryId);
+    onSelectOption(HOME_FEED_CATEGORY_OPTIONS.find(option => option.value === categoryId) || null);
+  }, [categoryId]);
 
   const onChangeForm = useCallback((payload: { name: string; value: string }) => {
     dispatch(changeForm(payload));
@@ -27,9 +39,28 @@ export const FeedForm = ({ isEdit, openModal, closeModal, onOpenModalByType }: P
     dispatch(addCuration());
   }, []);
 
+  const onSelectCategory = useCallback((option: SelectOption | null) => {
+    onSelectOption(option);
+    dispatch(changeForm({ name: 'category', value: option?.value }));
+  }, []);
+
   return (
     <Container>
-      <TextField label={'카테고리'} name={'category'} value={String(category)} placeholder={'1: 월별 트렌드 빵집, 2: 추천 빵집'} onChangeForm={onChangeForm} />
+      <div className="row">
+        <label className="label-item">카테고리</label>
+        <SelectBox
+          width={150}
+          isOpen={isOpen}
+          onCloseSelectBox={onCloseSelectBox}
+          onToggleSelectBox={onToggleSelectBox}
+          // onToggleSelectBox={() => onToggleLinkOption(idx)}
+          triggerComponent={<BasicSelectTrigger selectedOption={selectedOption} bgColor={color.white} />}
+        >
+          {HOME_FEED_CATEGORY_OPTIONS.map((option, idx) => (
+            <BasicSelectOption key={idx} option={option} onSelectOption={onSelectCategory} />
+          ))}
+        </SelectBox>
+      </div>
       <TextField textarea label={'제목'} name={'subTitle'} value={subTitle || ''} placeholder={'콘텐츠 제목을 입력해 주세요.'} onChangeForm={onChangeForm} />
       <TextField
         textarea
@@ -80,9 +111,22 @@ export const FeedForm = ({ isEdit, openModal, closeModal, onOpenModalByType }: P
 const Container = styled.form`
   padding-top: 2rem;
   margin-bottom: 10rem;
+
   .button-wrapper {
     margin: 2rem 0;
     display: flex;
     justify-content: flex-end;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.5rem;
+
+    .label-item {
+      width: 12rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
   }
 `;

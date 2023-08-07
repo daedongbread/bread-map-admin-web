@@ -7,6 +7,7 @@ import { BakeryMenuModal } from '@/components/HomeFeedDetail/BakeryMenuModal';
 import { BakeryModal } from '@/components/HomeFeedDetail/BakeryModal';
 import { Button, SelectBox, SelectOption, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { ModalPortal } from '@/components/Shared/Modal';
+import { HOME_FEED_CATEGORY_OPTIONS } from '@/constants/homeFeed';
 import useModal from '@/hooks/useModal';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useToast } from '@/hooks/useToast';
@@ -84,15 +85,6 @@ export const FeedDetailPage = () => {
     }
   }, [homeFeed]);
 
-  // ??
-  // useEffect(() => {
-  //   if (location.state) {
-  //     Object.keys(location.state).forEach(key => {
-  //       dispatch(changeForm({ name: key, value: location.state[key] }));
-  //     });
-  //   }
-  // }, [location.state]);
-
   const createAndGetImageUrl = async (previewUrl: string) => {
     // ImageEditView와 동일한 로직, TODO: 나중에 공통으로 빼기?
     const imageUrl = previewUrl;
@@ -112,7 +104,6 @@ export const FeedDetailPage = () => {
 
     if (form.thumbnailUrl) {
       const result = await createAndGetImageUrl(form.thumbnailUrl);
-      console.log('이미지result', result);
       result ? (thumbnailUrl = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
     }
 
@@ -126,8 +117,8 @@ export const FeedDetailPage = () => {
     if (!validateHomeFeedForm(form)) {
       return;
     }
-    const { subTitle, introduction, conclusion, curations, activeTime, thumbnailUrl, likeCounts, activated } = form;
-    const payload: CurationFeedDetailEntity = {
+    const { subTitle, introduction, conclusion, curations, activeTime, thumbnailUrl, likeCounts, activated, category } = form;
+    const payload: CreateUpdateCurationFeedPayload['payload'] = {
       common: {
         subTitle,
         introduction,
@@ -135,7 +126,7 @@ export const FeedDetailPage = () => {
         thumbnailUrl,
         activated,
         feedType: 'CURATION',
-        categoryId: 1,
+        categoryId: Number(category as string),
         activeTime: `${form.uploadDate}T${form.uploadTime}`,
       },
       curation: curations.map(c => ({ bakeryId: c.bakery.bakeryId, productId: c.bread.productId, reason: c.reason } as CurationBakeryEntity)),
@@ -145,7 +136,6 @@ export const FeedDetailPage = () => {
     console.log('등록...! feedId', feedId);
     // feedId가 있으면(숫자)면 수정, 없으면 생성
     if (feedId !== 'add') {
-      console.log('if문 탐', typeof Number(feedId));
       // 이미지가 있었으나 새로 추가한경우 이미지 업로드 과정 진행
       if (homeFeed?.common.thumbnailUrl && homeFeed?.common.thumbnailUrl !== form.thumbnailUrl) {
         const { thumbnailUrl } = await uploadAllImages();
@@ -153,9 +143,6 @@ export const FeedDetailPage = () => {
       } else {
         onUpdateForm({ payload });
       }
-      // if (bakery.image && bakery.image !== form.image) {
-      //   const { image } = await uploadAllImages();
-      //   onUpdateForm({ payload: { ...payload, image } });
     } else {
       console.log('else문 탐', typeof Number(feedId));
       // 새로 생성하는 경우, 이미지를 새로 업로드한 경우는 이미지 업로드 과정 진행
@@ -207,6 +194,15 @@ export const FeedDetailPage = () => {
     navigate(-1);
   }, []);
 
+  const getCategoryId = () => {
+    let category: number | null = null;
+    if (homeFeed?.common) {
+      category = HOME_FEED_CATEGORY_OPTIONS.find(option => option.name === homeFeed.common.categoryName)?.value as number;
+    }
+
+    return category || 1;
+  };
+
   return (
     <>
       <Container>
@@ -226,7 +222,7 @@ export const FeedDetailPage = () => {
         </Header>
 
         <ScrollSection>
-          <FeedForm isEdit={Boolean(bakery)} openModal={openModal} closeModal={closeModal} onOpenModalByType={onOpenModalByType} />
+          <FeedForm isEdit={Boolean(bakery)} categoryId={getCategoryId()} openModal={openModal} closeModal={closeModal} onOpenModalByType={onOpenModalByType} />
         </ScrollSection>
 
         <BtnSection>
