@@ -16,6 +16,9 @@ const getPath = (row: TableCell, path: string) => {
     case PATH.HomeScreen.AdminCommunity:
       id = row.managerId as number;
       break;
+    case PATH.HomeScreen.Feeds:
+      id = row.feedId as number;
+      break;
     default:
       id = 0;
       break;

@@ -1,3 +1,4 @@
+import { Option } from '@/components/BakeryDetail/Form/SnsLinkArea';
 import { SelectOption, TabItem } from '@/components/Shared';
 import { TableHeader } from '@/components/Shared/Table/types';
 import { color } from '@/styles';
@@ -10,6 +11,7 @@ export const BAKERY_TABLE_HEADERS: TableHeader[] = [
   { key: 'createdAt', name: '등록일' },
   { key: 'modifiedAt', name: '마지막 수정일' },
   { key: 'status', name: '상태' },
+  { key: 'address', name: '주소' },
 ];
 
 // 빵집 게시 상태
@@ -21,6 +23,13 @@ export const BAKERY_STATUS = {
 export const BAKERY_STATUS_OPTIONS: SelectOption[] = [
   { name: '미게시', value: BAKERY_STATUS.Unposting, color: color.red },
   { name: '게시중', value: BAKERY_STATUS.Posting, color: color.green },
+];
+
+// 빵집 메뉴 타입
+export const BAKERY_MENU_TYPES: Option[] = [
+  { name: '빵', value: 'BREAD' },
+  { name: '음료', value: 'BEVERAGE' },
+  { name: '기타', value: 'ETC' },
 ];
 
 // 빵집 리스트 알람
@@ -144,3 +153,10 @@ export type BakeryImgTabValue = 'bakery-report-image' | 'product-add-report-imag
 export type BakeryFacilityValue = 'PARKING' | 'WIFI' | 'DELIVERY' | 'PET' | 'SHIPPING' | 'BOOKING';
 
 export type BakeryStatus = (typeof BAKERY_STATUS)[keyof typeof BAKERY_STATUS];
+
+// 콘텐츠 관리 - 빵집 메뉴 조회
+export const BAKERY_MENU_TABLE_HEADERS: TableHeader[] = [
+  { key: 'productType', name: '빵분류' },
+  { key: 'productName', name: '빵메뉴명' },
+  { key: 'price', name: '가격' },
+];

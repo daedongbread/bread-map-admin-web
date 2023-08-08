@@ -11,8 +11,8 @@ export class HomeFeed {
     return await this.client.createItem({ payload });
   }
 
-  async updateItem({ payload }: CreateUpdateCurationFeedPayload) {
-    await this.client.updateItem({ payload });
+  async updateItem(payload: { feedId: number } & CreateUpdateCurationFeedPayload) {
+    await this.client.updateItem(payload);
   }
 
   async getList(params: GetHomeFeedsPayload) {

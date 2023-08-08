@@ -27,9 +27,10 @@ export const ReportModal = ({ closeModal }: Props) => {
   const { data, isLoading, isFetching } = bakeryReportsQuery({ page: currPage });
   const bakeryReportData = getBakeryReportTableData(data?.bakeryReports || [], ['content']);
 
+  // 이 데이터는 뭐지?..
   const bakeryReportsRow = data?.bakeryReports?.map(report => ({
     ...report,
-    status: formatTextToOptionObj({ constants: BAKERY_REPORT_STATUS_OPTIONS, targetText: report.status }),
+    // status: formatTextToOptionObj({ constants: BAKERY_REPORT_STATUS_OPTIONS, targetText: report.status }),
   }));
 
   const changeTotalPageCount = (data?: { bakeryReports: BakeryReportsItemEntity[]; totalCount: number; totalPages: number }) => {

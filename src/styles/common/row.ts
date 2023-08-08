@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const Row = styled.div<{ alignTop?: boolean; spaceBetween?: boolean }>`
+export const Row = styled.div<{ alignTop?: boolean; spaceBetween?: boolean; noMargin?: boolean;  }>`
   display: flex;
   align-items: ${({ alignTop }) => (alignTop ? 'flex-start' : 'center')};
   justify-content: ${({ spaceBetween }) => (spaceBetween ? 'space-between' : 'flex-start')};
@@ -12,7 +12,7 @@ export const Row = styled.div<{ alignTop?: boolean; spaceBetween?: boolean }>`
   }
 
   &:not(:last-child) {
-    margin-bottom: 2.5rem;
+    margin-bottom: ${({ noMargin }) => (noMargin ? 0 : '2.5rem')};
   }
 
   &:not(label) {

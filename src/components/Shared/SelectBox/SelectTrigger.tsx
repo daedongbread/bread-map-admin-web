@@ -3,10 +3,10 @@ import { ChevronDown } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
 import { SelectOption } from './SelectOption';
 
-export const BasicSelectTrigger = ({ selectedOption }: { selectedOption: SelectOption | null }) => {
+export const BasicSelectTrigger = ({ selectedOption, bgColor }: { selectedOption: SelectOption | null; bgColor?: string }) => {
   return (
     <div>
-      <Trigger>
+      <Trigger bgColor={bgColor}>
         <span>{selectedOption?.name || '선택'}</span>
         <ChevronDown />
       </Trigger>
@@ -15,6 +15,7 @@ export const BasicSelectTrigger = ({ selectedOption }: { selectedOption: SelectO
 };
 
 export const StatusSelectTrigger = ({ selectedOption }: { selectedOption: SelectOption | null }) => {
+  console.log('selectedOption...', selectedOption);
   return (
     <StatusTrigger color={(selectedOption && selectedOption.color) ?? ''}>
       <span>{selectedOption?.name || '선택'}</span>
@@ -23,7 +24,7 @@ export const StatusSelectTrigger = ({ selectedOption }: { selectedOption: Select
   );
 };
 
-const Trigger = styled.div`
+const Trigger = styled.div<{ bgColor?: string }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -34,7 +35,7 @@ const Trigger = styled.div`
   color: #3b3b3b;
   height: 3.8rem;
   line-height: 3.8rem;
-  background: ${({ theme }) => theme.color.gray100};
+  background: ${({ bgColor, theme }) => (bgColor ? bgColor : theme.color.gray100)};
   cursor: pointer;
   border: ${({ theme }) => `1px solid ${theme.color.gray500}`};
   border-radius: 10px;

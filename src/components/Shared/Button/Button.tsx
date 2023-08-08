@@ -3,7 +3,7 @@ import { color } from '@/styles';
 import styled from '@emotion/styled';
 
 type BtnColor = 'orange' | 'lightOrange' | 'reverseOrange' | 'gray' | 'lightGray' | 'white';
-type Size = 'large' | 'medium' | 'small';
+type Size = 'large' | 'medium' | 'small' | 'x-small';
 
 type ButtonProps = {
   type: BtnColor;
@@ -78,7 +78,7 @@ const CustomBtn = styled.button<BtnStyles & { btnSize?: Size; fontSize?: Size }>
   width: ${({ btnSize }) => !btnSize && '100%'};
   font-weight: bold;
   color: ${({ fontColor }) => fontColor};
-  font-size: ${({ fontSize }) => (fontSize === 'large' ? '2rem' : fontSize === 'medium' ? '1.6rem' : '1.4rem')};
+  font-size: ${({ fontSize }) => (fontSize === 'large' ? '2rem' : fontSize === 'medium' ? '1.6rem' : fontSize === 'small' ? '1.4rem' : '1.2rem')};
   display: flex;
   justify-content: center;
   align-items: center;

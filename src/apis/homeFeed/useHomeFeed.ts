@@ -19,7 +19,7 @@ export const useHomeFeed = ({ feedId }: { feedId: number }) => {
     onSuccess: () => queryClient.invalidateQueries('getBakeries'),
   });
 
-  const editHomeFeed = useMutation((payload: CreateUpdateCurationFeedPayload) => homeFeed.updateItem(payload), {
+  const editHomeFeed = useMutation((payload: { feedId: number } & CreateUpdateCurationFeedPayload) => homeFeed.updateItem(payload), {
     onSuccess: () => {
       return Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
     },

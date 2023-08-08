@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 
 type PreviewProps = {
@@ -6,12 +6,19 @@ type PreviewProps = {
   widthRem: number;
   heightRem: number;
   emptyText: string;
+  onClick?: () => void;
 };
 
 // TODO img 가로,세로 계산해서 fit하게 해주는 작업 필요
-export const Preview = ({ src, widthRem, heightRem, emptyText }: PreviewProps) => {
+export const Preview = ({ src, widthRem, heightRem, emptyText, onClick }: PreviewProps) => {
+  const handleClick = useCallback(() => {
+    if (onClick) {
+      onClick();
+    }
+  }, [onClick]);
+
   return (
-    <Container widthRem={widthRem} heightRem={heightRem}>
+    <Container widthRem={widthRem} heightRem={heightRem} onClick={handleClick}>
       {src ? <img src={src} alt={'미리보기'} /> : <span>{emptyText}</span>}
     </Container>
   );

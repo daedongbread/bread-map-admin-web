@@ -46,7 +46,7 @@ const ModalContainer = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: scroll;
   z-index: 5;
 `;
 
@@ -61,8 +61,10 @@ const Background = styled.div`
 
 const ContentContainer = styled.div`
   min-width: 1000px;
-  min-height: 30rem;
+  min-height: 70%;
+  max-height: 90%;
   position: fixed;
+  overflow: scroll;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

@@ -25,7 +25,7 @@ import {
   setLinks,
 } from '@/store/slices/bakery';
 import { urlToFile } from '@/utils';
-import { validateForm } from '@/utils/bakery';
+import { validateBakeryForm } from '@/utils/bakery';
 import styled from '@emotion/styled';
 
 export const BakeryDetailPage = () => {
@@ -139,7 +139,7 @@ export const BakeryDetailPage = () => {
     if (!window.confirm('저장하시겠습니까?')) {
       return;
     }
-    if (!validateForm(form)) {
+    if (!validateBakeryForm(form)) {
       return;
     }
     const { pioneerId, pioneerNickName, ...restForm } = form;
@@ -159,7 +159,7 @@ export const BakeryDetailPage = () => {
       return;
     }
     onSelectOption(status);
-    dispatch(changeBakeryStatus({ status: status.value }));
+    dispatch(changeBakeryStatus({ status: status.value as string }));
   };
 
   const onCreateForm = (payload: Omit<BakeryFormType, 'pioneerId' | 'pioneerNickName'>) => {
