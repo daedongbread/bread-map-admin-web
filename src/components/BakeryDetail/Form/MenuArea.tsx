@@ -34,7 +34,7 @@ export const MenuArea = ({ label }: Props) => {
     dispatch(closeMenuTypeOption());
   };
 
-  const onSelectMenuTypeOption = ({ currIdx, optionValue }: { currIdx: number; optionValue: string }) => {
+  const onSelectMenuTypeOption = ({ currIdx, optionValue }: { currIdx: number; optionValue: string | number }) => {
     dispatch(selectMenuTypeOption({ currIdx, optionValue }));
   };
 

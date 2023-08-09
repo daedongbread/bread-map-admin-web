@@ -11,8 +11,8 @@ type Props = {
   options: Option[];
   onCloseAllLinkOption: () => void;
   onToggleLinkOption: (currIdx: number) => void;
-  onSelectLinkOption: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
-  onChangeLinkValue: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
+  onSelectLinkOption: (payload: { currIdx: number; optionValue: string | number; linkValue: string }) => void;
+  onChangeLinkValue: (payload: { currIdx: number; optionValue: string | number; linkValue: string }) => void;
   onRemoveLink: (currIdx: number) => void;
 };
 

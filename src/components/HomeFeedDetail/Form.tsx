@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { TextField } from '@/components/BakeryDetail/Form/TextField';
 import { CurationBakery } from '@/components/HomeFeedDetail/CurationBakery';
 import { CurationBannerImgField } from '@/components/HomeFeedDetail/CurationBannerImgField';
@@ -7,7 +7,7 @@ import { BasicSelectOption, BasicSelectTrigger, Button, ReadOnlyInputField, Sele
 import { HOME_FEED_CATEGORY_OPTIONS, TIME_OPTIONS } from '@/constants/homeFeed';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { changeForm, addCuration, Curation } from '@/store/slices/homeFeed';
+import { addCuration, changeForm } from '@/store/slices/homeFeed';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
@@ -24,7 +24,7 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
 
   const dispatch = useAppDispatch();
   const { form } = useAppSelector(selector => selector.homeFeed);
-  const { category, subTitle, introduction, conclusion, curations, activeTime, thumbnailUrl, likeCounts, uploadDate, uploadTime, reason } = form;
+  const { category, subTitle, introduction, conclusion, curations, activeTime, thumbnailUrl, likeCounts, uploadDate, uploadTime } = form;
 
   useEffect(() => {
     // form이 아닌, feedData를 받아서 categoryName 을 가져와서 처리해야함

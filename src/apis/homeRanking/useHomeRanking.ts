@@ -1,11 +1,10 @@
-import { useQuery } from 'react-query';
-import { GetHomeFeedsPayload } from '@/apis';
-import { GetHomeRankingPayload } from '@/apis/homeRanking/types';
-import { useHomeFeedApi } from '@/context/homeFeed';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { GetHomeRankingPayload, UpdateRankingPayload } from '@/apis/homeRanking/types';
 import { useHomeRankingApi } from '@/context/homeRanking';
 
 export const useHomeRanking = () => {
   const { ranking } = useHomeRankingApi();
+  const queryClient = useQueryClient();
 
   if (!ranking) {
     throw new Error('homeFeedApi를 확인해주세요.');
@@ -17,7 +16,12 @@ export const useHomeRanking = () => {
     });
   };
 
+  const updateRanking = useMutation((payload: UpdateRankingPayload) => ranking.update(payload), {
+    onSuccess: () => queryClient.invalidateQueries('homeRanking'),
+  });
+
   return {
     homeRankingQuery,
+    updateRanking,
   };
 };

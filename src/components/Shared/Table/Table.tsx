@@ -1,4 +1,6 @@
 import React from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import ReactBeautifulDnd from 'react-beautiful-dnd/index';
 import { useNavigate } from 'react-router-dom';
 import { TableCell, TableProps } from '@/components/Shared/Table/types';
 import { PATH } from '@/constants';
@@ -24,11 +26,19 @@ const getPath = (row: TableCell, path: string) => {
       break;
   }
 
-  return `${path}/${id}`;
+  return id ? `${path}/${id}` : `${path}`;
 };
 
 export const Table = ({ headers, rows, event }: TableProps) => {
   const navigate = useNavigate();
+
+  const handleClickHeader = (header: { key: string; name: string }) => {
+    if (event?.headerClick) {
+      if (header) {
+        event.headerClick.fn(header);
+      }
+    }
+  };
 
   const handleClickRow = (row: TableCell) => {
     // 상세페이지로 이동
@@ -44,26 +54,79 @@ export const Table = ({ headers, rows, event }: TableProps) => {
     }
   };
 
+  const onDragEnd = (dropResult: ReactBeautifulDnd.DropResult) => {
+    if (!dropResult.destination) {
+      return;
+    }
+    event?.draggable?.dragEndFn(dropResult as { source: { index: number }; destination: { index: number } });
+  };
+
   return (
     <TableContainer>
-      <CustomTable hover={!!event?.hover?.on}>
-        <thead>
-          <Tr>
-            {headers.map(header => (
-              <th key={`th-${header.key}`}>{header.name}</th>
-            ))}
-          </Tr>
-        </thead>
-        <tbody>
-          {rows.map((row, idx) => (
-            <Tr data-testid="row" key={`row-${idx}`} onClick={() => handleClickRow(row)}>
-              {headers.map((header, hIdx) => (
-                <td key={`header-${hIdx}`}>{row[header.key]}</td>
+      {event?.draggable?.on ? (
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="Table">
+            {provided => (
+              <CustomTable {...provided.droppableProps} ref={provided.innerRef} hover={!!event?.hover?.on}>
+                <thead>
+                  <Tr>
+                    {headers.map(header => (
+                      <Th
+                        key={`th-${header.key}`}
+                        onClick={() => handleClickHeader(header)}
+                        highlight={!!event?.headerStyle?.headerNames.includes(header.name)}
+                      >
+                        {header.name}
+                      </Th>
+                    ))}
+                  </Tr>
+                </thead>
+                <tbody>
+                  {rows.map((row, idx) => (
+                    <Draggable key={idx} draggableId={idx.toString()} index={idx}>
+                      {provided => (
+                        <Tr
+                          data-testid="row"
+                          key={`row-${idx}`}
+                          onClick={() => handleClickRow(row)}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          {headers.map((header, hIdx) => {
+                            return <td key={`header-${hIdx}`}>{row[header.key]}</td>;
+                          })}
+                        </Tr>
+                      )}
+                    </Draggable>
+                  ))}
+                </tbody>
+              </CustomTable>
+            )}
+          </Droppable>
+        </DragDropContext>
+      ) : (
+        <CustomTable hover={!!event?.hover?.on}>
+          <thead>
+            <Tr>
+              {headers.map(header => (
+                <Th key={`th-${header.key}`} onClick={() => handleClickHeader(header)} highlight={!!event?.headerStyle?.headerNames.includes(header.name)}>
+                  {header.name}
+                </Th>
               ))}
             </Tr>
-          ))}
-        </tbody>
-      </CustomTable>
+          </thead>
+          <tbody>
+            {rows.map((row, idx) => (
+              <Tr data-testid="row" key={`row-${idx}`} onClick={() => handleClickRow(row)}>
+                {headers.map((header, hIdx) => (
+                  <td key={`header-${hIdx}`}>{row[header.key]}</td>
+                ))}
+              </Tr>
+            ))}
+          </tbody>
+        </CustomTable>
+      )}
     </TableContainer>
   );
 };
@@ -135,4 +198,12 @@ const Tr = styled.tr`
       border-bottom-width: 0;
     }
   }
+
+  top: auto !important;
+  left: auto !important;
+`;
+
+const Th = styled.th<{ highlight: boolean }>`
+  color: ${({ highlight, theme }) => (highlight ? theme.color.primary500 : 'black')};
+  text-decoration: ${({ highlight }) => (highlight ? 'underline' : 'none')};
 `;

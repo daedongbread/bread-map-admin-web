@@ -7,7 +7,8 @@ export type GetHomeRankingPayload = {
   startDate: string;
 };
 
-type SimpleBakeryInfoEntity = {
+export type SimpleBakeryInfoEntity = {
+  id: number;
   rank: number;
   bakeryId: number;
   bakeryName: string;
@@ -26,4 +27,14 @@ export type GetHomeRankingResponse = {
 
 export interface HomeRankingApiClient {
   getList: (params: GetHomeRankingPayload) => Promise<GetHomeRankingResponse>;
+  update: (payload: UpdateRankingPayload) => Promise<void>;
 }
+
+export type UpdateRankingPayload = {
+  bakeryRankInfoList: UpdateRankingItemPayload[];
+};
+
+export type UpdateRankingItemPayload = {
+  id: number;
+  rank: number;
+};

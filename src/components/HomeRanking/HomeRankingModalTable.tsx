@@ -3,7 +3,7 @@ import type { TableProps } from '@/components/Shared';
 import { Error as Empty, Table } from '@/components/Shared';
 import styled from '@emotion/styled';
 
-export const HomeRankingTable = ({ headers, rows, event }: TableProps) => {
+export const HomeRankingModalTable = ({ headers, rows, event }: TableProps) => {
   if (!rows.length) {
     return (
       <EmptyContainer>

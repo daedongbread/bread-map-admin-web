@@ -17,7 +17,7 @@ type Props = {
   isOpenMenuType: boolean;
   onCloseMenuTypeOption: () => void;
   onToggleMenuTypeOption: (currIdx: number) => void;
-  onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string }) => void;
+  onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string | number }) => void;
   onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
   onRemoveMenu: (currIdx: number) => void;
   onChangeMenuImg: ({ currIdx }: { currIdx: number }) => void;

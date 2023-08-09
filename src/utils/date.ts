@@ -21,10 +21,8 @@ export const getWeekRange = ({ type, dateStr }: { type: Week; dateStr: string })
   };
 };
 
-const minusDay = (baseDate: string, day: number) => {
-  console.log('baseDate', baseDate);
+export const minusDay = (baseDate: string, day: number) => {
   const date = new Date(baseDate);
-  console.log('date', date);
   date.setDate(date.getDate() - day);
 
   const baseYear = date.getFullYear();
@@ -38,7 +36,6 @@ export const getDatesBetween = (start: string, end: string) => {
   const dateArray: string[] = [];
   const currentDate = new Date(start);
   while (currentDate <= new Date(end)) {
-    console.log('currentDate', currentDate);
     dateArray.push(currentDate.getFullYear() + '-' + ('0' + (currentDate.getMonth() + 1)).slice(-2) + '-' + ('0' + currentDate.getDate()).slice(-2));
     currentDate.setDate(currentDate.getDate() + 1);
   }

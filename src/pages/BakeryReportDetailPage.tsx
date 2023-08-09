@@ -57,7 +57,7 @@ export const BakeryReportDetailPage = () => {
     }
 
     editBakeryReportStatus.mutate(
-      { reportId: Number(reportId), status: selectedOption.value },
+      { reportId: Number(reportId), status: selectedOption.value as string },
       {
         onSuccess: () => {
           navigate(PATH.BakeryReports);
@@ -116,6 +116,7 @@ const ContentHeader = styled.div`
 
   button {
     margin-bottom: 1rem;
+
     &:first-of-type {
       justify-self: flex-start;
     }
@@ -124,6 +125,7 @@ const ContentHeader = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
+
   button {
     margin-right: 1rem;
   }
@@ -139,6 +141,7 @@ const SaveBtns = styled.div`
   width: ${({ theme }) => `calc(100% - ${theme.size.sidebarWidth})`};
   background-color: ${({ theme }) => theme.color.white};
   z-index: 2;
+
   > button {
     width: 18rem;
   }

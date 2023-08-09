@@ -24,5 +24,16 @@ export type TableProps = {
       on: boolean;
       fn: TableClickEvent;
     };
+    headerClick?: {
+      on: boolean;
+      fn: (header: { key: string; name: string }) => void;
+    };
+    headerStyle?: {
+      headerNames: string[];
+    };
+    draggable?: {
+      on: boolean;
+      dragEndFn: (dropResult: { source: { index: number }; destination: { index: number } }) => void;
+    };
   };
 };

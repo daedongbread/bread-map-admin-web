@@ -33,11 +33,11 @@ export const SnsLinkArea = ({ label }: Props) => {
     dispatch(toggleLinkOption({ currIdx }));
   };
 
-  const onSelectLinkOption = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+  const onSelectLinkOption = (payload: { currIdx: number; optionValue: string | number; linkValue: string }) => {
     dispatch(selectLinkOption(payload));
   };
 
-  const onChangeLinkValue = (payload: { currIdx: number; optionValue: string; linkValue: string }) => {
+  const onChangeLinkValue = (payload: { currIdx: number; optionValue: string | number; linkValue: string }) => {
     dispatch(changeLinkValue(payload));
   };
 

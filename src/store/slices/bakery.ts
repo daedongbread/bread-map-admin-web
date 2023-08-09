@@ -125,7 +125,14 @@ const bakerySlice = createSlice({
       const { currIdx } = action.payload;
       state.openedSnsLinkIdx = currIdx === openedSnsLinkIdx ? null : currIdx;
     },
-    selectLinkOption(state, action: PayloadAction<{ currIdx: number; optionValue: SelectOption['value']; linkValue: string }>) {
+    selectLinkOption(
+      state,
+      action: PayloadAction<{
+        currIdx: number;
+        optionValue: SelectOption['value'];
+        linkValue: string;
+      }>
+    ) {
       // 중복 선택 안되도록 구현필요
       const { currIdx, optionValue, linkValue } = action.payload;
       const target = state.formLinks[currIdx];
@@ -137,7 +144,14 @@ const bakerySlice = createSlice({
       });
       state.form = { ...state.form, ...updatedLinks };
     },
-    changeLinkValue(state, action: PayloadAction<{ currIdx: number; optionValue: SelectOption['value']; linkValue: string }>) {
+    changeLinkValue(
+      state,
+      action: PayloadAction<{
+        currIdx: number;
+        optionValue: SelectOption['value'];
+        linkValue: string;
+      }>
+    ) {
       const { currIdx, optionValue, linkValue } = action.payload;
       const target = state.formLinks[currIdx];
       state.formLinks.splice(currIdx, 1, { ...target, value: linkValue });
@@ -176,7 +190,7 @@ const bakerySlice = createSlice({
       // 동작이 되는가?
       const { currIdx, optionValue } = action.payload;
       const target = state.form.productList[currIdx];
-      state.form.productList.splice(currIdx, 1, { ...target, productType: optionValue });
+      state.form.productList.splice(currIdx, 1, { ...target, productType: optionValue as string });
     },
     changeMenuInput(state, action: PayloadAction<{ currIdx: number; name: string; value: string }>) {
       const { currIdx, name, value } = action.payload;
