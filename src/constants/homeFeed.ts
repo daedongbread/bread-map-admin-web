@@ -33,3 +33,24 @@ export const HOME_FEED_CATEGORY_OPTIONS: (SelectOption & { bgColor: string })[] 
   { name: '월별 트렌드 빵집', value: HOME_FEED_CATEGORY_VALUE.MonthlyTrendBakery, color: color.blue800, bgColor: color.blue100 },
   { name: '추천 빵집', value: HOME_FEED_CATEGORY_VALUE.RecommendBakery, color: color.green800, bgColor: color.green100 },
 ];
+
+export const TIME_OPTIONS: SelectOption[] = [
+  { name: '오전 12시 (밤)', value: '00:00:00' },
+  { name: '오전 7시', value: '07:00:00' },
+  { name: '오전 8시', value: '08:00:00' },
+  { name: '오전 9시', value: '09:00:00' },
+  { name: '오전 10시', value: '10:00:00' },
+  { name: '오전 11시', value: '11:00:00' },
+  { name: '오후 12시 (낮)', value: '12:00:00' },
+  { name: '오후 1시', value: '13:00:00' },
+  { name: '오후 2시', value: '14:00:00' },
+  { name: '오후 3시', value: '15:00:00' },
+  { name: '오후 4시', value: '16:00:00' },
+  { name: '오후 5시', value: '17:00:00' },
+  { name: '오후 6시', value: '18:00:00' },
+  { name: '오후 7시', value: '19:00:00' },
+  { name: '오후 8시', value: '20:00:00' },
+  { name: '오후 9시', value: '21:00:00' },
+  { name: '오후 10시', value: '22:00:00' },
+  { name: '오후 11시', value: '23:00:00' },
+];

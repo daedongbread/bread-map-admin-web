@@ -79,5 +79,7 @@ export const SelectOptions = styled.div<{ isOpen: boolean }>`
   pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
   z-index: 2;
   border-radius: 10px;
-  overflow: hidden;
+  // overflow: hidden;
+  max-height: 200px;
+  overflow: scroll;
 `;
