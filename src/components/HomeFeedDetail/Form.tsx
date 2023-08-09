@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { TextField } from '@/components/BakeryDetail/Form/TextField';
 import { CurationBakery } from '@/components/HomeFeedDetail/CurationBakery';
 import { CurationBannerImgField } from '@/components/HomeFeedDetail/CurationBannerImgField';
+import { UploadTimeField } from '@/components/HomeFeedDetail/UploadTimeField';
 import { BasicSelectOption, BasicSelectTrigger, Button, ReadOnlyInputField, SelectBox, SelectOption } from '@/components/Shared';
-import { HOME_FEED_CATEGORY_OPTIONS } from '@/constants/homeFeed';
+import { HOME_FEED_CATEGORY_OPTIONS, TIME_OPTIONS } from '@/constants/homeFeed';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { changeForm, addCuration, Curation } from '@/store/slices/homeFeed';
@@ -42,6 +43,10 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
   const onSelectCategory = useCallback((option: SelectOption | null) => {
     onSelectOption(option);
     dispatch(changeForm({ name: 'category', value: option?.value }));
+  }, []);
+
+  const onSelectUploadTime = useCallback((time: string) => {
+    dispatch(changeForm({ name: 'uploadTime', value: time }));
   }, []);
 
   return (
@@ -92,15 +97,11 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
       <div className="button-wrapper">
         <Button type={'reverseOrange'} text={'큐레이션 빵집 추가'} btnSize={'medium'} onClickBtn={onAddCuration} />
       </div>
-      <TextField textarea label={'게시일시'} name={'uploadDate'} value={uploadDate || ''} placeholder={'YYYY-MM-DD'} onChangeForm={onChangeForm} />
-      <TextField
-        textarea
-        label={'시간'}
-        name={'uploadTime'}
-        value={uploadTime || ''}
-        placeholder={'ex) 오후 11시 업로드 -> 23:00:00 / 오전 7시 업로드 -> 07:00:00'}
-        onChangeForm={onChangeForm}
-      />
+      <TextField textarea label={'게시일'} name={'uploadDate'} value={uploadDate || ''} placeholder={'YYYY-MM-DD'} onChangeForm={onChangeForm} />
+      <div className="row">
+        <label className="label-item">게시시간</label>
+        <UploadTimeField time={uploadTime || ''} onSelectUploadTime={onSelectUploadTime} />
+      </div>
       <CurationBannerImgField label={'배너 이미지'} onChangeForm={onChangeForm} />
 
       <ReadOnlyInputField label={'좋아요 개수'} labelMinWidth={11} content={'0'} placeholder={'좋아요개수'} />
