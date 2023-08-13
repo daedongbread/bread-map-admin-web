@@ -39,6 +39,8 @@ const initialBakeryForm: BakeryForm = {
   latitude: '',
   longitude: '',
   hours: '',
+  newBreadTime: '',
+  checkPoint: '',
   instagramURL: '',
   facebookURL: '',
   blogURL: '',

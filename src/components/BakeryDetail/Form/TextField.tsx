@@ -10,13 +10,22 @@ type Props = {
   name: string;
   value: string;
   multiline?: boolean;
+  multilineRowCount?: number;
+  alignTop?: boolean;
   onChangeForm: (payload: { name: string; value: string }) => void;
 };
 
-export const TextField = ({ label, textarea = false, placeholder, rowNoMargin, name, value, multiline, onChangeForm }: Props) => {
+export const TextField = ({ label, textarea = false, placeholder, rowNoMargin, name, value, multiline, multilineRowCount, alignTop, onChangeForm }: Props) => {
   return (
-    <Row noMargin={rowNoMargin}>
-      <label>{label}</label>
+    <Row noMargin={rowNoMargin} alignTop={alignTop}>
+      <label>
+        {label.split('\n').map((str, index) => (
+          <React.Fragment key={index}>
+            {str}
+            <br />
+          </React.Fragment>
+        ))}
+      </label>
       <RowContents>
         <Input
           name={name}
@@ -25,6 +34,7 @@ export const TextField = ({ label, textarea = false, placeholder, rowNoMargin, n
           textarea={textarea}
           value={value}
           multiLine={multiline}
+          multiLineRowCount={multilineRowCount}
           onChangeInput={e => onChangeForm({ name, value: e.target.value })}
         />
       </RowContents>

@@ -74,6 +74,8 @@ export type BakeryDetailBaseEntity = {
   facebookURL: string | null;
   blogURL: string | null;
   phoneNumber: string | null;
+  newBreadTime: string | null;
+  checkPoint: string | null;
 };
 
 export type BakeryDetailEntity = BakeryDetailBaseEntity & {

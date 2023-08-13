@@ -19,7 +19,7 @@ type Props = {
 export const BakeryForm = ({ isEdit, openModal }: Props) => {
   const dispatch = useAppDispatch();
   const { form } = useAppSelector(selector => selector.bakery);
-  const { name, pioneerNickName, hours, phoneNumber } = form;
+  const { name, pioneerNickName, hours, phoneNumber, newBreadTime, checkPoint } = form;
 
   const onChangeForm = useCallback((payload: { name: string; value: string }) => {
     dispatch(changeForm(payload));
@@ -39,8 +39,30 @@ export const BakeryForm = ({ isEdit, openModal }: Props) => {
       <BakeryImgField label={'대표이미지'} onChangeForm={onChangeForm} />
       <AddressArea label={'주소'} onChangeForm={onChangeForm} />
       <TextField textarea label={'시간'} name={'hours'} value={hours || ''} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} onChangeForm={onChangeForm} />
+      <TextField
+        textarea
+        label={'갓군빵\n나오는 시간'}
+        placeholder={'따끈따끈한 빵이 나오는 시간을 작성해주세요.\n[예시] 오전 8시 ~ 오전 9시 치아바타'}
+        name={'newBreadTime'}
+        value={newBreadTime || ''}
+        onChangeForm={onChangeForm}
+        multiline={true}
+        multilineRowCount={6}
+        alignTop={true}
+      />
       <SnsLinkArea label={'홈페이지'} />
       <TextField label={'전화번호'} name={'phoneNumber'} value={phoneNumber || ''} placeholder={'000-000-0000'} onChangeForm={onChangeForm} />
+      <TextField
+        textarea
+        label={'체크포인트'}
+        placeholder={'이 빵집 또는 빵의 매력(장점) 대해서 작성 해주세요.\n빵을 맛있게 먹는 꿀팁도 좋아요'}
+        name={'checkPoint'}
+        value={checkPoint || ''}
+        onChangeForm={onChangeForm}
+        multiline={true}
+        multilineRowCount={6}
+        alignTop={true}
+      />
       <FacilityField label={'시설정보'} />
       <MenuArea label={'메뉴'} />
     </Container>
