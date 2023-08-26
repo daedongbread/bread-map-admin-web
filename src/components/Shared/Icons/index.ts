@@ -24,3 +24,4 @@ export * from './Shipping';
 export * from './Booking';
 export * from './Star';
 export * from './Close';
+export * from './Calendar';

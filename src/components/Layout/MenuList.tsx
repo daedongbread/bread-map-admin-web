@@ -133,7 +133,7 @@ const MENUS: Menu[] = [
       },
       {
         name: '콘텐츠 관리',
-        path: PATH.HomeScreen.Feeds,
+        path: `${PATH.HomeScreen.Feeds}/all`,
         icon: <div></div>,
       },
       {

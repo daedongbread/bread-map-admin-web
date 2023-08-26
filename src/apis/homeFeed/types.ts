@@ -9,9 +9,9 @@ import { BaseResponse } from '@/apis/types';
  */
 
 export type GetHomeFeedsPayload = {
-  activeAt: string | null;
+  createdAt: string | null;
   createBy: string | null;
-  activated: 'POSTING' | 'INACTIVATED' | null;
+  activated: '' | 'POSTING' | 'INACTIVATED';
   categoryName: string | null;
   page: number;
   size: number;
@@ -56,12 +56,20 @@ export type CurationFeedsItemEntity = {
 };
 
 export type CreateUpdateCurationFeedPayload = {
-  payload: { common: Omit<CurationCommonEntity, 'categoryName'> & { categoryId: number }; curation: CurationBakeryEntity[]; landing: null };
+  payload: {
+    common: Omit<CurationCommonEntity, 'categoryName'> & { categoryId: number };
+    curation: CurationBakeryEntity[];
+    landing: null;
+  };
 };
 
 export interface HomeFeedApiClient {
   getItem: ({ feedId }: { feedId: number }) => Promise<CurationFeedDetailEntity>;
   createItem: ({ payload }: CreateUpdateCurationFeedPayload) => Promise<any>; // TODO: 응답 타입 정의
   updateItem: ({ feedId, payload }: { feedId: number } & CreateUpdateCurationFeedPayload) => void;
-  getList: (params: GetHomeFeedsPayload) => Promise<{ feeds: CurationFeedsItemEntity[]; totalCount: number; totalPages: number }>;
+  getList: (params: GetHomeFeedsPayload) => Promise<{
+    feeds: CurationFeedsItemEntity[];
+    totalCount: number;
+    totalPages: number;
+  }>;
 }

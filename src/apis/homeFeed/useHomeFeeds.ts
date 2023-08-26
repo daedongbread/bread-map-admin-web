@@ -10,10 +10,23 @@ export const useHomeFeeds = () => {
   }
 
   const homeFeedsQuery = (params: GetHomeFeedsPayload) => {
-    const { categoryName, createBy, page } = params;
-    return useQuery(['homeFeeds', { page, categoryName, createBy }], () => homeFeed.getList(params), {
-      enabled: !isNaN(page),
-    });
+    const { categoryName, createBy, page, createdAt, activated } = params;
+    return useQuery(
+      [
+        'homeFeeds',
+        {
+          page,
+          categoryName,
+          createBy,
+          createdAt,
+          activated,
+        },
+      ],
+      () => homeFeed.getList(params),
+      {
+        enabled: !isNaN(page),
+      }
+    );
   };
 
   return {

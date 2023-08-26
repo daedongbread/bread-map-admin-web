@@ -13,7 +13,6 @@ export type Props = {
 
 // TODO: category, alarm 합치기
 export const FeedCategoryCell = ({ category }: Props) => {
-  console.log('category..', category);
   return (
     <Container>
       {category?.map((category, idx) => (

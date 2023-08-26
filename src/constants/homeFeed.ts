@@ -13,8 +13,8 @@ export const HOME_FEED_TABLE_HEADERS: TableHeader[] = [
 
 // 홈피드 카테고리
 export const HOME_FEED_CATEGORY_VALUE = {
-  MonthlyTrendBakery: 1,
-  RecommendBakery: 2,
+  MonthlyTrendBakery: '월별 트렌드 빵집',
+  RecommendBakery: '추천 빵집',
 };
 
 // 빵집 게시 상태
@@ -30,7 +30,18 @@ export const HOME_FEED_STATUS_OPTIONS: SelectOption[] = [
 
 export const HOME_FEED_CATEGORY_OPTIONS: (SelectOption & { bgColor: string })[] = [
   // TODO: 나중에 api로 불러오기
-  { name: '월별 트렌드 빵집', value: HOME_FEED_CATEGORY_VALUE.MonthlyTrendBakery, color: color.blue800, bgColor: color.blue100 },
+  {
+    name: '카테고리 선택',
+    value: '',
+    color: color.blue800,
+    bgColor: color.blue100,
+  },
+  {
+    name: '월별 트렌드 빵집',
+    value: HOME_FEED_CATEGORY_VALUE.MonthlyTrendBakery,
+    color: color.blue800,
+    bgColor: color.blue100,
+  },
   { name: '추천 빵집', value: HOME_FEED_CATEGORY_VALUE.RecommendBakery, color: color.green800, bgColor: color.green100 },
 ];
 
