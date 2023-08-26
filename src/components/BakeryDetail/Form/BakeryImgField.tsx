@@ -1,10 +1,9 @@
 import React, { ChangeEvent } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Preview } from '@/components/Shared';
+import { Preview } from '@/components/Shared';
 import useFileInput from '@/hooks/useFileInput';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { BakeryFormChangeKey, changeCurrentImageUploader, ImageUploaderInfo } from '@/store/slices/bakery';
-import { Row } from '@/styles';
 import styled from '@emotion/styled';
 
 type Props = {
@@ -24,7 +23,7 @@ export const BakeryImgField = ({ label, onChangeForm }: Props) => {
     const bakeryImage: ImageUploaderInfo = {
       url: image || '',
       type: 'image',
-      name: '대표 이미지',
+      name: '대표 이미지1',
     };
     dispatch(changeCurrentImageUploader(bakeryImage));
   };
@@ -42,16 +41,31 @@ export const BakeryImgField = ({ label, onChangeForm }: Props) => {
   };
 
   return (
-    <Row alignTop>
+    <Container alignTop>
       <label>{label}</label>
       <RepresentativeImg>
-        <Preview src={image || ''} widthRem={28} heightRem={20} emptyText={'대표 이미지가 없습니다.'} />
-        <Button type={'lightOrange'} text={'이미지 변경'} btnSize={'small'} onClickBtn={handleClickBtn} />
+        <Preview src={image || ''} widthRem={28} heightRem={20} emptyText={'클릭 후 이미지 업로드.'} onClick={handleClickBtn} />
         <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
       </RepresentativeImg>
-    </Row>
+    </Container>
   );
 };
+
+const Container = styled.div<{ alignTop?: boolean; spaceBetween?: boolean; noMargin?: boolean }>`
+  display: flex;
+  align-items: ${({ alignTop }) => (alignTop ? 'flex-start' : 'center')};
+  justify-content: ${({ spaceBetween }) => (spaceBetween ? 'space-between' : 'flex-start')};
+
+  > label {
+    width: 12rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  &:not(label) {
+    flex: 1;
+  }
+`;
 
 const RepresentativeImg = styled.div`
   width: 100%;

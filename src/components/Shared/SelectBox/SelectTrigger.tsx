@@ -15,7 +15,6 @@ export const BasicSelectTrigger = ({ selectedOption, bgColor }: { selectedOption
 };
 
 export const StatusSelectTrigger = ({ selectedOption }: { selectedOption: SelectOption | null }) => {
-  console.log('selectedOption...', selectedOption);
   return (
     <StatusTrigger color={(selectedOption && selectedOption.color) ?? ''}>
       <span>{selectedOption?.name || '선택'}</span>
@@ -47,6 +46,7 @@ const Trigger = styled.div<{ bgColor?: string }>`
 
 const StatusTrigger = styled(Trigger)<{ color: string }>`
   background: ${({ theme }) => theme.color.white};
+
   &::after {
     content: '';
     position: absolute;
@@ -58,6 +58,7 @@ const StatusTrigger = styled(Trigger)<{ color: string }>`
     border-radius: 50%;
     background-color: ${({ color }) => color};
   }
+
   span {
     color: ${({ color }) => color};
     margin-left: 7px;

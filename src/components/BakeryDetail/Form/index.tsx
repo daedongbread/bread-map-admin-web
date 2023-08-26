@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { AddressArea } from '@/components/BakeryDetail/Form/AddressArea';
 import { BakeryImgField } from '@/components/BakeryDetail/Form/BakeryImgField';
+import { BakeryImgPreviewField } from '@/components/BakeryDetail/Form/BakeryImgPreviewField';
 import { FacilityField } from '@/components/BakeryDetail/Form/FacilityField';
 import { MenuArea } from '@/components/BakeryDetail/Form/MenuArea';
 import { SearchField } from '@/components/BakeryDetail/Form/SearchField';
@@ -36,7 +37,10 @@ export const BakeryForm = ({ isEdit, openModal }: Props) => {
         placeholder={'빵집개척자를 선택해주세요'}
         onClickSearch={openModal}
       />
-      <BakeryImgField label={'대표이미지'} onChangeForm={onChangeForm} />
+      <FlexContainer>
+        <BakeryImgField label={'대표이미지1'} onChangeForm={onChangeForm} />
+        <BakeryImgPreviewField label={'대표이미지2'} />
+      </FlexContainer>
       <AddressArea label={'주소'} onChangeForm={onChangeForm} />
       <TextField textarea label={'시간'} name={'hours'} value={hours || ''} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} onChangeForm={onChangeForm} />
       <TextField
@@ -72,4 +76,14 @@ export const BakeryForm = ({ isEdit, openModal }: Props) => {
 const Container = styled.form`
   padding-top: 2rem;
   margin-bottom: 10rem;
+`;
+
+const FlexContainer = styled.div<{ justifyContent?: 'flex-start' | 'flex-end'; gap?: string }>`
+  display: flex;
+  align-items: center;
+  min-width: 30rem;
+  min-height: 5rem;
+  gap: ${({ gap }) => (gap ? gap : '15px')};
+  justify-content: ${({ justifyContent }) => justifyContent};
+  margin-bottom: 2.5rem;
 `;
