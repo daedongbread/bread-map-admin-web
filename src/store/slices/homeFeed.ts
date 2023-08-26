@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export type Curation = {
   bakery: {
@@ -105,13 +105,23 @@ const feedSlice = createSlice({
       const { activated } = action.payload;
       state.form.activated = activated;
     },
-    changeCuration(state, action: PayloadAction<{ currIdx: number; key: 'bakery' | 'bread' | 'reason'; value: any }>) {
+    changeCuration(
+      state,
+      action: PayloadAction<{
+        currIdx: number;
+        key: 'bakery' | 'bread' | 'reason';
+        value: any;
+      }>
+    ) {
       const { currIdx, key, value } = action.payload;
       const target = state.form.curations[currIdx];
       state.form.curations.splice(currIdx, 1, { ...target, [key]: value });
     },
     addCuration(state) {
       state.form.curations.push(initialCuration);
+    },
+    removeCuration(state, action: PayloadAction<{ index: number }>) {
+      state.form.curations.splice(action.payload.index, 1);
     },
     initializeForm(state) {
       state.form = initialForm;
@@ -120,4 +130,4 @@ const feedSlice = createSlice({
 });
 
 export default feedSlice.reducer;
-export const { setForm, changeForm, changeHomeFeedStatus, changeCuration, addCuration, initializeForm } = feedSlice.actions;
+export const { setForm, changeForm, changeHomeFeedStatus, changeCuration, addCuration, removeCuration, initializeForm } = feedSlice.actions;

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { TextField } from '@/components/BakeryDetail/Form/TextField';
 import { Button, ReadOnlyInputField } from '@/components/Shared';
+import { Close } from '@/components/Shared/Icons';
 import { useAppDispatch } from '@/store/hooks';
 import { changeCuration } from '@/store/slices/homeFeed';
 import styled from '@emotion/styled';
@@ -18,9 +19,10 @@ type Props = {
   reason: string;
   onOpenModalByType: ({ type, index }: { type: 'bakery' | 'bread'; index: number }) => void;
   onChangeForm: ({ name, value }: { name: string; value: string }) => void;
+  onClose: ({ idx }: { idx: number }) => void;
 };
 
-export const CurationBakery = ({ index, bakery, bread, reason, onOpenModalByType, onChangeForm }: Props) => {
+export const CurationBakery = ({ index, bakery, bread, reason, onOpenModalByType, onChangeForm, onClose }: Props) => {
   const dispatch = useAppDispatch();
 
   const handleBakerySearch = useCallback(() => {
@@ -43,9 +45,21 @@ export const CurationBakery = ({ index, bakery, bread, reason, onOpenModalByType
     <Container>
       <div className="title">큐레이션 빵집 {index + 1}</div>
       <div className="curation-wrapper">
-        <div className="row">
-          <ReadOnlyInputField label={'빵집명'} content={bakery.bakeryName} placeholder={'빵집을 조회해 주세요.'} />
-          <Button type={'orange'} text={'조회하기'} btnSize={'small'} onClickBtn={handleBakerySearch} />
+        <div className="flex">
+          <div className="row">
+            <ReadOnlyInputField label={'빵집명'} content={bakery.bakeryName} placeholder={'빵집을 조회해 주세요.'} />
+            <Button type={'orange'} text={'조회하기'} btnSize={'small'} onClickBtn={handleBakerySearch} />
+          </div>
+          <div className="row">
+            <button
+              onClick={e => {
+                e.preventDefault();
+                onClose({ idx: index });
+              }}
+            >
+              <Close />
+            </button>
+          </div>
         </div>
         <div className="row">
           <ReadOnlyInputField label={'빵메뉴'} content={bread.productName} placeholder={'빵집 선택 후 빵메뉴를 조회해 주세요.'} />
@@ -80,6 +94,12 @@ const Container = styled.div`
     border: 1px solid #9e9e9e;
     border-radius: 10px;
     padding: 3rem;
+  }
+
+  .flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .row {

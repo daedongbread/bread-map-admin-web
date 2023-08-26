@@ -4,10 +4,10 @@ import { CurationBakery } from '@/components/HomeFeedDetail/CurationBakery';
 import { CurationBannerImgField } from '@/components/HomeFeedDetail/CurationBannerImgField';
 import { UploadTimeField } from '@/components/HomeFeedDetail/UploadTimeField';
 import { BasicSelectOption, BasicSelectTrigger, Button, ReadOnlyInputField, SelectBox, SelectOption } from '@/components/Shared';
-import { HOME_FEED_CATEGORY_OPTIONS, TIME_OPTIONS } from '@/constants/homeFeed';
+import { HOME_FEED_CATEGORY_OPTIONS } from '@/constants/homeFeed';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { addCuration, changeForm } from '@/store/slices/homeFeed';
+import { addCuration, changeForm, removeCuration } from '@/store/slices/homeFeed';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
@@ -34,6 +34,11 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
 
   const onChangeForm = useCallback((payload: { name: string; value: string }) => {
     dispatch(changeForm(payload));
+  }, []);
+
+  const onClose = useCallback(({ idx }: { idx: number }) => {
+    console.log(idx);
+    dispatch(removeCuration({ index: idx }));
   }, []);
 
   const onAddCuration = useCallback(() => {
@@ -92,6 +97,7 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
           reason={curation.reason}
           onOpenModalByType={onOpenModalByType}
           onChangeForm={onChangeForm}
+          onClose={onClose}
         />
       ))}
       <div className="button-wrapper">
