@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { CreateUpdateCurationFeedPayload, CurationBakeryEntity, CurationFeedDetailEntity, useHomeFeed } from '@/apis';
+import { CreateUpdateCurationFeedPayload, CurationBakeryEntity, useHomeFeed } from '@/apis';
 import { useBakery } from '@/apis/bakery/useBakery';
 import { FeedForm } from '@/components/HomeFeedDetail';
 import { BakeryMenuModal } from '@/components/HomeFeedDetail/BakeryMenuModal';
@@ -13,7 +13,7 @@ import useSelectBox from '@/hooks/useSelectBox';
 import { useToast } from '@/hooks/useToast';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import bakery from '@/store/slices/bakery';
-import { changeHomeFeedStatus, HomeFeedStatus, setForm, initializeForm } from '@/store/slices/homeFeed';
+import { changeHomeFeedStatus, HomeFeedStatus, initializeForm, setForm } from '@/store/slices/homeFeed';
 import { urlToFile } from '@/utils';
 import { validateHomeFeedForm } from '@/utils/bakery';
 import { HOME_FEED_STATUS_OPTIONS } from '@/utils/homeFeed';
@@ -129,13 +129,19 @@ export const FeedDetailPage = () => {
         categoryId: Number(category as string),
         activeTime: `${form.uploadDate}T${form.uploadTime}`,
       },
-      curation: curations.map(c => ({ bakeryId: c.bakery.bakeryId, productId: c.bread.productId, reason: c.reason } as CurationBakeryEntity)),
+      curation: curations.map(
+        c =>
+          ({
+            bakeryId: c.bakery.bakeryId,
+            productId: c.bread.productId,
+            reason: c.reason,
+          } as CurationBakeryEntity)
+      ),
       landing: null,
     };
 
-    console.log('등록...! feedId', feedId);
     // feedId가 있으면(숫자)면 수정, 없으면 생성
-    if (feedId !== 'add') {
+    if (feedId !== 'new') {
       // 이미지가 있었으나 새로 추가한경우 이미지 업로드 과정 진행
       if (homeFeed?.common.thumbnailUrl && homeFeed?.common.thumbnailUrl !== form.thumbnailUrl) {
         const { thumbnailUrl } = await uploadAllImages();
@@ -144,7 +150,6 @@ export const FeedDetailPage = () => {
         onUpdateForm({ payload });
       }
     } else {
-      console.log('else문 탐', typeof Number(feedId));
       // 새로 생성하는 경우, 이미지를 새로 업로드한 경우는 이미지 업로드 과정 진행
       if (form.thumbnailUrl) {
         const { thumbnailUrl } = await uploadAllImages();
@@ -163,6 +168,7 @@ export const FeedDetailPage = () => {
           addToast('컨텐츠 등록을 완료했습니다.', 'error', 3000);
           setTimeout(() => {
             // TODO: 상세페이지로 이동
+            console.log('response', data);
             // navigate(`/bakeries/${data.bakeryId}`);
           }, 1300);
         },

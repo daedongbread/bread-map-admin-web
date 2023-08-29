@@ -13,8 +13,8 @@ export const HOME_FEED_TABLE_HEADERS: TableHeader[] = [
 
 // 홈피드 카테고리
 export const HOME_FEED_CATEGORY_VALUE = {
-  MonthlyTrendBakery: '월별 트렌드 빵집',
-  RecommendBakery: '추천 빵집',
+  MonthlyTrendBakery: 1,
+  RecommendBakery: 2,
 };
 
 // 빵집 게시 상태

@@ -28,7 +28,6 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
 
   useEffect(() => {
     // form이 아닌, feedData를 받아서 categoryName 을 가져와서 처리해야함
-    console.log('category', categoryId);
     onSelectOption(HOME_FEED_CATEGORY_OPTIONS.find(option => option.value === categoryId) || null);
   }, [categoryId]);
 
@@ -37,7 +36,6 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
   }, []);
 
   const onClose = useCallback(({ idx }: { idx: number }) => {
-    console.log(idx);
     dispatch(removeCuration({ index: idx }));
   }, []);
 
@@ -63,7 +61,6 @@ export const FeedForm = ({ isEdit, categoryId, openModal, closeModal, onOpenModa
           isOpen={isOpen}
           onCloseSelectBox={onCloseSelectBox}
           onToggleSelectBox={onToggleSelectBox}
-          // onToggleSelectBox={() => onToggleLinkOption(idx)}
           triggerComponent={<BasicSelectTrigger selectedOption={selectedOption} bgColor={color.white} />}
         >
           {HOME_FEED_CATEGORY_OPTIONS.map((option, idx) => (

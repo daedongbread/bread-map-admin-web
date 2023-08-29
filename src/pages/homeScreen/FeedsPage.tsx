@@ -98,7 +98,7 @@ export const FeedsPage = () => {
 
   const onSelectCategory = useCallback((option: SelectOption | null) => {
     if (option) {
-      setCategoryValue(option.value as string);
+      setCategoryValue(option.name as string);
     }
     onSelectOption(option);
   }, []);
