@@ -1,3 +1,4 @@
+import { dashDateFormat } from '@/utils/date';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -46,8 +47,8 @@ const initialForm: FeedForm = {
   thumbnailUrl: '',
   likeCounts: 0,
   activated: 'INACTIVATED',
-  uploadDate: '', // 2022-01-01
-  uploadTime: '', // 00:00:00
+  uploadDate: dashDateFormat(new Date()), // 2022-01-01
+  uploadTime: '00:00:00', // 00:00:00
 };
 
 interface HomeFeedState {

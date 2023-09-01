@@ -32,6 +32,13 @@ export const minusDay = (baseDate: string, day: number) => {
   return `${baseYear}-${baseMonth < 10 ? '0' + baseMonth : baseMonth}-${baseDay < 10 ? '0' + baseDay : baseDay}`;
 };
 
+export const dashDateFormat = (baseDate: Date) => {
+  const baseYear = baseDate.getFullYear();
+  const baseMonth = baseDate.getMonth() + 1; // 월은 0부터 시작하므로 1을 더함
+  const baseDay = baseDate.getDate();
+  return `${baseYear}-${baseMonth < 10 ? '0' + baseMonth : baseMonth}-${baseDay < 10 ? '0' + baseDay : baseDay}`;
+};
+
 export const getDatesBetween = (start: string, end: string) => {
   const dateArray: string[] = [];
   const currentDate = new Date(start);
