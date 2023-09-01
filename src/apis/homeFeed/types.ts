@@ -63,9 +63,13 @@ export type CreateUpdateCurationFeedPayload = {
   };
 };
 
+export type CreateFeedResponse = {
+  feedId: number;
+};
+
 export interface HomeFeedApiClient {
   getItem: ({ feedId }: { feedId: number }) => Promise<CurationFeedDetailEntity>;
-  createItem: ({ payload }: CreateUpdateCurationFeedPayload) => Promise<any>; // TODO: 응답 타입 정의
+  createItem: ({ payload }: CreateUpdateCurationFeedPayload) => Promise<CreateFeedResponse>; // TODO: 응답 타입 정의
   updateItem: ({ feedId, payload }: { feedId: number } & CreateUpdateCurationFeedPayload) => void;
   getList: (params: GetHomeFeedsPayload) => Promise<{
     feeds: CurationFeedsItemEntity[];

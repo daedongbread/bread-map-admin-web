@@ -167,9 +167,8 @@ export const FeedDetailPage = () => {
         onSuccess: data => {
           addToast('컨텐츠 등록을 완료했습니다.', 'error', 3000);
           setTimeout(() => {
-            // TODO: 상세페이지로 이동
             console.log('response', data);
-            // navigate(`/bakeries/${data.bakeryId}`);
+            navigate(`/home-screen/feeds/${data.feedId}`);
           }, 1300);
         },
       }

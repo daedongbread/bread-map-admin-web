@@ -12,18 +12,25 @@ export const useHomeFeed = ({ feedId }: { feedId: number }) => {
 
   const homeFeedQuery = useQuery(['homeFeed', { feedId }], () => homeFeed.getItem({ feedId }), {
     enabled: !isNaN(feedId),
-    onSuccess: () => queryClient.invalidateQueries(['getBakeriesAlarmCount']),
+    onSuccess: () => queryClient.invalidateQueries([]),
   });
 
   const addHomeFeed = useMutation((payload: CreateUpdateCurationFeedPayload) => homeFeed.createItem(payload), {
-    onSuccess: () => queryClient.invalidateQueries('getBakeries'),
+    onSuccess: () => queryClient.invalidateQueries('homeFeeds'),
   });
 
-  const editHomeFeed = useMutation((payload: { feedId: number } & CreateUpdateCurationFeedPayload) => homeFeed.updateItem(payload), {
-    onSuccess: () => {
-      return Promise.all([queryClient.invalidateQueries('bakery'), queryClient.invalidateQueries('getBakeries'), queryClient.invalidateQueries('menuCount')]);
-    },
-  });
+  const editHomeFeed = useMutation(
+    (
+      payload: {
+        feedId: number;
+      } & CreateUpdateCurationFeedPayload
+    ) => homeFeed.updateItem(payload),
+    {
+      onSuccess: () => {
+        return Promise.all([queryClient.invalidateQueries('homeFeed'), queryClient.invalidateQueries('homeFeeds')]);
+      },
+    }
+  );
 
   return {
     homeFeedQuery,
