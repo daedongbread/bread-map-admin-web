@@ -62,8 +62,8 @@ export const BakeryDetailPage = () => {
       );
       updateLinksAtForm();
       onSelectOption(BAKERY_STATUS_OPTIONS.find(option => option.value === bakery.status) || null);
-      if (bakery.image) {
-        dispatch(changeBakeryImg({ imgPreview: bakery.image }));
+      if (bakery.images && bakery.images[0]) {
+        dispatch(changeBakeryImg({ imgPreview: bakery.images[0] }));
       }
     } else {
       dispatch(initializeForm());
@@ -116,8 +116,8 @@ export const BakeryDetailPage = () => {
     let image = '';
     let products: ProductItem[] = [];
 
-    if (form.image) {
-      const result = await createAndGetImageUrl(form.image);
+    if (form.images && form.images[0]) {
+      const result = await createAndGetImageUrl(form.images[0]);
       result ? (image = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
     }
 
@@ -150,7 +150,7 @@ export const BakeryDetailPage = () => {
       // 새로 생성하는 경우, 이미지를 새로 업로드한 경우는 이미지 업로드 과정 진행
       const { image, products } = await uploadAllImages();
 
-      onCreateForm({ ...restForm, image, productList: products });
+      onCreateForm({ ...restForm, images: [image], productList: products });
     }
   };
 

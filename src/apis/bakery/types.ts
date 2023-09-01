@@ -63,7 +63,7 @@ export type BakeryDetailBaseEntity = {
   pioneerId: number | null;
   pioneerNickName: string | null;
   reportId: number | null;
-  image: string | null;
+  images: string[] | null;
   address: string;
   detailedAddress: string;
   latitude: number;

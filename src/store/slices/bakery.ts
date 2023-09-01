@@ -33,7 +33,7 @@ const initialBakeryForm: BakeryForm = {
   pioneerId: null,
   pioneerNickName: '',
   reportId: null,
-  image: null,
+  images: [],
   address: '',
   detailedAddress: '',
   latitude: '',
@@ -116,7 +116,10 @@ const bakerySlice = createSlice({
     },
     changeBakeryImg(state, action: PayloadAction<{ imgPreview: string }>) {
       const { imgPreview } = action.payload;
-      state.form.image = imgPreview;
+      if (!state.form.images) {
+        state.form.images = [];
+      }
+      state.form.images[0] = imgPreview;
     },
     closeAllLinkOption(state) {
       // state.openedSelectBoxId = null;
