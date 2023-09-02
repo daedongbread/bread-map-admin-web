@@ -2,12 +2,11 @@ import React, { ChangeEvent } from 'react';
 import { Preview } from '@/components/Shared';
 import useFileInput from '@/hooks/useFileInput';
 import styled from '@emotion/styled';
-import { BakeryFormChangeKey } from '@/store/slices/bakery';
 
 type Props = {
   imageUrl: string;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
-  onRemoveForm: (payload: { name: BakeryFormChangeKey }) => void;
+  onChangeForm: (payload: { name: 'image'; value: string }) => void;
+  onRemoveForm: (payload: { name: 'image' }) => void;
 };
 
 export const ImageField = ({ imageUrl, onChangeForm, onRemoveForm }: Props) => {

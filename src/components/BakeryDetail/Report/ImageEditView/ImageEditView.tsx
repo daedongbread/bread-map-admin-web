@@ -91,7 +91,8 @@ export const ImageEditView = ({ bakeryId }: Props) => {
   };
 
   const handleDeleteBakeryImage = async (imageId: number, imageUrl: string) => {
-    const hasFormImageUrl = form.image === imageUrl || form.productList.some(item => item.image === imageUrl);
+    const formImage = form.images ? form.images[0] || '' : '';
+    const hasFormImageUrl = formImage === imageUrl || form.productList.some(item => item.image === imageUrl);
     if (hasFormImageUrl) {
       window.alert('사용중인 이미지입니다. 변경후 시도해주세요.');
       return;

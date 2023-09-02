@@ -1,7 +1,7 @@
 import React from 'react';
+import { ImageField } from '@/components/HomeCommunityDetail/ImageField';
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
-import { ImageField } from '@/components/HomeCommunityDetail/ImageField';
 
 type Props = {
   label: string;

@@ -3,25 +3,25 @@ import { useParams } from 'react-router-dom';
 import { Preview } from '@/components/Shared';
 import useFileInput from '@/hooks/useFileInput';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { BakeryFormChangeKey, changeCurrentImageUploader, ImageUploaderInfo } from '@/store/slices/bakery';
+import { changeCurrentImageUploader, ImageUploaderInfo } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
 
 type Props = {
   label: string;
-  onChangeForm: (payload: { name: BakeryFormChangeKey; value: string }) => void;
+  onChangeForm: (payload: { name: 'image'; value: string }) => void;
 };
 
 export const BakeryImgField = ({ label, onChangeForm }: Props) => {
   const { bakeryId } = useParams();
   const dispatch = useAppDispatch();
   const {
-    form: { image },
+    form: { images },
   } = useAppSelector(selector => selector.bakery);
   const { inputRef, onClickTriggerFile } = useFileInput();
 
   const onChangeBakeryImg = () => {
     const bakeryImage: ImageUploaderInfo = {
-      url: image || '',
+      url: images ? images[0] || '' : '',
       type: 'image',
       name: '대표 이미지1',
     };
@@ -44,7 +44,7 @@ export const BakeryImgField = ({ label, onChangeForm }: Props) => {
     <Container alignTop>
       <label>{label}</label>
       <RepresentativeImg>
-        <Preview src={image || ''} widthRem={28} heightRem={20} emptyText={'클릭 후 이미지 업로드.'} onClick={handleClickBtn} />
+        <Preview src={images ? images[0] || '' : ''} widthRem={28} heightRem={20} emptyText={'클릭 후 이미지 업로드.'} onClick={handleClickBtn} />
         <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
       </RepresentativeImg>
     </Container>
