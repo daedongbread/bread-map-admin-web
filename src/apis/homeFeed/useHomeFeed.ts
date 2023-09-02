@@ -12,7 +12,6 @@ export const useHomeFeed = ({ feedId }: { feedId: number }) => {
 
   const homeFeedQuery = useQuery(['homeFeed', { feedId }], () => homeFeed.getItem({ feedId }), {
     enabled: !isNaN(feedId),
-    onSuccess: () => queryClient.invalidateQueries([]),
   });
 
   const addHomeFeed = useMutation((payload: CreateUpdateCurationFeedPayload) => homeFeed.createItem(payload), {
