@@ -78,6 +78,16 @@ export const CommunityForm = ({ communityId }: Props) => {
       return;
     }
 
+    if (!formData.title || formData.title.length < 5) {
+      addToast('제목은 5자 이상 입력되어야 합니다.', 'error', 3000);
+      return;
+    }
+
+    if (!formData.content || formData.content.length < 10) {
+      addToast('본문은 10자 이상 입력되어야 합니다.', 'error', 3000);
+      return;
+    }
+
     const tempFormData = new FormData();
     const file = await urlToFile(formData.bannerImage, 'bread.jpg');
     tempFormData.append('image', file);

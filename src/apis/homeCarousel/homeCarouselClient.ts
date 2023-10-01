@@ -3,7 +3,7 @@ import { GetHomeCarouselResponse, HomeCarouselApiClient, UpdateHomeCarouselPaylo
 
 export class HomeCarouselClient implements HomeCarouselApiClient {
   async getList(): Promise<GetHomeCarouselResponse> {
-    const resp = await fetcher.get<GetHomeCarouselResponse>(`/posts/carousels`);
+    const resp = await fetcher.get<GetHomeCarouselResponse>(`/carousels`);
     return resp.data;
   }
 

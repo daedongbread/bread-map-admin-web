@@ -94,7 +94,7 @@ const bakerySlice = createSlice({
   name: 'bakery',
   initialState,
   reducers: {
-    changeForm(state, action: PayloadAction<{ name: string; value: string }>) {
+    changeForm(state, action: PayloadAction<{ name: string; value: string | string[] }>) {
       const { name, value } = action.payload;
 
       state.form = {
