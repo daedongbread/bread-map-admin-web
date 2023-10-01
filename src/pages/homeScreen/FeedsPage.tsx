@@ -118,7 +118,7 @@ export const FeedsPage = () => {
 
   return (
     <>
-      <Header name={'콘텐츠 관리'} />
+      <Header name={'큐레이션 관리'} />
       <Container>
         <TopContainer>
           {/* 검색조건 */}
