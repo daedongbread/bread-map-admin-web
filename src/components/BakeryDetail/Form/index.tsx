@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { AddressArea } from '@/components/BakeryDetail/Form/AddressArea';
 import { BakeryImgField } from '@/components/BakeryDetail/Form/BakeryImgField';
-import { BakeryImgPreviewField } from '@/components/BakeryDetail/Form/BakeryImgPreviewField';
+import { BakerySecondImgField } from '@/components/BakeryDetail/Form/BakerySecondImgField';
 import { FacilityField } from '@/components/BakeryDetail/Form/FacilityField';
 import { MenuArea } from '@/components/BakeryDetail/Form/MenuArea';
 import { SearchField } from '@/components/BakeryDetail/Form/SearchField';
@@ -22,7 +22,7 @@ export const BakeryForm = ({ isEdit, openModal }: Props) => {
   const { form } = useAppSelector(selector => selector.bakery);
   const { name, pioneerNickName, hours, phoneNumber, newBreadTime, checkPoint } = form;
 
-  const onChangeForm = useCallback((payload: { name: string; value: string }) => {
+  const onChangeForm = useCallback((payload: { name: string; value: string | string[] }) => {
     dispatch(changeForm(payload));
   }, []);
 
@@ -38,8 +38,22 @@ export const BakeryForm = ({ isEdit, openModal }: Props) => {
         onClickSearch={openModal}
       />
       <FlexContainer>
-        <BakeryImgField label={'대표이미지1'} onChangeForm={onChangeForm} />
-        <BakeryImgPreviewField label={'대표이미지2'} />
+        <BakeryImgField
+          label={'대표이미지1'}
+          onChangeForm={onChangeForm}
+          onRemoveForm={e => {
+            dispatch(changeForm({ name: e.name, value: [] }));
+          }}
+        />
+        <BakerySecondImgField
+          label={'대표이미지2'}
+          onChangeForm={onChangeForm}
+          onRemoveForm={e => {
+            const images = form.images && form.images.length > 0 ? [form.images[0]] : [];
+            dispatch(changeForm({ name: e.name, value: images }));
+          }}
+        />
+        {/*{form.images && form.images.length > 0 && <BakerySecondImgField label={'대표이미지2'} onChangeForm={onChangeForm} />}*/}
       </FlexContainer>
       <AddressArea label={'주소'} onChangeForm={onChangeForm} />
       <TextField textarea label={'시간'} name={'hours'} value={hours || ''} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} onChangeForm={onChangeForm} />

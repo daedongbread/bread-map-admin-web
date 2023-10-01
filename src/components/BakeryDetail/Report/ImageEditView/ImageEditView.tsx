@@ -76,8 +76,11 @@ export const ImageEditView = ({ bakeryId }: Props) => {
       result ? (url = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
     }
 
-    if (currentImageUploader.type === 'image') {
+    if (currentImageUploader.type === 'image' && currentImageUploader.name === '대표 이미지1') {
       dispatch(changeForm({ name: 'images', value: [url] }));
+    } else if (currentImageUploader.type === 'image' && currentImageUploader.name === '대표 이미지2') {
+      const images = [form.images && form.images.length > 0 ? form.images[0] : '', url];
+      dispatch(changeForm({ name: 'images', value: images }));
     } else {
       if (isNumber(currentImageUploader?.currMenuIdx)) {
         dispatch(

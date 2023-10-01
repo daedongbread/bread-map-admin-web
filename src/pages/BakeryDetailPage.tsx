@@ -113,12 +113,17 @@ export const BakeryDetailPage = () => {
   };
 
   const uploadAllImages = async () => {
-    let image = '';
+    const images: string[] = [];
     let products: ProductItem[] = [];
 
     if (form.images && form.images[0]) {
       const result = await createAndGetImageUrl(form.images[0]);
-      result ? (image = result) : window.alert('이미지 반영을 실패했습니다. 다시 시도해주세요.');
+      result ? images.push(result) : window.alert('대표 이미지1 반영을 실패했습니다. 다시 시도해주세요.');
+    }
+
+    if (form.images && form.images[1]) {
+      const result = await createAndGetImageUrl(form.images[1]);
+      result ? images.push(result) : window.alert('대표 이미지2 반영을 실패했습니다. 다시 시도해주세요.');
     }
 
     if (form.productList.length > 0) {
@@ -132,7 +137,7 @@ export const BakeryDetailPage = () => {
       );
     }
 
-    return { image, products };
+    return { images, products };
   };
 
   const onSaveForm = async () => {
@@ -148,9 +153,9 @@ export const BakeryDetailPage = () => {
       onUpdateForm({ ...restForm });
     } else {
       // 새로 생성하는 경우, 이미지를 새로 업로드한 경우는 이미지 업로드 과정 진행
-      const { image, products } = await uploadAllImages();
+      const { images, products } = await uploadAllImages();
 
-      onCreateForm({ ...restForm, images: [image], productList: products });
+      onCreateForm({ ...restForm, images: images, productList: products });
     }
   };
 
