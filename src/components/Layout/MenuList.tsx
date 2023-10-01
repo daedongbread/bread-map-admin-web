@@ -132,12 +132,12 @@ const MENUS: Menu[] = [
         icon: <div></div>,
       },
       {
-        name: '콘텐츠 관리',
+        name: '큐레이션 관리',
         path: `${PATH.HomeScreen.Feeds}/all`,
         icon: <div></div>,
       },
       {
-        name: '관리자용 커뮤니티',
+        name: '커뮤니티 이벤트 관리',
         path: `${PATH.HomeScreen.AdminCommunity}/all`,
         icon: <div></div>,
       },

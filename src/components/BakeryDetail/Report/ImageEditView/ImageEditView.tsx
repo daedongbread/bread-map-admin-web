@@ -77,7 +77,7 @@ export const ImageEditView = ({ bakeryId }: Props) => {
     }
 
     if (currentImageUploader.type === 'image') {
-      await dispatch(changeForm({ name: 'image', value: url }));
+      dispatch(changeForm({ name: 'images', value: [url] }));
     } else {
       if (isNumber(currentImageUploader?.currMenuIdx)) {
         dispatch(
