@@ -12,7 +12,7 @@ type Props = {
   onRemoveForm: (payload: { name: 'images' }) => void;
 };
 
-export const BakeryImgField = ({ label, onChangeForm, onRemoveForm }: Props) => {
+export const BakerySecondImgField = ({ label, onChangeForm, onRemoveForm }: Props) => {
   const { bakeryId } = useParams();
   const dispatch = useAppDispatch();
   const {
@@ -22,9 +22,9 @@ export const BakeryImgField = ({ label, onChangeForm, onRemoveForm }: Props) => 
 
   const onChangeBakeryImg = () => {
     const bakeryImage: ImageUploaderInfo = {
-      url: images ? images[0] || '' : '',
+      url: images ? images[1] || '' : '',
       type: 'image',
-      name: '대표 이미지1',
+      name: '대표 이미지2',
     };
     dispatch(changeCurrentImageUploader(bakeryImage));
   };
@@ -38,7 +38,10 @@ export const BakeryImgField = ({ label, onChangeForm, onRemoveForm }: Props) => 
     if (!e.target.files) return;
     const file = e.target.files[0];
 
-    onChangeForm({ name: 'images', value: [URL.createObjectURL(file)] });
+    onChangeForm({
+      name: 'images',
+      value: [images && images.length > 0 ? images[0] : '', URL.createObjectURL(file)],
+    });
   };
 
   return (
@@ -46,7 +49,7 @@ export const BakeryImgField = ({ label, onChangeForm, onRemoveForm }: Props) => 
       <label>{label}</label>
       <RepresentativeImg>
         <ImageFieldContainer>
-          {images && images[0] && (
+          {images && images[1] && (
             <CloseButton
               onClick={e => {
                 e.preventDefault();
@@ -57,7 +60,7 @@ export const BakeryImgField = ({ label, onChangeForm, onRemoveForm }: Props) => 
             </CloseButton>
           )}
           <div onClick={handleClickBtn}>
-            <Preview src={images ? images[0] || '' : ''} widthRem={28} heightRem={20} emptyText={'클릭 후 이미지 업로드.'} />
+            <Preview src={images ? images[1] || '' : ''} widthRem={28} heightRem={20} emptyText={'클릭 후 이미지 업로드.'} />
           </div>
           <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={handleChangeImage} />
         </ImageFieldContainer>
