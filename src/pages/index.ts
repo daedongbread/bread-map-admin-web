@@ -6,3 +6,5 @@ export * from './LoginPage';
 
 // 홈 화면 관리
 export * from './homeScreen';
+// 검색 관리
+export * from './ManageSearchesPage';

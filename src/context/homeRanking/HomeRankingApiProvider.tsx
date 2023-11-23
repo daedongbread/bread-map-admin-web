@@ -1,7 +1,5 @@
 import React, { ReactNode } from 'react';
-import { HomeFeed, HomeFeedClient } from '@/apis/homeFeed';
 import { HomeRanking, HomeRankingClient } from '@/apis/homeRanking';
-import { HomeFeedApiContext } from '@/context/homeFeed/HomeFeedApiContext';
 import { HomeRankingApiContext } from '@/context/homeRanking/HomeRankingApiContext';
 
 const client = new HomeRankingClient();

@@ -14,6 +14,7 @@ import {
   FeedDetailPage,
   FeedsPage,
   LoginPage,
+  ManageSearchesPage,
   RankingPage,
 } from '@/pages';
 import { AdminCommunityDetailPage } from '@/pages/homeScreen/AdminCommunityDetailPage';
@@ -53,6 +54,7 @@ export const router = createBrowserRouter(
           <Route path={`${PATH.HomeScreen.AdminCommunity}/all`} element={<AdminCommunityPage />} />
           <Route path={`${PATH.HomeScreen.AdminCommunity}/new`} element={<AdminCommunityDetailPage />} />
           <Route path={`${PATH.HomeScreen.AdminCommunity}/:communityId`} element={<AdminCommunityDetailPage />} />
+          <Route path={`${PATH.Searches}`} element={<ManageSearchesPage />} />
           <Route
             path={PATH.Users}
             element={

@@ -29,7 +29,7 @@ const getPath = (row: TableCell, path: string) => {
   return id ? `${path}/${id}` : `${path}`;
 };
 
-export const Table = ({ headers, rows, event }: TableProps) => {
+export const Table = ({ headers, rows, event, hiddenHeader }: TableProps) => {
   const navigate = useNavigate();
 
   const handleClickHeader = (header: { key: string; name: string }) => {
@@ -75,6 +75,7 @@ export const Table = ({ headers, rows, event }: TableProps) => {
                         key={`th-${header.key}`}
                         onClick={() => handleClickHeader(header)}
                         highlight={!!event?.headerStyle?.headerNames.includes(header.name)}
+                        hiddenHeader={hiddenHeader}
                       >
                         {header.name}
                       </Th>
@@ -110,7 +111,12 @@ export const Table = ({ headers, rows, event }: TableProps) => {
           <thead>
             <Tr>
               {headers.map(header => (
-                <Th key={`th-${header.key}`} onClick={() => handleClickHeader(header)} highlight={!!event?.headerStyle?.headerNames.includes(header.name)}>
+                <Th
+                  key={`th-${header.key}`}
+                  onClick={() => handleClickHeader(header)}
+                  highlight={!!event?.headerStyle?.headerNames.includes(header.name)}
+                  hiddenHeader={hiddenHeader}
+                >
                   {header.name}
                 </Th>
               ))}
@@ -203,7 +209,8 @@ const Tr = styled.tr`
   left: auto !important;
 `;
 
-const Th = styled.th<{ highlight: boolean }>`
+const Th = styled.th<{ highlight: boolean; hiddenHeader?: boolean }>`
+  display: ${({ hiddenHeader }) => (hiddenHeader ? 'none' : 'table-cell')};
   color: ${({ highlight, theme }) => (highlight ? theme.color.primary500 : 'black')};
   text-decoration: ${({ highlight }) => (highlight ? 'underline' : 'none')};
 `;

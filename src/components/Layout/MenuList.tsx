@@ -144,6 +144,11 @@ const MENUS: Menu[] = [
     ],
   },
   {
+    name: '검색 관리',
+    path: PATH.Searches,
+    icon: <Dislike />,
+  },
+  {
     name: '사용자관리',
     path: PATH.Users,
     icon: <Profile />,

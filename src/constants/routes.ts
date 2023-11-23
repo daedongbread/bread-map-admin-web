@@ -5,6 +5,7 @@ export const PATH = {
   Bakeries: '/bakeries',
   BakeryReports: '/bakery-reports',
   Users: '/users',
+  Searches: '/searches',
   UserReports: '/user-reports',
   HomeScreen: {
     Main: HOME_SCREEN,

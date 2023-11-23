@@ -12,6 +12,7 @@ export type TableProps = {
     name: string;
   }[];
   rows: TableCell[];
+  hiddenHeader?: boolean;
   event?: {
     hover?: {
       on: boolean;

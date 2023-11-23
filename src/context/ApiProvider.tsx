@@ -5,6 +5,7 @@ import { HomeCarouselApiProvider } from '@/context/homeCarousel/HomeCarouselApiP
 import { HomeCommunityApiProvider } from '@/context/homeCommunity';
 import { HomeFeedApiProvider } from '@/context/homeFeed';
 import { HomeRankingApiProvider } from '@/context/homeRanking';
+import { ManageSearchKeywordApiProvider } from '@/context/manageSearchKeyword';
 
 export const ApiProvider = ({ children }: { children: ReactNode }) => {
   return (
@@ -13,7 +14,9 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
         <HomeFeedApiProvider>
           <HomeCommunityApiProvider>
             <HomeCarouselApiProvider>
-              <HomeRankingApiProvider>{children}</HomeRankingApiProvider>
+              <HomeRankingApiProvider>
+                <ManageSearchKeywordApiProvider>{children}</ManageSearchKeywordApiProvider>
+              </HomeRankingApiProvider>
             </HomeCarouselApiProvider>
           </HomeCommunityApiProvider>
         </HomeFeedApiProvider>

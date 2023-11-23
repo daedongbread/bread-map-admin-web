@@ -25,3 +25,4 @@ export * from './Booking';
 export * from './Star';
 export * from './Close';
 export * from './Calendar';
+export * from './Hamburger';
